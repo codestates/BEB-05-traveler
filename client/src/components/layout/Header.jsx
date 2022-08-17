@@ -47,7 +47,9 @@ function HeaderComponent() {
                   <p>...</p>
                 </Drawer>
               </>
-              <MenuOutlined style={{ fontSize: '200%' }} onClick={showDrawer}></MenuOutlined>
+              <SideBar>
+                <MenuOutlined style={{ fontSize: '120%' }} onClick={showDrawer}></MenuOutlined>
+              </SideBar>
               <MoreOutlined style={{ fontSize: '200%' }} />
               <LogoTitle> T r a v e l e r</LogoTitle>
               <Button shape="round" onClick={showLogin}>
@@ -94,6 +96,10 @@ const LogoTitle = styled.span`
   margin-right: auto;
   font-family: 'Aboreto', cursive;
   font-family: 'Noto Sans KR', sans-serif;
+`;
+
+const SideBar = styled.span`
+  margin-right: 15px;
 `;
 
 export default HeaderComponent;
