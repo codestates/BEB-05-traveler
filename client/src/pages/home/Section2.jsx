@@ -1,8 +1,8 @@
 import { Image, Row } from 'antd';
 import React from 'react';
-import mainImg from '../../../src/asset/imgs/haha.png';
+import mainImg from '../../../src/asset/imgs/Recent_posts.png';
 
-function Section1() {
+function Section2() {
   return (
     <Row gutter={[8, 8]} justify="center" align="middle" wrap={true}>
       <Image src={mainImg} alt="main image" preview={false} />
@@ -10,4 +10,4 @@ function Section1() {
   );
 }
 
-export default Section1;
+export default Section2;

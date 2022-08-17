@@ -11,6 +11,7 @@ export const theme = {
   very_dark_blue_main: 'hsl(217, 54%, 11%)',
   very_dark_blue_sub: 'hsl(216, 50%, 16%)',
   very_dark_blue_line: 'hsl(215, 32%, 27%)',
+  beige: 'hsl(24, 59%, 89%)',
 
   /* Typography */
   fw_500: 500,

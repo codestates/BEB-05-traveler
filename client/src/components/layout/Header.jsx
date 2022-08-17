@@ -49,7 +49,7 @@ function HeaderComponent() {
               </>
               <MenuOutlined style={{ fontSize: '200%' }} onClick={showDrawer}></MenuOutlined>
               <MoreOutlined style={{ fontSize: '200%' }} />
-              <LogoTitle> Traveler</LogoTitle>
+              <LogoTitle> T r a v e l e r</LogoTitle>
               <Button shape="round" onClick={showLogin}>
                 Login
               </Button>
