@@ -1,6 +1,7 @@
 import { Result, Row } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
 import React from 'react';
+
 import collectionData from '../../asset/dummy/fakeposts';
 import PostsList from './PostsList';
 import styled from 'styled-components';

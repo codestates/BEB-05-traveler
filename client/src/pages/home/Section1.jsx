@@ -1,7 +1,6 @@
 import { Image, Row } from 'antd';
 import React from 'react';
 import mainImg from '../../../src/asset/imgs/haha.png';
-import PostsList from './PostsList';
 
 function Section1() {
   return (
