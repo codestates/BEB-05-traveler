@@ -90,9 +90,7 @@ function HeaderComponent() {
             </SideBar>
             <MoreOutlined style={{ fontSize: '200%' }} />
 
-            <Link to="/">
-              <LogoTitle> T r a v e l e r</LogoTitle>
-            </Link>
+            <LogoTitle> T r a v e l e r</LogoTitle>
 
             <Button shape="round" onClick={showLoginModal}>
               Login
@@ -170,8 +168,6 @@ const LogoTitle = styled.div`
   margin-right: auto;
   font-family: 'Aboreto', cursive;
   font-family: 'Noto Sans KR', sans-serif;
-  margin-left: 1000px;
-  margin-right: 1000px;
 `;
 
 const SideBar = styled.span`
