@@ -1,13 +1,24 @@
-import { Layout, Row, Col, Button, Drawer } from 'antd';
+import { Layout, Row, Col, Button, Drawer, Modal, Input, Space } from 'antd';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { theme } from '../../style/theme';
-import { MenuOutlined, MoreOutlined } from '@ant-design/icons';
+import {
+  MenuOutlined,
+  MoreOutlined,
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+  UserOutlined,
+  LockOutlined,
+} from '@ant-design/icons';
+import Register from '../../pages/home/Register';
 
 const { Header: _Header } = Layout;
 function HeaderComponent() {
   const [visible, setVisible] = useState(false);
+  const [isLoginVisible, setIsLoginVisible] = useState(false);
+  const [isJoinVisible, setIsJoinVisible] = useState(false);
+
   const placement = 'left';
 
   const showDrawer = () => {
@@ -18,8 +29,28 @@ function HeaderComponent() {
     setVisible(false);
   };
 
-  const showLogin = (e) => {
-    alert('로그인 모달이 들어갈 예정!');
+  const showLoginModal = () => {
+    setIsLoginVisible(true);
+  };
+
+  const handleLoginOk = () => {
+    setIsLoginVisible(false);
+  };
+
+  const handleLoginCancel = () => {
+    setIsLoginVisible(false);
+  };
+
+  const showJoinModal = () => {
+    setIsJoinVisible(true);
+  };
+
+  const handleJoinOk = () => {
+    setIsJoinVisible(false);
+  };
+
+  const handleJoinCancel = () => {
+    setIsJoinVisible(false);
   };
 
   return (
@@ -58,13 +89,47 @@ function HeaderComponent() {
               <MenuOutlined style={{ fontSize: '120%' }} onClick={showDrawer}></MenuOutlined>
             </SideBar>
             <MoreOutlined style={{ fontSize: '200%' }} />
+
             <Link to="/">
               <LogoTitle> T r a v e l e r</LogoTitle>
             </Link>
 
-            <Button shape="round" onClick={showLogin}>
+            <Button shape="round" onClick={showLoginModal}>
               Login
             </Button>
+            <Modal
+              visible={isLoginVisible}
+              title="ID 로그인"
+              onOk={handleLoginOk}
+              onCancel={handleLoginCancel}
+              width={300}
+              footer={[
+                <Button key="submit" shape="round" onClick={showJoinModal}>
+                  회원가입
+                </Button>,
+                <Button key="submit" shape="round" onClick={handleLoginOk}>
+                  로그인
+                </Button>,
+              ]}
+            >
+              <Space direction="vertical">
+                <Input placeholder="아이디" type="text" prefix={<UserOutlined />} />
+                <Input.Password
+                  placeholder="비밀번호"
+                  type="password"
+                  prefix={<LockOutlined />}
+                  iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                />
+              </Space>
+            </Modal>
+            <Modal
+              visible={isJoinVisible}
+              onOk={handleJoinOk}
+              onCancel={handleJoinCancel}
+              footer={[]}
+            >
+              <Register handleJoinOk={handleJoinOk} />
+            </Modal>
           </LogoWrapper>
         </Header>
       </Col>
