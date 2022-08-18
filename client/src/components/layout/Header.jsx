@@ -1,9 +1,16 @@
-import { Layout, Row, Col, Button, Drawer, Modal, Input, Space} from 'antd';
+import { Layout, Row, Col, Button, Drawer, Modal, Input, Space } from 'antd';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { theme } from '../../style/theme';
-import { MenuOutlined, MoreOutlined, EyeInvisibleOutlined, EyeTwoTone, UserOutlined, LockOutlined} from '@ant-design/icons';
+import {
+  MenuOutlined,
+  MoreOutlined,
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+  UserOutlined,
+  LockOutlined,
+} from '@ant-design/icons';
 import Register from '../../pages/home/Register';
 
 const { Header: _Header } = Layout;
@@ -12,7 +19,6 @@ function HeaderComponent() {
   const [isLoginVisible, setIsLoginVisible] = useState(false);
   const [isJoinVisible, setIsJoinVisible] = useState(false);
 
-  
   const placement = 'left';
 
   const showDrawer = () => {
@@ -46,7 +52,6 @@ function HeaderComponent() {
   const handleJoinCancel = () => {
     setIsJoinVisible(false);
   };
-
 
   return (
     <Row justify="center" align="middle">
@@ -84,41 +89,47 @@ function HeaderComponent() {
               <MenuOutlined style={{ fontSize: '120%' }} onClick={showDrawer}></MenuOutlined>
             </SideBar>
             <MoreOutlined style={{ fontSize: '200%' }} />
-            <LogoTitle> T r a v e l e r</LogoTitle>
+
+            <Link to="/">
+              <LogoTitle> T r a v e l e r</LogoTitle>
+            </Link>
+
             <Button shape="round" onClick={showLoginModal}>
               Login
             </Button>
             <Modal
-                visible={isLoginVisible}
-                title="ID 로그인"
-                onOk={handleLoginOk}
-                onCancel={handleLoginCancel}
-                width={300}
-                footer={[
-                  <Button key="submit" shape="round" onClick={showJoinModal}>회원가입</Button>,
-                  <Button key="submit" shape="round" onClick={handleLoginOk}>로그인</Button>
-                ]}>
-                <Space direction="vertical">
-                  <Input 
-                    placeholder="아이디" 
-                    type="text"
-                    prefix={<UserOutlined />}/>
-                  <Input.Password 
-                    placeholder="비밀번호" 
-                    type="password"
-                    prefix={<LockOutlined />}
-                    iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                  />
-                </Space>
-              </Modal>
-              <Modal
-                visible={isJoinVisible}
-                onOk={handleJoinOk}
-                onCancel={handleJoinCancel}
-                footer={[]}
-              >
-                <Register handleJoinOk={handleJoinOk} />
-              </Modal>
+              visible={isLoginVisible}
+              title="ID 로그인"
+              onOk={handleLoginOk}
+              onCancel={handleLoginCancel}
+              width={300}
+              footer={[
+                <Button key="submit" shape="round" onClick={showJoinModal}>
+                  회원가입
+                </Button>,
+                <Button key="submit" shape="round" onClick={handleLoginOk}>
+                  로그인
+                </Button>,
+              ]}
+            >
+              <Space direction="vertical">
+                <Input placeholder="아이디" type="text" prefix={<UserOutlined />} />
+                <Input.Password
+                  placeholder="비밀번호"
+                  type="password"
+                  prefix={<LockOutlined />}
+                  iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                />
+              </Space>
+            </Modal>
+            <Modal
+              visible={isJoinVisible}
+              onOk={handleJoinOk}
+              onCancel={handleJoinCancel}
+              footer={[]}
+            >
+              <Register handleJoinOk={handleJoinOk} />
+            </Modal>
           </LogoWrapper>
         </Header>
       </Col>
@@ -150,7 +161,7 @@ const LogoWrapper = styled.div`
   font-family: 'Noto Sans KR', sans-serif;
 `;
 
-const LogoTitle = styled.span`
+const LogoTitle = styled.div`
   font-size: ${theme.fs_11};
   font-weight: ${theme.fw_700};
   letter-spacing: -1px;
@@ -159,6 +170,8 @@ const LogoTitle = styled.span`
   margin-right: auto;
   font-family: 'Aboreto', cursive;
   font-family: 'Noto Sans KR', sans-serif;
+  margin-left: 1000px;
+  margin-right: 1000px;
 `;
 
 const SideBar = styled.span`
