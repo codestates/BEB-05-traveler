@@ -1,15 +1,26 @@
-import { Result, Image, Row } from 'antd';
+import { Result, Row } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
 import React from 'react';
-import mainImg from '../../../src/asset/imgs/Recent_posts.png';
+import collectionData from '../../asset/dummy/fakeposts';
+import PostsList from './PostsList';
+import styled from 'styled-components';
 
 function Section2() {
   return (
-    <Row gutter={[8, 8]} justify="center" align="middle" wrap={true}>
+    <Row justify="center" align="middle" wrap={true}>
       <Result icon={<SmileOutlined />} title="Great, we have done all the operations!" />
-      <Image src={mainImg} alt="main image" preview={false} />
+      <List>
+        <PostsList collectionData={collectionData} />
+      </List>
     </Row>
   );
 }
+
+const List = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin
+`;
 
 export default Section2;
