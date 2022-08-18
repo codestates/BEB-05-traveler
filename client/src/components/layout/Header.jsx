@@ -52,36 +52,43 @@ function HeaderComponent() {
     <Row justify="center" align="middle">
       <Col span={24}>
         <Header>
-          <Link to="/">
-            <LogoWrapper>
-              <>
-                <Drawer
-                  title="Traveler"
-                  placement="left"
-                  closable={false}
-                  onClose={onClose}
-                  visible={visible}
-                  key={placement}
-                >
+          <LogoWrapper>
+            <>
+              <Drawer
+                title="Traveler"
+                placement="left"
+                closable={false}
+                onClose={onClose}
+                visible={visible}
+                key={placement}
+                style={{ fontSize: '150%' }}
+              >
+                <Link to="/">
                   <p>Home</p>
-                  <p>게시글 페이지</p>
+                </Link>
+                <Link to="/posts">
+                  <p>Posts</p>
+                </Link>
+                <Link to="/mypage">
                   <p>My Page</p>
-                  <p>게시글 작성</p>
-                  <p>Create Your NFT</p>
-                  <p>...</p>
-                  <p>...</p>
-                  <p>...</p>
-                </Drawer>
-              </>
-              <SideBar>
-                <MenuOutlined style={{ fontSize: '120%' }} onClick={showDrawer}></MenuOutlined>
-              </SideBar>
-              <MoreOutlined style={{ fontSize: '200%' }} />
-              <LogoTitle> T r a v e l e r</LogoTitle>
-              <Button shape="round" onClick={showLoginModal}>
-                Login
-              </Button>
-              <Modal
+                </Link>
+                <Link to="/create">
+                  <p>Create your NFT</p>
+                </Link>
+                <Link to="/market">
+                  <p>NFT Market</p>
+                </Link>
+              </Drawer>
+            </>
+            <SideBar>
+              <MenuOutlined style={{ fontSize: '120%' }} onClick={showDrawer}></MenuOutlined>
+            </SideBar>
+            <MoreOutlined style={{ fontSize: '200%' }} />
+            <LogoTitle> T r a v e l e r</LogoTitle>
+            <Button shape="round" onClick={showLoginModal}>
+              Login
+            </Button>
+            <Modal
                 visible={isLoginVisible}
                 title="ID 로그인"
                 onOk={handleLoginOk}
@@ -112,8 +119,7 @@ function HeaderComponent() {
               >
                 <Register handleJoinOk={handleJoinOk} />
               </Modal>
-            </LogoWrapper>
-          </Link>
+          </LogoWrapper>
         </Header>
       </Col>
     </Row>
