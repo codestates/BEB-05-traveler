@@ -160,14 +160,18 @@ const LogoWrapper = styled.div`
 `;
 
 const LogoTitle = styled.div`
+  @import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Noto+Sans+KR:wght@100&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Pangolin&display=swap');
+
+  text-align: center;
+  font-weight: 400;
+  font-family: 'Aboreto', cursive;
   font-size: ${theme.fs_11};
   font-weight: ${theme.fw_700};
   letter-spacing: -1px;
   white-space: nowrap;
   margin-left: auto;
   margin-right: auto;
-  font-family: 'Aboreto', cursive;
-  font-family: 'Noto Sans KR', sans-serif;
 `;
 
 const SideBar = styled.span`

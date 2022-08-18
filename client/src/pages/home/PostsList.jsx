@@ -21,7 +21,8 @@ function PostsList({ collectionData }) {
 }
 
 const Lists = styled.div`
-  text-align
+  padding-right: 20px;
+  padding-left: 20px;
 `;
 
 export default PostsList;
