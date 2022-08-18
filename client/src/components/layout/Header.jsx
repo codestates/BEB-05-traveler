@@ -58,7 +58,10 @@ function HeaderComponent() {
               <MenuOutlined style={{ fontSize: '120%' }} onClick={showDrawer}></MenuOutlined>
             </SideBar>
             <MoreOutlined style={{ fontSize: '200%' }} />
-            <LogoTitle> T r a v e l e r</LogoTitle>
+            <Link to="/">
+              <LogoTitle> T r a v e l e r</LogoTitle>
+            </Link>
+
             <Button shape="round" onClick={showLogin}>
               Login
             </Button>
@@ -93,7 +96,7 @@ const LogoWrapper = styled.div`
   font-family: 'Noto Sans KR', sans-serif;
 `;
 
-const LogoTitle = styled.span`
+const LogoTitle = styled.div`
   font-size: ${theme.fs_11};
   font-weight: ${theme.fw_700};
   letter-spacing: -1px;
@@ -102,6 +105,8 @@ const LogoTitle = styled.span`
   margin-right: auto;
   font-family: 'Aboreto', cursive;
   font-family: 'Noto Sans KR', sans-serif;
+  margin-left: 1000px;
+  margin-right: 1000px;
 `;
 
 const SideBar = styled.span`
