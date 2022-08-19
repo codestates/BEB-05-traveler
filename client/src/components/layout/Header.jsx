@@ -1,4 +1,4 @@
-import { Layout, Row, Col, Button, Drawer, Modal, Input, Space } from 'antd';
+import { Layout, Row, Col, Button, Drawer, Modal, Input, Space, Typography } from 'antd';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -13,6 +13,7 @@ import {
 } from '@ant-design/icons';
 import Register from '../../pages/home/Register';
 
+const { Title } = Typography;
 const { Header: _Header } = Layout;
 function HeaderComponent() {
   const [visible, setVisible] = useState(false);
@@ -58,33 +59,35 @@ function HeaderComponent() {
       <Col span={24}>
         <Header>
           <LogoWrapper>
-            <>
-              <Drawer
-                title="Traveler"
-                placement="left"
-                closable={false}
-                onClose={onClose}
-                visible={visible}
-                key={placement}
-                style={{ fontSize: '150%' }}
-              >
-                <Link to="/">
-                  <p>Home</p>
-                </Link>
-                <Link to="/posts">
-                  <p>Posts</p>
-                </Link>
-                <Link to="/mypage">
-                  <p>My Page</p>
-                </Link>
-                <Link to="/create">
-                  <p>Create your NFT</p>
-                </Link>
-                <Link to="/market">
-                  <p>NFT Market</p>
-                </Link>
-              </Drawer>
-            </>
+            <Side>
+              <>
+                <Drawer
+                  title="Traveler"
+                  placement="left"
+                  closable={false}
+                  onClose={onClose}
+                  visible={visible}
+                  key={placement}
+                  style={{ fontSize: '150%' }}
+                >
+                  <Link to="/">
+                    <Title>Home</Title>
+                  </Link>
+                  <Link to="/posts">
+                    <Title>Posts</Title>
+                  </Link>
+                  <Link to="/mypage">
+                    <Title>My Page</Title>
+                  </Link>
+                  <Link to="/create">
+                    <Title>Create your NFT</Title>
+                  </Link>
+                  <Link to="/market">
+                    <Title>NFT Market</Title>
+                  </Link>
+                </Drawer>
+              </>
+            </Side>
             <SideBar>
               <MenuOutlined style={{ fontSize: '120%' }} onClick={showDrawer}></MenuOutlined>
             </SideBar>
@@ -160,14 +163,25 @@ const LogoWrapper = styled.div`
 `;
 
 const LogoTitle = styled.div`
+  @import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Noto+Sans+KR:wght@100&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Pangolin&display=swap');
+
+  text-align: center;
+  font-weight: 400;
+  font-family: 'Aboreto', cursive;
   font-size: ${theme.fs_11};
   font-weight: ${theme.fw_700};
   letter-spacing: -1px;
   white-space: nowrap;
   margin-left: auto;
   margin-right: auto;
+`;
+
+const Side = styled.div`
+  @import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Noto+Sans+KR:wght@100&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Pangolin&display=swap');
+
   font-family: 'Aboreto', cursive;
-  font-family: 'Noto Sans KR', sans-serif;
 `;
 
 const SideBar = styled.span`

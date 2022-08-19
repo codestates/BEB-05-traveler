@@ -19,7 +19,7 @@ export default function Router() {
       <Route path="/posts" element={[<Posts />, <NotAuthorized />]} />
       <Route path="/posts/:content_id" element={<PostDetail />} />
       <Route path="/mypage" element={[<MyPage />, <MP_sec1 />, <MP_sec2 />]} />
-      <Route path="/create" element={[<Create />, <NotAuthorized />]} />
+      <Route path="/create" element={[<Create />]} />
       <Route path="/market" element={[<Market />, <NotAuthorized />]} />
     </Routes>
   );

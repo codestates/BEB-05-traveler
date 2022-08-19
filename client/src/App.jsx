@@ -14,7 +14,7 @@ function App() {
         className="layout"
         style={{
           height: '100%',
-          background: `linear-gradient(${theme.very_light_blue_main}, ${theme.beige} )`,
+          background: `linear-gradient(${theme.d_beige}, ${theme.beige} )`,
           color: `${theme.beige}`,
           gap: `${theme.space_2}`,
         }}
