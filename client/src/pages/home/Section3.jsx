@@ -40,7 +40,6 @@ const TitleFont = styled.div`
   font-weight: 400;
   font-family: 'Aboreto', cursive;
   font-family: 'Noto Sans KR', sans-serif;
-  width: 100%;
 `;
 
 const List = styled.div`
