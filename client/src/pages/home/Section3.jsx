@@ -2,8 +2,8 @@ import { Result, Image, Row, Typography } from 'antd';
 import { WalletOutlined } from '@ant-design/icons';
 import React from 'react';
 import styled from 'styled-components';
-import PostsList from './PostsList';
-import collectionData from '../../asset/dummy/fakeposts';
+import NFTList from './NFTList';
+import collectionData from '../../asset/dummy/fakeNFT';
 import { theme } from '../../style/theme';
 
 const { Title } = Typography;
@@ -26,7 +26,7 @@ function Section3() {
       </TitleFont>
 
       <List>
-        <PostsList collectionData={collectionData} />
+        <NFTList collectionData={collectionData} />
       </List>
     </Row>
   );
@@ -39,6 +39,7 @@ const TitleFont = styled.div`
   font-weight: 400;
   font-family: 'Aboreto', cursive;
   font-family: 'Noto Sans KR', sans-serif;
+  width: 100%;
 `;
 
 const List = styled.div`
