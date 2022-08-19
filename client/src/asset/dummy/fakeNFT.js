@@ -15,6 +15,10 @@ const postlist = [
     content_id: '4',
     link: 'https://ipfs.io/ipfs/bafyreieh445w7gawzlzoxftssxn65jgrwlzcewbz4777utb3vur7g7f3iy/metadata.json',
   },
+  {
+    content_id: '5',
+    link: 'https://ipfs.io/ipfs/bafyreiexuzq525e6rdsemfa6ptzt7vsgqclvb5tr5eezymgwcnel6swmm4/metadata.json',
+  },
 ];
 
 export default postlist;

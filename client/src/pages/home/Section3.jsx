@@ -9,9 +9,10 @@ import { theme } from '../../style/theme';
 const { Title } = Typography;
 
 function Section3() {
+  const recentData = collectionData.filter((e) => e.content_id <= 4);
+
   return (
-    <Row gutter={[8, 8]} justify="center" align="middle" wrap={true}>
-      {/* <Result icon={<WalletOutlined />} title="========== Recent NFTs ==========" /> */}
+    <Row justify="center" align="middle" wrap={true}>
       <TitleFont>
         <Title
           style={{
@@ -21,12 +22,12 @@ function Section3() {
             color: `${theme.very_dark_blue_line}`,
           }}
         >
-          MY NFT List 🖍
+          Recent NFT 🖍
         </Title>
       </TitleFont>
 
       <List>
-        <NFTList collectionData={collectionData} />
+        <NFTList collectionData={recentData} />
       </List>
     </Row>
   );
