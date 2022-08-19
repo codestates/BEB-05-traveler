@@ -2,16 +2,17 @@ import { Result, Image, Row, Typography } from 'antd';
 import { WalletOutlined } from '@ant-design/icons';
 import React from 'react';
 import styled from 'styled-components';
-import PostsList from './PostsList';
-import collectionData from '../../asset/dummy/fakeposts';
+import NFTList from './NFTList';
+import collectionData from '../../asset/dummy/fakeNFT';
 import { theme } from '../../style/theme';
 
 const { Title } = Typography;
 
 function Section3() {
+  const recentData = collectionData.filter((e) => e.content_id <= 4);
+
   return (
-    <Row gutter={[8, 8]} justify="center" align="middle" wrap={true}>
-      {/* <Result icon={<WalletOutlined />} title="========== Recent NFTs ==========" /> */}
+    <Row justify="center" align="middle" wrap={true}>
       <TitleFont>
         <Title
           style={{
@@ -21,12 +22,12 @@ function Section3() {
             color: `${theme.very_dark_blue_line}`,
           }}
         >
-          MY NFT List 🖍
+          Recent NFT 🖍
         </Title>
       </TitleFont>
 
       <List>
-        <PostsList collectionData={collectionData} />
+        <NFTList collectionData={recentData} />
       </List>
     </Row>
   );
