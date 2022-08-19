@@ -22,6 +22,7 @@ function Section2() {
           Recent Posts 🗂
         </Title>
       </TitleFont>
+      <br />
       <List>
         <PostsList collectionData={collectionData} />
       </List>
@@ -36,6 +37,7 @@ const TitleFont = styled.div`
   font-weight: 400;
   font-family: 'Aboreto', cursive;
   font-family: 'Noto Sans KR', sans-serif;
+  width: 100%;
 `;
 
 const List = styled.div`
