@@ -2,8 +2,8 @@ import { Result, Row } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 import { theme } from '../../style/theme';
-import {FormOutlined, EditOutlined, DeleteOutlined, PushpinOutlined, EnvironmentOutlined} from '@ant-design/icons';
-import { Button, Space, List,Image, Tag} from 'antd';
+import {EditOutlined, DeleteOutlined, PushpinOutlined, EnvironmentOutlined} from '@ant-design/icons';
+import {Typography, Space, List,Image, Tag} from 'antd';
 import postlist from '../../../src/asset/dummy/fakeposts';
 
 const item_list = (list) => {
@@ -35,10 +35,22 @@ const IconText = ({ icon, text }) => (
 );
 
 function MP_sec1() {
-  return (
+    const { Title } = Typography;
+    return (
     <div>
         <Row gutter={[8, 8]} justify="center" align="middle" wrap={true}>
-            <Result icon={<FormOutlined />} title="========== My Posts ==========" />
+            <TitleFont>
+                <Title
+                    style={{
+                        marginBottom: `${theme.space_5}`,
+                        fontSize: `${theme.fs_14}`,
+                        fontWeight: `${theme.fw_700}`,
+                        color: `${theme.very_dark_blue_line}`,
+                    }}
+                    >
+                    {"My Posts 🗂"}
+                </Title>
+            </TitleFont>
             <ListWrapper>
                 <List
                     itemLayout="vertical"
@@ -63,22 +75,33 @@ function MP_sec1() {
                             avatar={<Image src={item.avatar} width={272} alt="logo" preview={true} />}
                             description = {
                                 <>  
-                                    <div>{"created at: " + item.created_at}</div>
+                                    <div>{item.created_at}</div>
                                     <div><IconText icon={PushpinOutlined} text={item.place_name}/></div>
                                     <div><IconText icon={EnvironmentOutlined} text={item.place_address}/></div>
                                 </>
                             }
                         />
-                        {item.content}
+                        <div style={{fontSize: `${theme.fs_5}`,}}>
+                            {item.content}
+                        </div>
                     </List.Item>
                     )}
                 />
             </ListWrapper>
         </Row>
     </div>
-    
-  );
+    );
 }
+
+const TitleFont = styled.div`
+  @import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Noto+Sans+KR:wght@100&display=swap');
+
+  text-align: center;
+  font-weight: 400;
+  font-family: 'Aboreto', cursive;
+  font-family: 'Noto Sans KR', sans-serif;
+`;
+
 
 const ListWrapper = styled.div`
   display: flex;
@@ -87,8 +110,10 @@ const ListWrapper = styled.div`
   justify-content: flex-start;
   cursor: pointer;
   background-color: rgba( 255, 255, 255, 0.65 );
-  padding-left: 50px;
-  padding-right: 50px;
+  margin-right: 20px;
+  margin-left: 20px;
+  padding-left: 200px;
+  padding-right: 200px;
   padding-top: 20px;
   padding-bottom: 20px;
 `;

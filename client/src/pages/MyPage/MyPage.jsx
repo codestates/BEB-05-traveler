@@ -1,8 +1,8 @@
-import { Result, Row, Form, Input, Button, Select} from 'antd';
+import { Result, Row, Form, Input, Button, Select, Typography, Avatar} from 'antd';
 import React, {useState} from 'react';
 import styled from 'styled-components';
 import { theme } from '../../style/theme';
-import {DollarOutlined} from '@ant-design/icons';
+import {ContactsOutlined} from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
 const address = "0x12B345f752DAD296371A07EA86931096E7f9BdEb";
@@ -10,6 +10,7 @@ const amount = 1000;
 const { Option } = Select;
 
 function MyPage() {
+  const { Title } = Typography;
   const [optionVal, setOptionVal] = useState(null);
 
   const handleChange = (value) => {
@@ -28,11 +29,11 @@ function MyPage() {
     if (value === "0"){
       return(
         <Form
-        name="transfer"
-        labelCol={{span: 8}}
-        wrapperCol={{span: 8}}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
+          name="transfer"
+          labelCol={{span: 8}}
+          wrapperCol={{span: 8}}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
         >
         <Form.Item
           label="ID"
@@ -88,11 +89,11 @@ function MyPage() {
     if (value === "2") {
       return(
         <Form
-        name="transfer"
-        labelCol={{span: 8}}
-        wrapperCol={{span: 8}}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
+          name="transfer"
+          labelCol={{span: 8}}
+          wrapperCol={{span: 8}}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
         >
         <Form.Item
           label="주소"
@@ -119,22 +120,40 @@ function MyPage() {
 
   return (
     <div>
-      <div style={{textAlign: "center"}}><Title>닉네임님의 페이지 &#40;ID: abcd123&#41;</Title></div>
-      <Row gutter={[8, 8]} justify="center" align="middle" wrap={true}>
-        <Result icon={<DollarOutlined />} title="========== My Token ==========" />
+      <Row gutter={[8, 8]} justify="left" align="middle" wrap={true}>
         <Wrapper>
-          <ElWrapper>
-            <h1>{`내 주소: ${address}`}</h1>
-          </ElWrapper>
-          <ElWrapper>
-            <h1>{`토큰 잔액: ${amount}`}</h1>
-          </ElWrapper>
+          <TitleFont>
+              <Title
+              style={{
+                marginTop: `${theme.space_5}`,
+                marginBottom: `${theme.space_3}`,
+                fontSize: `${theme.fs_12}`,
+                fontWeight: `${theme.fw_700}`,
+                color: `${theme.very_dark_blue_line}`,
+              }}
+              >
+                <Avatar size={140} icon={<ContactsOutlined />} />
+                <div style={{paddingTop: '40px'}}>
+                  {"닉네임 (ID: abcd123)"}
+                </div>
+                <div style={{paddingTop: '15px', fontSize: `${theme.fs_9}`}}>
+                  {"게시글 수 : 10 "}&ensp;{"보유 NFT 수 : 10"}
+                </div>
+                <div style={{paddingTop: '15px',fontSize: `${theme.fs_9}`, whiteSpace: 'nowrap'}}>
+                  {`내 주소 : ${address}`}
+                </div>
+                <div style={{paddingTop: '15px', fontSize: `${theme.fs_9}`}}>
+                  {`토큰 잔액: ${amount}`}
+                </div>
+              </Title>
+          </TitleFont>
           <ElWrapper>
           <>
             <Select
               placeholder="타인에게 전송하기"
               style={{
                 width: 200,
+                marginTop: 0,
                 marginBottom: 30
               }}
               onChange={handleChange}
@@ -152,10 +171,13 @@ function MyPage() {
   );
 }
 
-const Title = styled.span`
-  font-size: ${theme.fs_11};
-  font-weight: ${theme.fw_700};
-  color: ${theme.very_dark_blue_line};
+const TitleFont = styled.div`
+  @import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Noto+Sans+KR:wght@100&display=swap');
+
+  text-align: center;
+  font-weight: 400;
+  font-family: 'Aboreto', cursive;
+  font-family: 'Noto Sans KR', sans-serif;
 `;
 
 const Wrapper = styled.div`
@@ -164,9 +186,12 @@ const Wrapper = styled.div`
   cursor: pointer;
   background-color: rgba( 255, 255, 255, 0.65 );
   width: 100%;
-  padding-left: 50px;
-  padding-right: 50px;
-  padding-top: 20px;
+  margin-top: 100px;
+  margin-right: 20px;
+  margin-left: 20px;
+  padding-left: 200px;
+  padding-right: 200px;
+  padding-top: 0px;
   padding-bottom: 20px;
 `;
 
@@ -178,6 +203,7 @@ const ElWrapper = styled.div`
   justify-content: flex-start;
   cursor: pointer;
   width: 100%;
+  margin-bottom: 30px;
 `;
 
 

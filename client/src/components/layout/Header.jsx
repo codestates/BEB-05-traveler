@@ -93,9 +93,9 @@ function HeaderComponent() {
             </SideBar>
             <MoreOutlined style={{ fontSize: '200%' }} />
 
-            <LogoTitle> T r a v e l e r</LogoTitle>
+            <LogoTitle><a href="http://localhost:3000/">T r a v e l e r</a></LogoTitle>
 
-            <Button shape="round" onClick={showLoginModal}>
+            <Button shape="round" onClick={showLoginModal} style={{color: `${theme.very_dark_blue_line}`, fontWeight: 'bold'}}>
               Login
             </Button>
             <Modal
