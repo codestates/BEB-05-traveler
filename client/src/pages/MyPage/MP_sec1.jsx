@@ -12,7 +12,7 @@ const item_list = (list) => {
     for (let i=0; i<list.length; i++) {
         let el = list[i];
         let obj = {
-            href: `http://localhost:3000/posts/${i+1}`,
+            idx: `${i+1}`,
             title: el.title,
             avatar: process.env.PUBLIC_URL + el.image,
             place_name: el.place_name,
@@ -66,12 +66,12 @@ function MP_sec1() {
                     <List.Item
                         key={item.title}
                         actions={[
-                        <IconText icon={EditOutlined} text="수정" />,
+                        <a href={"http://localhost:3000/posts/edit/"+ item.idx}><IconText icon={EditOutlined} text="수정" /></a>,
                         <IconText icon={DeleteOutlined} text="삭제" />,
                         ]}
                     >
                         <List.Item.Meta
-                            title={<a href={item.href} style={{fontSize:'18px', color:'#464646'}}>{item.title}</a>}
+                            title={<a href={"http://localhost:3000/posts/"+item.idx} style={{fontSize:'18px', color:'#464646'}}>{item.title}</a>}
                             avatar={<Image src={item.avatar} width={272} alt="logo" preview={true} />}
                             description = {
                                 <>  
