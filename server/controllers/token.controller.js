@@ -1,4 +1,14 @@
-const model = require('../models');
+const abi20 = require("../abi20");
+const abi721 = require("../abi721");
+const address20 = require("../address20");
+const address721 = require("../address721");
+
+const Web3 = require('web3');
+const web3 = Web3(process.env.RPCURL);
+const contract20 = new web3.eth.Contract(abi20, address20);
+const contract721 = new web3.eth.Contract(abi721, address721);
+
+const nftmodel = require('../models/nft');
 
 module.exports = {
     transfer_20: (req, res) => {
