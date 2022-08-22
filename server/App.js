@@ -9,6 +9,7 @@ dotenv.config();
 
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
+app.use(cors());
 
 const mongoConnect = require('./models');
 const getTransactions = require('./controllers/contract.controller');
