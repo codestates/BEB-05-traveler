@@ -4,7 +4,7 @@ const address20 = require("../address20");
 const address721 = require("../address721");
 
 const Web3 = require('web3');
-const web3 = Web3(process.env.RPCURL);
+const web3 = new Web3(process.env.RPCURL);
 const contract20 = new web3.eth.Contract(abi20, address20);
 const contract721 = new web3.eth.Contract(abi721, address721);
 
