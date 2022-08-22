@@ -25,17 +25,19 @@ function PostsPreview({ collectionData }) {
   };
 
   return (
-    <PreviewImage>
-      <Card
-        key={collectionData.name}
-        hoverable
-        cover={<Image alt="collection-card" src={Img} preview={false} style={{ height: 500 }} />}
-      >
-        <Summary>
-          <Meta title={name} description={desc} />
-        </Summary>
-      </Card>
-    </PreviewImage>
+    <Link to={`/market/${collectionData.content_id}`}>
+      <PreviewImage>
+        <Card
+          key={collectionData.name}
+          hoverable
+          cover={<Image alt="collection-card" src={Img} preview={false} style={{ height: 500 }} />}
+        >
+          <Summary>
+            <Meta title={name} description={desc} />
+          </Summary>
+        </Card>
+      </PreviewImage>
+    </Link>
   );
 }
 
