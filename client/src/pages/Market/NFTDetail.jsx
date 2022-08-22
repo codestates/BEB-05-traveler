@@ -11,6 +11,7 @@ import collectionData from '../../asset/dummy/fakeNFT';
 import { useParams } from 'react-router-dom';
 import Axios from 'axios';
 import styled from 'styled-components';
+import eth from '../../asset/imgs/eth_icon.png';
 
 const { Text } = Typography;
 const { Title } = Typography;
@@ -22,6 +23,7 @@ function NFTDetail() {
   const [Img, setImg] = useState('');
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
+  const [price, setPrice] = useState('1 ETH');
   useEffect(() => {
     getNFTInfo();
   }, [collectionData]);
@@ -74,15 +76,28 @@ function NFTDetail() {
                     </Text>
                   </Row>
                   <Row gutter={[8, 8]} type="flex">
-                    <Text type="primary" style={{ marginBottom: 20, fontSize: 20 }}>
+                    <Text type="primary" style={{ marginBottom: 40, fontSize: 20 }}>
                       <EyeOutlined /> 1.5K views
                       <HeartFilled style={{ color: '#EE4B2B', marginLeft: 20 }} /> 67 favorites
                     </Text>
                   </Row>
                   <Row gutter={[8, 8]} type="flex">
-                    <Text type="primary" style={{ marginTop: 20, marginBottom: 20, fontSize: 50 }}>
-                      Current Price: 1 ETH
-                    </Text>
+                    <Col flex={'1 1 10%'}>
+                      <Image src={eth} alt="main image" preview={false} style={{ width: 70 }} />
+                    </Col>
+                    <Col flex={'1 1 90%'}>
+                      <Text
+                        type="primary"
+                        style={{
+                          marginTop: 30,
+                          marginBottom: 20,
+                          fontSize: 40,
+                          font: '',
+                        }}
+                      >
+                        Current Price: {price}
+                      </Text>
+                    </Col>
                   </Row>
                   <Row gutter={[8, 8]} type="flex">
                     <Button
@@ -90,7 +105,12 @@ function NFTDetail() {
                       size="large"
                       type="primary"
                       onClick={onBuy}
-                      style={{ marginTop: 20, marginBottom: 20 }}
+                      style={{
+                        marginTop: 60,
+                        marginBottom: 20,
+                        fontFamily: 'sans-serif',
+                        fontSize: 20,
+                      }}
                     >
                       NFT 구매
                     </Button>
