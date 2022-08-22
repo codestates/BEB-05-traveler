@@ -16,6 +16,7 @@ export const theme = {
   black: '#000000',
   l_brown: '#B5926D',
   brown: '#A67C5B',
+  sky_blue: '#5B7895',
 
   /* Typography */
   fw_500: 500,

@@ -43,16 +43,16 @@ const postlist = [
     place_address: 'Monnaie de Paris, 11 Quai de Conti, 75006 Paris, 프랑스',
     created_at: '2022-08-04 T 02:45 UTC',
   },
-    // {
-    //   user_id: 'barista0102',
-    //   title: '세상에서 가장 오래된 카페',
-    //   content:
-    //     '네오바로크 양식의 화려하고 현대적인 예술품으로 장식된 유명한 1700년대 카페로 커피, 칵테일, 간식을 판매합니다. 아름다운 베네치에이 있는 카페 플로리안에서 맛과 전통이 깊은 커피로 추억을 만들어 보시는 건 어떠신가요?',
-    //   image: 'image5.png',
-    //   place_name: 'Caffe Florian',
-    //   place_address: 'P.za San Marco, 57, 30124 Venezia VE, 이탈리아',
-    //   created_at: '2022-08-06 T 22:22 UTC',
-    // },
+    {
+      user_id: 'barista0102',
+      title: '세상에서 가장 오래된 카페',
+      content:
+        '네오바로크 양식의 화려하고 현대적인 예술품으로 장식된 유명한 1700년대 카페로 커피, 칵테일, 간식을 판매합니다. 아름다운 베네치에이 있는 카페 플로리안에서 맛과 전통이 깊은 커피로 추억을 만들어 보시는 건 어떠신가요?',
+      image: 'image5.png',
+      place_name: 'Caffe Florian',
+      place_address: 'P.za San Marco, 57, 30124 Venezia VE, 이탈리아',
+      created_at: '2022-08-06 T 22:22 UTC',
+    },
 ];
 
 export default postlist;

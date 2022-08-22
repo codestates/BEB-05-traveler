@@ -176,7 +176,6 @@ const TitleFont = styled.div`
 
   text-align: center;
   font-weight: 400;
-  font-family: 'Aboreto', cursive;
   font-family: 'Noto Sans KR', sans-serif;
 `;
 

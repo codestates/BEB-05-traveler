@@ -23,7 +23,7 @@ function Section2() {
         </Title>
       </TitleFont>
       <List>
-        <PostsList collectionData={collectionData} />
+        <PostsList collectionData={collectionData.slice(0,4)} />
       </List>
     </Row>
   );
