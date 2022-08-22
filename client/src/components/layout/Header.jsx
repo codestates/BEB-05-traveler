@@ -55,7 +55,7 @@ function HeaderComponent() {
   };
 
   return (
-    <Row justify="center" align="middle">
+    <Row justify="center" align="middle" style={{ marginTop: 20, marginBottom: 2 }}>
       <Col span={24}>
         <Header>
           <LogoWrapper>
@@ -71,19 +71,19 @@ function HeaderComponent() {
                   style={{ fontSize: '150%' }}
                 >
                   <Link to="/">
-                    <Title>Home</Title>
+                    <Title style={{ fontSize: 30 }}>Home</Title>
                   </Link>
                   <Link to="/posts">
-                    <Title>Posts</Title>
+                    <Title style={{ fontSize: 30 }}>Posts</Title>
                   </Link>
                   <Link to="/mypage">
-                    <Title>My Page</Title>
+                    <Title style={{ fontSize: 30 }}>My Page</Title>
                   </Link>
                   <Link to="/create">
-                    <Title>Create your NFT</Title>
+                    <Title style={{ fontSize: 30 }}>Create your NFT</Title>
                   </Link>
                   <Link to="/market">
-                    <Title>NFT Market</Title>
+                    <Title style={{ fontSize: 30 }}>NFT Market</Title>
                   </Link>
                 </Drawer>
               </>
@@ -99,8 +99,9 @@ function HeaderComponent() {
 
             <Button
               shape="round"
+              size="large"
               onClick={showLoginModal}
-              style={{ color: `${theme.very_dark_blue_line}`, fontWeight: 'bold' }}
+              style={{ color: `${theme.brown}`, fontWeight: 'bold' }}
             >
               Login
             </Button>
@@ -145,17 +146,18 @@ function HeaderComponent() {
 }
 
 const Header = styled(_Header)`
+  @import url('https://fonts.googleapis.com/css2?family=Aboreto&display=swap');
+  font-family: 'Aboreto', cursive;
   background-color: ${theme.beige};
-  color: ${theme.very_dark_blue_line};
+  color: ${theme.black};
   z-index: 1000;
   a:link,
   a:visited,
   a:active,
   a:hover {
-    text-decoration: none;
-    color: ${theme.very_dark_blue_line};
+    text-decoration: #decfac wavy underline;
+    color: ${theme.brown};
   }
-  border-bottom: 1px solid;
 `;
 
 const LogoWrapper = styled.div`
@@ -166,20 +168,21 @@ const LogoWrapper = styled.div`
   cursor: pointer;
   font-family: 'Aboreto', cursive;
   font-family: 'Noto Sans KR', sans-serif;
+  border: 5px solid transparent;
 `;
 
 const LogoTitle = styled.div`
   @import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Noto+Sans+KR:wght@100&display=swap');
 
   text-align: center;
-  font-weight: 400;
   font-family: 'Aboreto', cursive;
   font-family: 'Noto Sans KR', sans-serif;
-  font-size: ${theme.fs_11};
+  font-size: ${theme.fs_15};
   font-weight: ${theme.fw_700};
   color: ${theme.black};
   letter-spacing: -1px;
   white-space: nowrap;
+
   margin-left: auto;
   margin-right: auto;
 `;

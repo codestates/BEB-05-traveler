@@ -11,7 +11,8 @@ import collectionData from '../../asset/dummy/fakeNFT';
 import { useParams } from 'react-router-dom';
 import Axios from 'axios';
 import styled from 'styled-components';
-import eth from '../../asset/imgs/eth_icon.png';
+import eth from '../../asset/imgs/ethereum-icon-2.jpg';
+import { theme } from '../../style/theme';
 
 const { Text } = Typography;
 const { Title } = Typography;
@@ -66,37 +67,29 @@ function NFTDetail() {
               <Card>
                 <Space direction="vertical" style={{ width: '100%' }}>
                   <Row gutter={[8, 8]} type="flex">
-                    <Title keyboard style={{ marginTop: 20, marginBottom: 20 }}>
+                    <Title keyboard style={{ marginLeft: 20, marginTop: 20, marginBottom: 20 }}>
                       NFT#{num}
                     </Title>
                   </Row>
                   <Row gutter={[8, 8]} type="flex">
-                    <Text type="primary" style={{ marginTop: 20, fontSize: 20 }}>
+                    <Text type="primary" style={{ marginLeft: 20, marginTop: 20, fontSize: 20 }}>
                       owned by {name}
                     </Text>
                   </Row>
                   <Row gutter={[8, 8]} type="flex">
-                    <Text type="primary" style={{ marginBottom: 40, fontSize: 20 }}>
+                    <Text type="primary" style={{ marginLeft: 20, marginBottom: 40, fontSize: 20 }}>
                       <EyeOutlined /> 1.5K views
                       <HeartFilled style={{ color: '#EE4B2B', marginLeft: 20 }} /> 67 favorites
                     </Text>
                   </Row>
                   <Row gutter={[8, 8]} type="flex">
                     <Col flex={'1 1 10%'}>
-                      <Image src={eth} alt="main image" preview={false} style={{ width: 70 }} />
+                      <Image src={eth} alt="main image" preview={false} style={{ width: 90 }} />
                     </Col>
                     <Col flex={'1 1 90%'}>
-                      <Text
-                        type="primary"
-                        style={{
-                          marginTop: 30,
-                          marginBottom: 20,
-                          fontSize: 40,
-                          font: '',
-                        }}
-                      >
-                        Current Price: {price}
-                      </Text>
+                      <Price>
+                        <Text>Current Price: {price}</Text>
+                      </Price>
                     </Col>
                   </Row>
                   <Row gutter={[8, 8]} type="flex">
@@ -106,6 +99,7 @@ function NFTDetail() {
                       type="primary"
                       onClick={onBuy}
                       style={{
+                        marginLeft: 20,
                         marginTop: 60,
                         marginBottom: 20,
                         fontFamily: 'sans-serif',
@@ -128,6 +122,17 @@ function NFTDetail() {
 const Lists = styled.div`
   margin-top: 100px;
   margin-bottom: 100px;
+`;
+
+const Price = styled.span`
+  @import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Noto+Sans+KR:wght@100&display=swap');
+  font-family: 'Aboreto', cursive;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: ${theme.fw_700};
+  color: ${theme.black};
+  letter-spacing: -1px;
+  white-space: nowrap;
+  font-size: ${theme.fs_13};
 `;
 
 export default NFTDetail;

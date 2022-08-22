@@ -16,10 +16,10 @@ function Section2() {
             marginBottom: `${theme.space_7}`,
             fontSize: `${theme.fs_14}`,
             fontWeight: `${theme.fw_700}`,
-            color: `${theme.black}`,
+            color: `${theme.brown}`,
           }}
         >
-          Recent Posts 🗂
+          Recent Posts
         </Title>
       </TitleFont>
       <List>
@@ -30,15 +30,17 @@ function Section2() {
 }
 
 const TitleFont = styled.div`
-  @import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Noto+Sans+KR:wght@100&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Do+Hyeon&family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@100&display=swap');
 
   text-align: center;
   font-weight: 400;
-  font-family: 'Aboreto', cursive;
+  font-family: 'Do Hyeon', sans-serif;
+  font-family: 'Nanum Pen Script', cursive;
   font-family: 'Noto Sans KR', sans-serif;
   width: 100%;
   border-top: 0.1rem dotted black;
   padding-top: 40px;
+  text-decoration: underline overline #decfac;
 `;
 
 const List = styled.div`
