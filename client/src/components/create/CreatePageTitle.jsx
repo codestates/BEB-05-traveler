@@ -1,4 +1,4 @@
-import { Typography } from 'antd';
+import { AutoComplete, Typography } from 'antd';
 import React from 'react';
 import { theme } from '../../style/theme';
 import styled from 'styled-components';
@@ -12,10 +12,11 @@ function CreatePageTitle() {
         <Title
           style={{
             textAlign: 'center',
+            marginTop: `${theme.space_5_6}`,
             marginBottom: `${theme.space_7}`,
-            fontSize: `${theme.fs_14}`,
+            fontSize: `${theme.fs_18}`,
             fontWeight: `${theme.fw_700}`,
-            color: `${theme.very_dark_blue_line}`,
+            color: `${theme.black}`,
           }}
         >
           Create Your NFT
