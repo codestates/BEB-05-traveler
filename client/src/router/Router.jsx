@@ -18,7 +18,7 @@ export default function Router() {
   return (
     <Routes>
       <Route path="/" element={[<Section1 />, <Section2 />, <Section3 />]} />
-      <Route path="/posts" element={[<Posts />, <NotAuthorized />]} />
+      <Route path="/posts" element={[<Posts />]} />
       <Route path="/posts/:content_id" element={<PostDetail />} />
       <Route path="posts/edit/:content_id" element={[<PostEdit/>]} />
       <Route path="posts/create" element={[<PostCreate/>]} />
