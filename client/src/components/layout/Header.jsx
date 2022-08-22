@@ -12,6 +12,7 @@ import {
   LockOutlined,
 } from '@ant-design/icons';
 import Register from '../../pages/home/Register';
+import axios from 'axios';
 
 const { Title } = Typography;
 const { Header: _Header } = Layout;
@@ -35,7 +36,19 @@ function HeaderComponent() {
   };
 
   const handleLoginOk = () => {
-    setIsLoginVisible(false);
+    // setIsLoginVisible(false);
+    // axios.post('http://localhost:4000/user/login').then((res) => {
+    //   // console.log(res.data.message);
+    //   console.log(res.data);
+    // });
+    axios
+      .post('http://localhost:4000/user/login', {
+        user_id: 'test',
+        password: 'test1234',
+      })
+      .then((res) => {
+        console.log(res);
+      });
   };
 
   const handleLoginCancel = () => {
@@ -47,7 +60,11 @@ function HeaderComponent() {
   };
 
   const handleJoinOk = () => {
-    setIsJoinVisible(false);
+    // setIsJoinVisible(false);
+    // axios.get('http://localhost:4000/token/findallnft').then((res) => {
+    //   // console.log(res.data.message);
+    //   console.log(res.data);
+    // });
   };
 
   const handleJoinCancel = () => {
