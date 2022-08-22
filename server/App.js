@@ -7,12 +7,14 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const mongoConnect = require('./models');
-
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
+app.use(cors());
 
+const mongoConnect = require('./models');
+const getTransactions = require('./controllers/contract.controller');
 mongoConnect();
+getTransactions.start();
 
 const routes = require("./routes");
 

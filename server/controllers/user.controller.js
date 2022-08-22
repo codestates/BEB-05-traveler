@@ -53,6 +53,7 @@ module.exports = {
         const userData = {
             user_id: req.body.user_id,
             nickname: req.body.nickname,
+            password: req.body.password,
             address: newAccount,
             token_amount: 0,
             eth_amount: 0,

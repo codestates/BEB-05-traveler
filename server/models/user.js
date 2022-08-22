@@ -62,28 +62,28 @@ userSchema.statics.setPassword = async function(user_id, password) {
 // 20 token 변경(user_id)
 userSchema.statics.setEthAmountById = async function(user_id, amount) {
     const _userInfo = await this.find({user_id: user_id});
-    _userInfo.eth_amount += amount;
+    _userInfo.eth_amount = amount;
     return await this.findOneAndUpdate({user_id: user_id}, _userInfo);
 }
 
 // 20 token 변경(nickname)
 userSchema.statics.setEthAmountById = async function(nickname, amount) {
     const _userInfo = await this.find({nickname: nickname});
-    _userInfo.eth_amount += amount;
+    _userInfo.eth_amount = amount;
     return await this.findOneAndUpdate({nickname: nickname}, _userInfo);
 }
 
 // nft token 변경(user_id)
 userSchema.statics.setTokenAmountById = async function(user_id, amount) {
     const _userInfo = await this.find({user_id: user_id});
-    _userInfo.token_amount += amount;
+    _userInfo.token_amount = amount;
     return await this.findOneAndUpdate({user_id: user_id}, _userInfo);
 }
 
 // nft token 변경(nickname)
 userSchema.statics.setEthAmountById = async function(nickname, amount) {
     const _userInfo = await this.find({nickname: nickname});
-    _userInfo.token_amount += amount;
+    _userInfo.token_amount = amount;
     return await this.findOneAndUpdate({nickname: nickname}, _userInfo);
 }
 
