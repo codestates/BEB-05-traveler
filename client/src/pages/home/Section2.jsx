@@ -16,7 +16,7 @@ function Section2() {
             marginBottom: `${theme.space_7}`,
             fontSize: `${theme.fs_14}`,
             fontWeight: `${theme.fw_700}`,
-            color: `${theme.very_dark_blue_line}`,
+            color: `${theme.black}`,
           }}
         >
           Recent Posts 🗂
@@ -36,13 +36,15 @@ const TitleFont = styled.div`
   font-weight: 400;
   font-family: 'Aboreto', cursive;
   font-family: 'Noto Sans KR', sans-serif;
+  width: 100%;
+  border-top: 0.1rem dotted black;
+  padding-top: 40px;
 `;
 
 const List = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin
 `;
 
 export default Section2;

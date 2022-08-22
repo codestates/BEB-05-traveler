@@ -93,9 +93,15 @@ function HeaderComponent() {
             </SideBar>
             <MoreOutlined style={{ fontSize: '200%' }} />
 
-            <LogoTitle><a href="http://localhost:3000/">T r a v e l e r</a></LogoTitle>
+            <LogoTitle>
+              <a href="http://localhost:3000/">T r a v e l e r</a>
+            </LogoTitle>
 
-            <Button shape="round" onClick={showLoginModal} style={{color: `${theme.very_dark_blue_line}`, fontWeight: 'bold'}}>
+            <Button
+              shape="round"
+              onClick={showLoginModal}
+              style={{ color: `${theme.very_dark_blue_line}`, fontWeight: 'bold' }}
+            >
               Login
             </Button>
             <Modal
@@ -139,7 +145,7 @@ function HeaderComponent() {
 }
 
 const Header = styled(_Header)`
-  background-color: ${theme.very_light_blue_main};
+  background-color: ${theme.beige};
   color: ${theme.very_dark_blue_line};
   z-index: 1000;
   a:link,
@@ -164,13 +170,14 @@ const LogoWrapper = styled.div`
 
 const LogoTitle = styled.div`
   @import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Noto+Sans+KR:wght@100&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Pangolin&display=swap');
 
   text-align: center;
   font-weight: 400;
   font-family: 'Aboreto', cursive;
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: ${theme.fs_11};
   font-weight: ${theme.fw_700};
+  color: ${theme.black};
   letter-spacing: -1px;
   white-space: nowrap;
   margin-left: auto;

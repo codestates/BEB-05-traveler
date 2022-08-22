@@ -18,7 +18,7 @@ function CreatePageTitle() {
             color: `${theme.very_dark_blue_line}`,
           }}
         >
-          Create an NFT
+          Create Your NFT
         </Title>
       </>
     </MainTitle>
