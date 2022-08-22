@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Axios from 'axios';
 
-function PostsPreview({ collectionData }) {
+function MarketNFTPreivew({ collectionData }) {
   const [Img, setImg] = useState('');
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
@@ -25,17 +25,19 @@ function PostsPreview({ collectionData }) {
   };
 
   return (
-    <PreviewImage>
-      <Card
-        key={collectionData.name}
-        hoverable
-        cover={<Image alt="collection-card" src={Img} preview={false} style={{ height: 500 }} />}
-      >
-        <Summary>
-          <Meta title={name} description={desc} />
-        </Summary>
-      </Card>
-    </PreviewImage>
+    <Link to={`/market/${collectionData.content_id}`}>
+      <PreviewImage>
+        <Card
+          key={collectionData.name}
+          hoverable
+          cover={<Image alt="collection-card" src={Img} preview={false} style={{ height: 500 }} />}
+        >
+          <Summary>
+            <Meta title={name} description={desc} />
+          </Summary>
+        </Card>
+      </PreviewImage>
+    </Link>
   );
 }
 
@@ -49,4 +51,4 @@ const Summary = styled.span`
   font-family: 'Noto Sans KR', sans-serif;
 `;
 
-export default PostsPreview;
+export default MarketNFTPreivew;

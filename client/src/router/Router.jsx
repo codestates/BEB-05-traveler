@@ -11,8 +11,12 @@ import Posts from '../pages/Posts/Posts';
 import Market from '../pages/Market/Market';
 import Create from '../pages/Create/Create';
 import PostDetail from '../pages/Posts/PostDetail';
+<<<<<<< Updated upstream
 import PostEdit from '../pages/Posts/PostEdit';
 import PostCreate from '../pages/Posts/PostCreate';
+=======
+import NFTDetail from '../pages/Market/NFTDetail';
+>>>>>>> Stashed changes
 
 export default function Router() {
   return (
@@ -24,7 +28,8 @@ export default function Router() {
       <Route path="posts/create" element={[<PostCreate/>]} />
       <Route path="/mypage" element={[<MyPage />, <MP_sec1 />, <MP_sec2 />]} />
       <Route path="/create" element={[<Create />]} />
-      <Route path="/market" element={[<Market />, <NotAuthorized />]} />
+      <Route path="/market" element={[<Market />]} />
+      <Route path="/market/:content_id" element={<NFTDetail />} />
     </Routes>
   );
 }
