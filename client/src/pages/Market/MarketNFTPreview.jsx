@@ -1,4 +1,4 @@
-import { Card, Image } from 'antd';
+import { Avatar, Card, Image } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -9,6 +9,7 @@ function MarketNFTPreivew({ collectionData }) {
   const [Img, setImg] = useState('');
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
+  const [avatar, setAvatar] = useState('');
   useEffect(() => {
     getNFTInfo();
   }, [collectionData]);
@@ -22,6 +23,7 @@ function MarketNFTPreivew({ collectionData }) {
     setImg(`https://ipfs.io/ipfs/${response.data.image.split('//')[1]}`);
     setName(response.data.name);
     setDesc(response.data.description);
+    setAvatar(`https://joeschmoe.io/api/v1/random`);
   };
 
   return (
@@ -33,6 +35,7 @@ function MarketNFTPreivew({ collectionData }) {
           cover={<Image alt="collection-card" src={Img} preview={false} style={{ height: 500 }} />}
         >
           <Summary>
+            <Avatar src={avatar} />
             <Meta title={name} description={desc} />
           </Summary>
         </Card>

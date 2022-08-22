@@ -21,8 +21,8 @@ function MarketNFTList({ collectionData }) {
 }
 
 const Lists = styled.div`
-  padding-right: 20px;
-  padding-left: 20px;
+  padding-right: 40px;
+  padding-left: 40px;
 `;
 
 export default MarketNFTList;
