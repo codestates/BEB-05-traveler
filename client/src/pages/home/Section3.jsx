@@ -19,10 +19,10 @@ function Section3() {
             marginBottom: `${theme.space_7}`,
             fontSize: `${theme.fs_14}`,
             fontWeight: `${theme.fw_700}`,
-            color: `${theme.very_dark_blue_line}`,
+            color: `${theme.brown}`,
           }}
         >
-          Recent NFT 🖍
+          Recent NFT
         </Title>
       </TitleFont>
 
@@ -40,6 +40,10 @@ const TitleFont = styled.div`
   font-weight: 400;
   font-family: 'Aboreto', cursive;
   font-family: 'Noto Sans KR', sans-serif;
+  width: 100%;
+  border-top: 0.1rem dotted black;
+  padding-top: 40px;
+  text-decoration: underline overline #decfac;
 `;
 
 const List = styled.div`

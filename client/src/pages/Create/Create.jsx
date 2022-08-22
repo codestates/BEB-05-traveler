@@ -21,10 +21,4 @@ function Create() {
   );
 }
 
-const Title = styled.span`
-  font-size: ${theme.fs_11};
-  font-weight: ${theme.fw_700};
-  color: ${theme.very_dark_blue_line};
-`;
-
 export default Create;

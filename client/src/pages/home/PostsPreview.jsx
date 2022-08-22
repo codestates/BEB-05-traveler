@@ -22,7 +22,7 @@ function PostsPreview({ collectionData }) {
               alt="collection-card"
               src={image_array[collectionData.content_id - 1]}
               preview={false}
-              style={{ objectFit: 'cover', height: 350 }}
+              style={{ height: 350 }}
             />
           }
         >

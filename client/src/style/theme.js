@@ -12,7 +12,10 @@ export const theme = {
   very_dark_blue_sub: 'hsl(216, 50%, 16%)',
   very_dark_blue_line: 'hsl(215, 32%, 27%)',
   beige: '#F3F1ED',
-  d_beige: '#E6E4E1',
+  d_beige: '#F4E7D3',
+  black: '#000000',
+  l_brown: '#B5926D',
+  brown: '#A67C5B',
   sky_blue: '#5B7895',
 
   /* Typography */
