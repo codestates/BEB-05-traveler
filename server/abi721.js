@@ -431,4 +431,4 @@ const abi721 = [
 	}
 ]
 
-export default abi721;
+module.exports = abi721;

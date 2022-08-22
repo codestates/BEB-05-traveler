@@ -352,4 +352,4 @@ const abi20 = [
 	}
 ];
 
-export default abi20;
+module.exports = abi20;
