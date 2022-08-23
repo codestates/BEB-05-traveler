@@ -9,6 +9,9 @@ import { theme } from './style/theme';
 const { Content } = Layout;
 
 function App() {
+  const [userInfo, setUserInfo] = useState('');
+  const [token, setToken] = useState('');
+
   return (
     <div className="App">
       <Layout
@@ -20,7 +23,7 @@ function App() {
           gap: `${theme.space_2}`,
         }}
       >
-        <Header />
+        <Header userInfo={userInfo} setUserInfo={setUserInfo} token={token} setToken={setToken} />
         <Content
           style={{
             display: 'flex',

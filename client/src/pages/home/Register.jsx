@@ -44,7 +44,7 @@ const useInput = (initialValue) => {
   return { value, onChange };
 };
 
-const Register = ({ handleJoinOk }) => {
+const Register = ({ handleJoinOk, setJoinID, setJoinPW, setJoinName }) => {
   const use_id = useInput('');
   const pw = useInput('');
   const nickname = useInput('');
@@ -123,6 +123,9 @@ const Register = ({ handleJoinOk }) => {
           placeholder="영문 + 숫자 조합 (4~12자)"
           value={use_id.value}
           onChange={use_id.onChange}
+          onChange={(e) => {
+            setJoinID(e.target.value);
+          }}
         />
       </Form.Item>
 
@@ -131,6 +134,9 @@ const Register = ({ handleJoinOk }) => {
         label="비밀번호"
         tooltip="영문 + 숫자 + 특수문자(?/~!@#$%^) 조합 (8~15자)"
         rules={[{ validator: validatePW }]}
+        onChange={(e) => {
+          setJoinPW(e.target.value);
+        }}
         hasFeedback
       >
         <Input.Password
@@ -170,6 +176,9 @@ const Register = ({ handleJoinOk }) => {
             validator: validateNickname,
           },
         ]}
+        onChange={(e) => {
+          setJoinName(e.target.value);
+        }}
       >
         <Input
           placeholder="한글1~10자, 영문 및 숫자 2~20자"
