@@ -20,6 +20,9 @@ function HeaderComponent() {
   const [visible, setVisible] = useState(false);
   const [isLoginVisible, setIsLoginVisible] = useState(false);
   const [isJoinVisible, setIsJoinVisible] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+  const [id, setId] = useState('');
+  const [pw, setPw] = useState('');
 
   const placement = 'left';
 
@@ -36,18 +39,17 @@ function HeaderComponent() {
   };
 
   const handleLoginOk = () => {
-    // setIsLoginVisible(false);
-    // axios.post('http://localhost:4000/user/login').then((res) => {
-    //   // console.log(res.data.message);
-    //   console.log(res.data);
-    // });
     axios
       .post('http://localhost:4000/user/login', {
-        user_id: 'test',
-        password: 'test1234',
+        user_id: id,
+        password: pw,
       })
       .then((res) => {
-        console.log(res);
+        if (res.status === 200) {
+          console.log('hihi');
+          setIsLogin(true);
+          setIsLoginVisible(false);
+        }
       });
   };
 
@@ -60,11 +62,20 @@ function HeaderComponent() {
   };
 
   const handleJoinOk = () => {
-    // setIsJoinVisible(false);
-    // axios.get('http://localhost:4000/token/findallnft').then((res) => {
-    //   // console.log(res.data.message);
-    //   console.log(res.data);
-    // });
+    axios
+      .post('http://localhost:4000/user/join', {
+        user_id: 'hihiyoyo3',
+        nickname: 'hihiyoyo22',
+        password: 'hihiyoyo1234',
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          console.log(res);
+          console.log('hihi');
+          setIsLogin(true);
+          setIsLoginVisible(false);
+        }
+      });
   };
 
   const handleJoinCancel = () => {
@@ -114,14 +125,21 @@ function HeaderComponent() {
               <a href="http://localhost:3000/">T r a v e l e r</a>
             </LogoTitle>
 
-            <Button
-              shape="round"
-              size="large"
-              onClick={showLoginModal}
-              style={{ color: `${theme.brown}`, fontWeight: 'bold' }}
-            >
-              Login
-            </Button>
+            {isLogin ? (
+              <Link to="/mypage">
+                <Button>My page</Button>
+              </Link>
+            ) : (
+              <Button
+                shape="round"
+                size="large"
+                onClick={showLoginModal}
+                style={{ color: `${theme.brown}`, fontWeight: 'bold' }}
+              >
+                Login
+              </Button>
+            )}
+
             <Modal
               visible={isLoginVisible}
               title="ID 로그인"
@@ -138,8 +156,18 @@ function HeaderComponent() {
               ]}
             >
               <Space direction="vertical">
-                <Input placeholder="아이디" type="text" prefix={<UserOutlined />} />
+                <Input
+                  onChange={(e) => {
+                    setId(e.target.value);
+                  }}
+                  placeholder="아이디"
+                  type="text"
+                  prefix={<UserOutlined />}
+                />
                 <Input.Password
+                  onChange={(e) => {
+                    setPw(e.target.value);
+                  }}
                   placeholder="비밀번호"
                   type="password"
                   prefix={<LockOutlined />}
