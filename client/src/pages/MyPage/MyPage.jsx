@@ -3,13 +3,17 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { theme } from '../../style/theme';
 import { ContactsOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
-const address = '0x12B345f752DAD296371A07EA86931096E7f9BdEb';
+// const address = '0x12B345f752DAD296371A07EA86931096E7f9BdEb';
 const amount = 1000;
 const { Option } = Select;
 
 function MyPage() {
+  const location = useLocation();
+  const user = location;
+  console.log(user.state.userInfo, 'jojo');
+
   const { Title } = Typography;
   const [optionVal, setOptionVal] = useState(null);
 
@@ -129,15 +133,20 @@ function MyPage() {
               }}
             >
               <Avatar size={140} icon={<ContactsOutlined />} />
-              <div style={{ paddingTop: '40px' }}>{'닉네임 (ID: abcd123)'}</div>
+              <div style={{ paddingTop: '40px' }}>
+                {user.state.userInfo.nickname}({user.state.userInfo.user_id})
+              </div>
               <div style={{ paddingTop: '15px', fontSize: `${theme.fs_9}` }}>
                 {'게시글 수 : 10 '}&ensp;{'보유 NFT 수 : 10'}
               </div>
               <div style={{ paddingTop: '15px', fontSize: `${theme.fs_9}`, whiteSpace: 'nowrap' }}>
-                {`내 주소 : ${address}`}
+                {`내 주소 : ${user.state.userInfo.address}`}
               </div>
               <div style={{ paddingTop: '15px', fontSize: `${theme.fs_9}` }}>
-                {`토큰 잔액: ${amount}`}
+                {`토큰 잔액: ${user.state.userInfo.token_amount}`}
+              </div>
+              <div style={{ paddingTop: '15px', fontSize: `${theme.fs_9}` }}>
+                {`이더 잔액: ${user.state.userInfo.eth_amount}`}
               </div>
             </Title>
           </TitleFont>

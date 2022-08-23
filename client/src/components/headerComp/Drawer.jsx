@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-function DrawerComp({ visible, setVisible }) {
+function DrawerComp({ visible, setVisible, token, userInfo }) {
   const { Title } = Typography;
 
   const placement = 'left';
@@ -30,7 +30,16 @@ function DrawerComp({ visible, setVisible }) {
           <Link to="/posts">
             <Title style={{ fontSize: 30 }}>Posts</Title>
           </Link>
-          <Link to="/mypage">
+          {/* <Link
+            to={{
+              pathname: '/mypage',
+              state: {
+                token: token,
+                userInfo: userInfo,
+              },
+            }}
+          > */}
+          <Link to="/mypage" state={{ token: token, userInfo: userInfo }}>
             <Title style={{ fontSize: 30 }}>My Page</Title>
           </Link>
           <Link to="/create">

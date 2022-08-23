@@ -26,7 +26,22 @@ function LoginModal({
       setToken(res.data.data.accessToken);
       setIsLoginVisible(false);
     }
-    console.log('hihi');
+
+    const userinfo = await axios.get('http://localhost:4000/user/info', {
+      headers: { authorization: res.data.data.accessToken },
+    });
+    if (userinfo.status === 200) {
+      setUserInfo({
+        user_id: userinfo.data.data.user_id,
+        nickname: userinfo.data.data.nickname,
+        address: userinfo.data.data.address,
+        token_amount: userinfo.data.data.token_amount,
+        eth_amount: userinfo.data.data.eth_amount,
+        waiting_time: userinfo.data.data.waiting_time,
+        created_at: userinfo.data.data.created_at,
+      });
+    }
+
     // const userinfo = await axios.get('http://localhost:4000/user/info', {
     //   headers: { authorization: `Bearer ${token}` },
     // });
