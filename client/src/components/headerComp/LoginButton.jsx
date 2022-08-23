@@ -3,7 +3,7 @@ import { Button } from 'antd';
 import { theme } from '../../style/theme';
 import { Link } from 'react-router-dom';
 
-function LoginButton({ token, setIsLoginVisible, isLoginVisible }) {
+function LoginButton({ token, setIsLoginVisible, userInfo }) {
   const showLoginModal = () => {
     setIsLoginVisible(true);
   };
@@ -11,7 +11,7 @@ function LoginButton({ token, setIsLoginVisible, isLoginVisible }) {
   return (
     <>
       {token ? (
-        <Link to="/mypage">
+        <Link to="/mypage" state={{ token: token, userInfo: userInfo }}>
           <Button>My page</Button>
         </Link>
       ) : (

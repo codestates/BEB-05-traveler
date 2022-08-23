@@ -5,6 +5,7 @@ import { Layout } from 'antd';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import { theme } from './style/theme';
+import { useCookies } from 'react-cookie';
 
 const { Content } = Layout;
 
@@ -19,6 +20,11 @@ function App() {
     created_at: '',
   });
   const [token, setToken] = useState('');
+  const [cookies, setCookie, removeCookie] = useCookies(['rememberUser']);
+
+  useEffect(() => {
+    console.log(cookies);
+  }, [cookies]);
 
   return (
     <div className="App">
@@ -31,7 +37,13 @@ function App() {
           gap: `${theme.space_2}`,
         }}
       >
-        <Header userInfo={userInfo} setUserInfo={setUserInfo} token={token} setToken={setToken} />
+        <Header
+          userInfo={userInfo}
+          setUserInfo={setUserInfo}
+          token={token}
+          setToken={setToken}
+          setCookie={setCookie}
+        />
         <Content
           style={{
             display: 'flex',

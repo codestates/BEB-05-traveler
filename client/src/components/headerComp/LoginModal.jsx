@@ -12,6 +12,7 @@ function LoginModal({
   setIsLoginVisible,
   userInfo,
   setUserInfo,
+  setCookie,
 }) {
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
@@ -25,6 +26,7 @@ function LoginModal({
       console.log(res.data.data.accessToken, '저장전');
       setToken(res.data.data.accessToken);
       setIsLoginVisible(false);
+      setCookie('rememberUser', res.data.data.accessToken, { path: '/', maxAge: 2000 });
     }
 
     const userinfo = await axios.get('http://localhost:4000/user/info', {
