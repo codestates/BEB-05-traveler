@@ -5,8 +5,7 @@ import { theme } from '../../style/theme.js';
 
 const { Text, Title } = Typography;
 
-function ImageUpload({defaultImg}) {
-    const [imageSrc, setImageSrc] = useState(defaultImg);
+function ImageUpload({file, setFile, setImgType}) {
     const [enable,setEnable] = useState(true);
 
     const encodeFileToBase64 = (fileBlob) => {
@@ -16,18 +15,20 @@ function ImageUpload({defaultImg}) {
         return new Promise((resolve) => {
             reader.onload = () => {
                 setEnable(false);
-                setImageSrc(reader.result);
+                setFile(reader.result);
                 resolve();
             };
         });
     };
 
     const saveFileImage =  (e) => {
+        const contentType = "image/" + e.target.files[0]["name"].split(".").pop();
+        setImgType(contentType);
         encodeFileToBase64(e.target.files[0]);
     };
 
     const deleteFileImage = () => {
-        setImageSrc(process.env.PUBLIC_URL + "/noImage.png");
+        setFile(process.env.PUBLIC_URL + "/noImage.png");
     };
 
     const selectFile = useRef("");
@@ -53,7 +54,7 @@ function ImageUpload({defaultImg}) {
             삭제
         </Button>
         <Card size="large">
-            <Image src={imageSrc} style={{ width: '100%', display: 'flex'}} />
+            <Image src={file} style={{ width: '100%', display: 'flex'}} />
         </Card>
         </main>
     );
