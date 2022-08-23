@@ -25,6 +25,9 @@ module.exports = {
         if(req.body.recipient_nickname){
             recipientInfo = await usermodel.getUserInfoByNickname(req.body.recipient_nickname)
         }
+        if(req.body.recipient_address) {
+            recipientInfo = await usermodel.getUserInfoByAddress(req.body.recipient_address)
+        }
 
         const recipientAddress = recipientInfo.address;
 
@@ -49,12 +52,41 @@ module.exports = {
         return res.status(200).send({data: {updateSenderInfo, updateRecipientInfo}, message: "Transaction success"}) 
     },
 
-    transfer_721: (req, res) => {
-        // transferfrom 함수로 보내주면 될거같은데,,
-        // 요청으로 보유자 주소, 받는 사람 주소, tokenuri 받아서
-        // transferfrom 함수로 보내고
+    transfer_721: async (req, res) => {
+        const sender = '토큰을 복호화해서 address'
+        let recipientInfo;
+        if(req.body.recipient_id){
+            recipientInfo = await usermodel.getUserInfoById(req.body.recipient_id);
+        }
+        if(req.body.recipient_nickname){
+            recipientInfo = await usermodel.getUserInfoByNickname(req.body.recipient_nickname)
+        }
+        if(req.body.recipient_address) {
+            recipientInfo = await usermodel.getUserInfoByAddress(req.body.recipient_address)
+        }
 
-        console.log("721토큰을 전송합니다.")
+
+        const recipientAddress = recipientInfo.address;
+
+        let senderBalance;
+        let recipientBalance;
+        const data = contract721.methods.transferFrom(sender, recipientAddress, token_id).encodeABI();
+        const rawTransaction = {"to": address721, "gas": 100000, "data": data};
+        web3.eth.account.signTransaction(rawTransaction, process.env.ADMIN_WALLET_PRIVATE_KEY)
+            .then( signedTX => web3.eth.sendSignedTransaction(signedTX.rawTransaction))
+            .then( req => {
+                senderBalance = contract721.methods.balanceOf(sender).call();
+                recipientBalance = contract721.methods.balanceOf(recipientAddress).call();
+                return true;
+            })
+            .catch(err =>{
+                console.error(err, "Transaction failure")
+            })
+        
+        const updateSenderInfo = await usermodel.setTokenAmountById('토큰을 복호화해서 user_id', senderBalance);
+        const updateRecipientInfo = await usermodel.setTokenAmountById(recipientInfo.user_id, recipientBalance);
+
+        return res.status(200).send({data: {updateSenderInfo, updateRecipientInfo}, message: "Transaction success"}) 
 
     },
 
@@ -65,16 +97,33 @@ module.exports = {
         console.log("NFT를 발행합니다.")
     },
 
-    buynft: (req, res) => {
+    buynft: async (req, res) => {
         // 판매등록만...트랜잭션 x
-        const {token_id, buyer_id, buyer_address} = req.body;
-        const buyResult = nftmodel.buynft(token_id, buyer_id, buyer_address)
+        const {token_id, buyer_id, payment} = req.body;
+        
+        const data = contract721.methods.buyNFT(sender, recipientAddress, token_id, payment).encodeABI();
+        const rawTransaction = {"to": address721, "gas": 100000, "data": data};
+
+        web3.eth.account.signTransaction(rawTransaction, process.env.ADMIN_WALLET_PRIVATE_KEY)
+            .then( signedTX => web3.eth.sendSignedTransaction(signedTX.rawTransaction))
+            .then( req => {
+                senderBalance = contract721.methods.balanceOf(sender).call();
+                recipientBalance = contract721.methods.balanceOf(recipientAddress).call();
+                return true;
+            })
+            .catch(err =>{
+                console.error(err, "Transaction failure")
+            })
+
+        const buyResult = nftmodel.buynft(token_id, buyer_id, recipientAddress)
         return res.status(200).send({data : buyResult, message : "NFT를 구매합니다"});
     },
 
-    sellnft: (req, res) => {
-        const {token_id, price} = req.body;
+    sellnft: async (req, res) => {
+        const {user_id, token_id, price} = req.body;
+        const haveNFT = '판매하고자하는 nft를 소유했는지 확인절차'
         const sellResult = nftmodel.sellnft(token_id, price);
+        
         return res.status(200).send({data : sellResult, message : "NFT를 판매합니다."});
     },
 
