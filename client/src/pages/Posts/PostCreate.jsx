@@ -3,56 +3,92 @@ import {PushpinOutlined, EnvironmentOutlined} from '@ant-design/icons';
 import React, { useState, useRef, useEffect } from 'react';
 import ImageUpload from './ImageUpload.jsx';
 import { theme } from '../../style/theme.js';
+import axios from 'axios';
 
 const { Text } = Typography;
 const { TextArea } = Input;
 
 function PostCreate() {
-  const ref = useRef(null);
-  const ref1 = useRef(null);
-  const ref2 = useRef(null);
-  const ref3 = useRef(null);
+    const ref = useRef(null);
+    const ref1 = useRef(null);
+    const ref2 = useRef(null);
+    const ref3 = useRef(null);
 
-  const [title, setTitle] = useState("제목");
-  const [editTitle,setEditTitle] = useState(false);
-  const [place, setPlace] = useState("장소 이름");
-  const [editPlace, setEditPlace] = useState(false);
-  const [addr, setAddr] = useState("장소 주소");
-  const [editAddr, setEditAddr] = useState(false);
-  const [content, setContent] = useState("내용");
-  const [editContent, setEditContent] = useState(false);
+    const [title, setTitle] = useState("제목");
+    const [editTitle,setEditTitle] = useState(false);
+    const [place, setPlace] = useState("장소 이름");
+    const [editPlace, setEditPlace] = useState(false);
+    const [addr, setAddr] = useState("장소 주소");
+    const [editAddr, setEditAddr] = useState(false);
+    const [content, setContent] = useState("내용");
+    const [editContent, setEditContent] = useState(false);
 
-  const editTitleOn = () => {setEditTitle(true);};
-  const editPlaceOn = () => {setEditPlace(true);};
-  const editAddrOn = () => {setEditAddr(true);};
-  const editContentOn = () => {setEditContent(true)};
+    const editTitleOn = () => {setEditTitle(true);};
+    const editPlaceOn = () => {setEditPlace(true);};
+    const editAddrOn = () => {setEditAddr(true);};
+    const editContentOn = () => {setEditContent(true)};
 
-  const handleChange = (e) => {setTitle(e.target.value);};
-  const handleChange2 = (e) => {setPlace(e.target.value);};
-  const handleChange3 = (e) => {setAddr(e.target.value);};
-  const handleChange4 = (e) => {setContent(e.target.value);};
+    const handleChange = (e) => {setTitle(e.target.value);};
+    const handleChange2 = (e) => {setPlace(e.target.value);};
+    const handleChange3 = (e) => {setAddr(e.target.value);};
+    const handleChange4 = (e) => {setContent(e.target.value);};
 
-  const handleKeyDown = (e) => {if (e.key === "Enter") {setEditTitle(!editTitle)}};
-  const handleKeyDown2 = (e) => {if (e.key === "Enter") {setEditPlace(!editPlace)}};
-  const handleKeyDown3 = (e) => {if (e.key === "Enter") {setEditAddr(!editAddr)}};
-  const handleKeyDown4 = (e) => {if (e.key === "Enter") {setEditContent(!editContent)}};
+    const handleKeyDown = (e) => {if (e.key === "Enter") {setEditTitle(!editTitle)}};
+    const handleKeyDown2 = (e) => {if (e.key === "Enter") {setEditPlace(!editPlace)}};
+    const handleKeyDown3 = (e) => {if (e.key === "Enter") {setEditAddr(!editAddr)}};
+    const handleKeyDown4 = (e) => {if (e.key === "Enter") {setEditContent(!editContent)}};
 
-  const handleClickOutside = (e) => {
-    if (editTitle == true && !ref.current.contains(e.target)) {setEditTitle(false)}
-    if (editPlace == true && !ref1.current.contains(e.target)) {setEditPlace(false)}
-    if (editAddr == true && !ref2.current.contains(e.target)) {setEditAddr(false)}
-    if (editContent == true && !ref3.current.contains(e.target)) {setEditContent(false)}
-  };
+    const handleClickOutside = (e) => {
+        if (editTitle == true && !ref.current.contains(e.target)) {setEditTitle(false)}
+        if (editPlace == true && !ref1.current.contains(e.target)) {setEditPlace(false)}
+        if (editAddr == true && !ref2.current.contains(e.target)) {setEditAddr(false)}
+        if (editContent == true && !ref3.current.contains(e.target)) {setEditContent(false)}
+    };
 
-  useEffect(() => {
-    window.addEventListener("click", handleClickOutside, true);
-  });
+    useEffect(() => {
+        window.addEventListener("click", handleClickOutside, true);
+    });
+
+    //DB post 요청
+    const [file, setFile] = useState(process.env.PUBLIC_URL + "/noImage.png");
+    const [imgType, setImgType] = useState('image/png'); //initial value
+    const [buffer, setBuffer] = useState();
+
+    const onSubmit = async (e) => {
+        e.preventDefault();
+        axios
+            .post("http://localhost:4000/board/newpost",{
+                user_id : "barista0102",
+                title : title,
+                content : content,
+                image : {
+                    data: file,
+                    contentType: imgType
+                },
+                place_name: place,
+                place_address: addr,
+            })
+            .then((res) => {
+                console.log(res);
+            });
+    };
+  
+  const getIMG = async () => {
+      axios
+          .get("http://localhost:4000/board/posts", {})
+          .then((res) => {
+              const imgOject = res.data["data"][4]["image"]["data"];
+              const enc = new TextDecoder("utf-8");
+              const arr = new Uint8Array(imgOject["data"])
+              setBuffer(enc.decode(arr));
+      });
+  }
 
   return (
     <Row justify="center" align="middle">
       <Col xs={24} xl={16}>
         <Row gutter={[8, 8]} type="flex">
-            <ImageUpload defaultImg={process.env.PUBLIC_URL + "/noImage.png"} />
+            <ImageUpload file={file} setFile={setFile} setImgType={setImgType}/>
             <div style={{paddingLeft: '10px', paddingRight:'10px'}}>
                 <div ref={ref} style={{paddingBottom:'7px'}}>
                     {editTitle ? (
@@ -84,7 +120,12 @@ function PostCreate() {
                 </div>
             </div>
             <div style={{width: '100%',paddingLeft: '10px', paddingTop:'30px', textAlign:'center'}}>
-                <Button>작성 완료</Button>
+                <Button onClick={onSubmit}>작성 완료</Button>
+            </div>
+            {/* 이미지 버퍼로부터 가져오는 테스트 */}
+            <div>
+                <Button onClick={getIMG}>DB로부터 이미지 불러오기 테스트</Button>
+                <img src={buffer} />
             </div>
         </Row>
       </Col>
