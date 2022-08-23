@@ -10,33 +10,49 @@ function LoginModal({
   token,
   setToken,
   setIsLoginVisible,
+  userInfo,
+  setUserInfo,
 }) {
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
 
-  const handleLoginOk = () => {
-    axios
-      .post('http://localhost:4000/user/login', {
-        user_id: id,
-        password: pw,
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          console.log(res.data.data.accessToken, '저장전');
-          setToken(res.data.data.accessToken);
-          setIsLoginVisible(false);
-        }
-      })
-      .then((res) => {
-        axios
-          .get('http://localhost:4000/user/info', {
-            headers: { authorization: `Bearer ${token}` },
-          })
-          .then((res) => {
-            console.log(res.data);
-            this.setState({ ...res.data.data.userInfo });
-          });
-      });
+  const handleLoginOk = async () => {
+    const res = await axios.post('http://localhost:4000/user/login', {
+      user_id: id,
+      password: pw,
+    });
+    if (res.status === 200) {
+      console.log(res.data.data.accessToken, '저장전');
+      setToken(res.data.data.accessToken);
+      setIsLoginVisible(false);
+    }
+    console.log('hihi');
+    // const userinfo = await axios.get('http://localhost:4000/user/info', {
+    //   headers: { authorization: `Bearer ${token}` },
+    // });
+
+    // axios
+    //   .post('http://localhost:4000/user/login', {
+    //     user_id: id,
+    //     password: pw,
+    //   })
+    //   .then((res) => {
+    //     if (res.status === 200) {
+    //       console.log(res.data.data.accessToken, '저장전');
+    //       setToken(res.data.data.accessToken);
+    //       setIsLoginVisible(false);
+    //     }
+    //     return res;
+    //   })
+    //   .then((res) =>
+    //     axios.get('http://localhost:4000/user/info', {
+    //       headers: { authorization: `Bearer ${token}` },
+    //     })
+    //   )
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     this.setState({ ...res.data.data.userInfo });
+    //   });
   };
   return (
     <>

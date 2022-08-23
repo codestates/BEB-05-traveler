@@ -67,6 +67,8 @@ function HeaderComponent({ userInfo, setUserInfo, token, setToken }) {
               token={token}
               setToken={setToken}
               setIsLoginVisible={setIsLoginVisible}
+              userInfo={userInfo}
+              setUserInfo={setUserInfo}
             />
 
             <Modal
