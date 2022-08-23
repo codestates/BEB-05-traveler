@@ -1,6 +1,6 @@
 //https://e2e2e2.tistory.com/21
 import React, { useState, useCallback } from 'react';
-import {Button, Form, Input} from 'antd';
+import { Button, Form, Input } from 'antd';
 
 const formItemLayout = {
   labelCol: {
@@ -35,14 +35,16 @@ const tailFormItemLayout = {
 const useInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
   const onChange = (event) => {
-    const {target: { value },} = event;
+    const {
+      target: { value },
+    } = event;
     setValue(value);
   };
 
   return { value, onChange };
 };
 
-const Register = ({handleJoinOk}) => {
+const Register = ({ handleJoinOk }) => {
   const use_id = useInput('');
   const pw = useInput('');
   const nickname = useInput('');
@@ -95,14 +97,16 @@ const Register = ({handleJoinOk}) => {
     let nicknameLength = 0;
     for (let i = 0; i < value.length; i += 1) {
       const char = value.charAt(i);
-      if ((char).charCodeAt(0).toString(16).length > 3) {
+      if (char.charCodeAt(0).toString(16).length > 3) {
         nicknameLength += 2;
       } else {
         nicknameLength += 1;
       }
     }
     if (nicknameLength < 2 || nicknameLength >= 20) {
-      return Promise.reject(new Error('닉네임 한글1~10자, 영문 및 숫자 2~20자까지 입력가능합니다.'));
+      return Promise.reject(
+        new Error('닉네임 한글1~10자, 영문 및 숫자 2~20자까지 입력가능합니다.')
+      );
     }
 
     const regExp = /[^a-zA-Z0-9가-힣_]/;
@@ -113,20 +117,9 @@ const Register = ({handleJoinOk}) => {
   }, []);
 
   return (
-    <Form
-      {...formItemLayout}
-      form={form}
-      name="register"
-      onFinish={onFinish}
-      scrollToFirstError
-    >
-      <Form.Item
-        name="user_id"
-        label="아이디"
-        hasFeedback
-        rules={[{validator: validateID}]}
-      >
-        <Input 
+    <Form {...formItemLayout} form={form} name="register" onFinish={onFinish} scrollToFirstError>
+      <Form.Item name="user_id" label="아이디" hasFeedback rules={[{ validator: validateID }]}>
+        <Input
           placeholder="영문 + 숫자 조합 (4~12자)"
           value={use_id.value}
           onChange={use_id.onChange}
@@ -137,10 +130,10 @@ const Register = ({handleJoinOk}) => {
         name="password"
         label="비밀번호"
         tooltip="영문 + 숫자 + 특수문자(?/~!@#$%^) 조합 (8~15자)"
-        rules={[{validator: validatePW,},]}
+        rules={[{ validator: validatePW }]}
         hasFeedback
       >
-        <Input.Password 
+        <Input.Password
           placeholder="영문 + 숫자 + 특수문자 조합 (8~15자)"
           value={pw.value}
           onChange={pw.onChange}
@@ -152,7 +145,8 @@ const Register = ({handleJoinOk}) => {
         label="비밀번호 재입력"
         dependencies={['password']}
         hasFeedback
-        rules={[{message: '비밀번호를 재입력 하세요.'},
+        rules={[
+          { message: '비밀번호를 재입력 하세요.' },
           ({ getFieldValue }) => ({
             validator(_, value) {
               if (!value || getFieldValue('password') === value) {
@@ -163,7 +157,7 @@ const Register = ({handleJoinOk}) => {
           }),
         ]}
       >
-        <Input.Password placeholder="비밀번호 재입력"/>
+        <Input.Password placeholder="비밀번호 재입력" />
       </Form.Item>
 
       <Form.Item
@@ -177,7 +171,7 @@ const Register = ({handleJoinOk}) => {
           },
         ]}
       >
-        <Input 
+        <Input
           placeholder="한글1~10자, 영문 및 숫자 2~20자"
           value={nickname.value}
           onChange={nickname.onChange}

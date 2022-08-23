@@ -34,7 +34,7 @@ function InputName({ setName }) {
 
 const MainTitle = styled.div`
   @import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Noto+Sans+KR:wght@100&display=swap');
-  padding-top: 10px;
+  padding-top: 20px;
   font-weight: 400;
   font-family: 'Aboreto', cursive;
   font-family: 'Noto Sans KR', sans-serif;
