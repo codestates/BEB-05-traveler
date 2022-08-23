@@ -1,9 +1,17 @@
-import { Drawer } from 'antd';
+import { Drawer, Typography } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
-function Drawer({ onClose, visible, placement }) {
+function DrawerComp({ visible, setVisible }) {
   const { Title } = Typography;
+
+  const placement = 'left';
+
+  const onClose = () => {
+    setVisible(false);
+  };
+
   return (
     <Side>
       <>
@@ -37,4 +45,11 @@ function Drawer({ onClose, visible, placement }) {
   );
 }
 
-export default Drawer;
+export default DrawerComp;
+
+const Side = styled.div`
+  @import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Noto+Sans+KR:wght@100&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Pangolin&display=swap');
+
+  font-family: 'Aboreto', cursive;
+`;

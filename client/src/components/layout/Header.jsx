@@ -1,56 +1,26 @@
-import { Layout, Row, Col, Button, Drawer, Modal, Input, Space, Typography } from 'antd';
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Layout, Row, Col, Modal } from 'antd';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { theme } from '../../style/theme';
-import {
-  MenuOutlined,
-  MoreOutlined,
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-  UserOutlined,
-  LockOutlined,
-} from '@ant-design/icons';
 import Register from '../../pages/home/Register';
 import axios from 'axios';
+import * as HeaderComp from '../headerComp';
 
-const { Title } = Typography;
 const { Header: _Header } = Layout;
-function HeaderComponent() {
+function HeaderComponent({ userInfo, setUserInfo, token, setToken }) {
   const [visible, setVisible] = useState(false);
   const [isLoginVisible, setIsLoginVisible] = useState(false);
   const [isJoinVisible, setIsJoinVisible] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
-  const [id, setId] = useState('');
-  const [pw, setPw] = useState('');
+  const [joinID, setJoinID] = useState('');
+  const [joinName, setJoinName] = useState('');
+  const [joinPW, setJoinPW] = useState('');
 
-  const placement = 'left';
-
-  const showDrawer = () => {
-    setVisible(true);
-  };
-
-  const onClose = () => {
-    setVisible(false);
-  };
+  useEffect(() => {
+    console.log(token, '저장후');
+  }, [token]);
 
   const showLoginModal = () => {
     setIsLoginVisible(true);
-  };
-
-  const handleLoginOk = () => {
-    axios
-      .post('http://localhost:4000/user/login', {
-        user_id: id,
-        password: pw,
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          console.log('hihi');
-          setIsLogin(true);
-          setIsLoginVisible(false);
-        }
-      });
   };
 
   const handleLoginCancel = () => {
@@ -64,16 +34,15 @@ function HeaderComponent() {
   const handleJoinOk = () => {
     axios
       .post('http://localhost:4000/user/join', {
-        user_id: 'hihiyoyo3',
-        nickname: 'hihiyoyo22',
-        password: 'hihiyoyo1234',
+        user_id: joinID,
+        nickname: joinName,
+        password: joinPW,
       })
       .then((res) => {
         if (res.status === 200) {
           console.log(res);
-          console.log('hihi');
-          setIsLogin(true);
-          setIsLoginVisible(false);
+          // setIsLogin(true);
+          setIsJoinVisible(false);
         }
       });
   };
@@ -87,101 +56,31 @@ function HeaderComponent() {
       <Col span={24}>
         <Header>
           <LogoWrapper>
-            <Side>
-              <>
-                <Drawer
-                  title="Traveler"
-                  placement="left"
-                  closable={false}
-                  onClose={onClose}
-                  visible={visible}
-                  key={placement}
-                  style={{ fontSize: '150%' }}
-                >
-                  <Link to="/">
-                    <Title style={{ fontSize: 30 }}>Home</Title>
-                  </Link>
-                  <Link to="/posts">
-                    <Title style={{ fontSize: 30 }}>Posts</Title>
-                  </Link>
-                  <Link to="/mypage">
-                    <Title style={{ fontSize: 30 }}>My Page</Title>
-                  </Link>
-                  <Link to="/create">
-                    <Title style={{ fontSize: 30 }}>Create your NFT</Title>
-                  </Link>
-                  <Link to="/market">
-                    <Title style={{ fontSize: 30 }}>NFT Market</Title>
-                  </Link>
-                </Drawer>
-              </>
-            </Side>
-            <SideBar>
-              <MenuOutlined style={{ fontSize: '120%' }} onClick={showDrawer}></MenuOutlined>
-            </SideBar>
-            <MoreOutlined style={{ fontSize: '200%' }} />
+            <HeaderComp.SideBarComp visible={visible} setVisible={setVisible} />
+            <HeaderComp.DrawerComp serVisible={setVisible} visible={visible} />
+            <HeaderComp.LogoTitle />
+            <HeaderComp.LoginButton showLoginModal={showLoginModal} token={token} />
+            <HeaderComp.LoginModal
+              isLoginVisible={isLoginVisible}
+              handleLoginCancel={handleLoginCancel}
+              showJoinModal={showJoinModal}
+              token={token}
+              setToken={setToken}
+              setIsLoginVisible={setIsLoginVisible}
+            />
 
-            <LogoTitle>
-              <a href="http://localhost:3000/">T r a v e l e r</a>
-            </LogoTitle>
-
-            {isLogin ? (
-              <Link to="/mypage">
-                <Button>My page</Button>
-              </Link>
-            ) : (
-              <Button
-                shape="round"
-                size="large"
-                onClick={showLoginModal}
-                style={{ color: `${theme.brown}`, fontWeight: 'bold' }}
-              >
-                Login
-              </Button>
-            )}
-
-            <Modal
-              visible={isLoginVisible}
-              title="ID 로그인"
-              onOk={handleLoginOk}
-              onCancel={handleLoginCancel}
-              width={300}
-              footer={[
-                <Button key="submit" shape="round" onClick={showJoinModal}>
-                  회원가입
-                </Button>,
-                <Button key="submit" shape="round" onClick={handleLoginOk}>
-                  로그인
-                </Button>,
-              ]}
-            >
-              <Space direction="vertical">
-                <Input
-                  onChange={(e) => {
-                    setId(e.target.value);
-                  }}
-                  placeholder="아이디"
-                  type="text"
-                  prefix={<UserOutlined />}
-                />
-                <Input.Password
-                  onChange={(e) => {
-                    setPw(e.target.value);
-                  }}
-                  placeholder="비밀번호"
-                  type="password"
-                  prefix={<LockOutlined />}
-                  iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                />
-              </Space>
-            </Modal>
             <Modal
               visible={isJoinVisible}
               onOk={handleJoinOk}
               onCancel={handleJoinCancel}
               footer={[]}
             >
-              <Register handleJoinOk={handleJoinOk} />
+              <Register
+                handleJoinOk={handleJoinOk}
+                setJoinID={setJoinID}
+                setJoinName={setJoinName}
+                setJoinPW={setJoinPW}
+              />
             </Modal>
           </LogoWrapper>
         </Header>
@@ -214,29 +113,6 @@ const LogoWrapper = styled.div`
   font-family: 'Aboreto', cursive;
   font-family: 'Noto Sans KR', sans-serif;
   border: 5px solid transparent;
-`;
-
-const LogoTitle = styled.div`
-  @import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Noto+Sans+KR:wght@100&display=swap');
-
-  text-align: center;
-  font-family: 'Aboreto', cursive;
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: ${theme.fs_15};
-  font-weight: ${theme.fw_700};
-  color: ${theme.black};
-  letter-spacing: -1px;
-  white-space: nowrap;
-
-  margin-left: auto;
-  margin-right: auto;
-`;
-
-const Side = styled.div`
-  @import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Noto+Sans+KR:wght@100&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Pangolin&display=swap');
-
-  font-family: 'Aboreto', cursive;
 `;
 
 const SideBar = styled.span`
