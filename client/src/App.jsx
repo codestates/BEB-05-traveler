@@ -9,7 +9,15 @@ import { theme } from './style/theme';
 const { Content } = Layout;
 
 function App() {
-  const [userInfo, setUserInfo] = useState('');
+  const [userInfo, setUserInfo] = useState({
+    user_id: '',
+    nickname: '',
+    address: '',
+    token_amount: '',
+    eth_amount: '',
+    waiting_time: '',
+    created_at: '',
+  });
   const [token, setToken] = useState('');
 
   return (

@@ -17,7 +17,8 @@ function HeaderComponent({ userInfo, setUserInfo, token, setToken }) {
 
   useEffect(() => {
     console.log(token, '저장후');
-  }, [token]);
+    console.log(userInfo);
+  }, [token, userInfo]);
 
   const showLoginModal = () => {
     setIsLoginVisible(true);
