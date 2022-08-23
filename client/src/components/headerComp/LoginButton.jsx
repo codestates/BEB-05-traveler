@@ -3,7 +3,11 @@ import { Button } from 'antd';
 import { theme } from '../../style/theme';
 import { Link } from 'react-router-dom';
 
-function LoginButton({ showLoginModal, token }) {
+function LoginButton({ token, setIsLoginVisible, isLoginVisible }) {
+  const showLoginModal = () => {
+    setIsLoginVisible(true);
+  };
+
   return (
     <>
       {token ? (

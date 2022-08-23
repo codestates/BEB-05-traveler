@@ -20,10 +20,6 @@ function HeaderComponent({ userInfo, setUserInfo, token, setToken }) {
     console.log(userInfo);
   }, [token, userInfo]);
 
-  const showLoginModal = () => {
-    setIsLoginVisible(true);
-  };
-
   const handleLoginCancel = () => {
     setIsLoginVisible(false);
   };
@@ -58,9 +54,18 @@ function HeaderComponent({ userInfo, setUserInfo, token, setToken }) {
         <Header>
           <LogoWrapper>
             <HeaderComp.SideBarComp visible={visible} setVisible={setVisible} />
-            <HeaderComp.DrawerComp serVisible={setVisible} visible={visible} />
+            <HeaderComp.DrawerComp
+              setVisible={setVisible}
+              visible={visible}
+              token={token}
+              userInfo={userInfo}
+            />
             <HeaderComp.LogoTitle />
-            <HeaderComp.LoginButton showLoginModal={showLoginModal} token={token} />
+            <HeaderComp.LoginButton
+              isLoginVisible={isLoginVisible}
+              setIsLoginVisible={setIsLoginVisible}
+              token={token}
+            />
             <HeaderComp.LoginModal
               isLoginVisible={isLoginVisible}
               handleLoginCancel={handleLoginCancel}
