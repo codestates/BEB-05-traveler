@@ -120,8 +120,8 @@ function NFTDetail() {
 }
 
 const Lists = styled.div`
-  margin-top: 100px;
-  margin-bottom: 100px;
+  margin-top: 180px;
+  margin-bottom: 150px;
 `;
 
 const Price = styled.span`
