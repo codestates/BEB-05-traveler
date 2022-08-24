@@ -7,7 +7,6 @@ import { ConsoleSqlOutlined, FormOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
 
-
 const { Title } = Typography;
 const { Meta } = Card;
 
