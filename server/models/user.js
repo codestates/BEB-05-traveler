@@ -29,13 +29,12 @@ const userSchema = new mongoose.Schema({
 });
 
 // 회원가입
-userSchema.methods.saveUser = async function() {
+userSchema.methods.saveUser = async function () {
     const _hash = await bcrypt.hash(this.password, 10);
     this.password = _hash;
 
     return await this.save();
-}
-
+};
 
 // 회원정보 수정 : nickname 외 기타 사용자 입력 정보. 현재기준으로는 nickname, password가 있으나, password 변경은 별도로 관리.
 userSchema.statics.setUserInfo = async function (user_id, nickname) {
@@ -91,12 +90,7 @@ userSchema.statics.setWaitingTime = async function (user_id) {
 };
 
 // 비밀번호 일치여부 확인
-<<<<<<< HEAD
-
 userSchema.statics.checkPassword = async function (user_id, password) {
-=======
-userSchema.statics.checkPassword = async function(user_id, password) {
->>>>>>> 8367bd60f33d71ef1fb6b26b5f26d720329a581e
     const _userInfo = await this.find({ user_id: user_id });
     return await bcrypt.compare(password, _userInfo[0].password);
 };
