@@ -12,7 +12,7 @@ const { Option } = Select;
 function MyPage() {
   const location = useLocation();
   const user = location;
-  console.log(user.state.userInfo, 'jojo');
+  console.log(user.state.userInfo);
 
   const { Title } = Typography;
   const [optionVal, setOptionVal] = useState(null);
