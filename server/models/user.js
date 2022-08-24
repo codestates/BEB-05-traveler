@@ -29,17 +29,11 @@ const userSchema = new mongoose.Schema({
 })
 
 // 회원가입
-userSchema.statics.saveUser = async function(obj) {
-    const _hash = bcrypt.hash(obj.password, 10);
-    const _user = new this({
-        user_id: obj.user_id,
-        nickname: obj.nickname,
-        password: _hash,
-        address: obj.address,
-        token_amount: 0,
-        eth_amount: 0,
-    });
-    return await _user.save();
+userSchema.methods.saveUser = async function() {
+    const _hash = await bcrypt.hash(this.password, 10);
+    this.password = _hash;
+
+    return await this.save();
 }
 
 // 회원정보 수정 : nickname 외 기타 사용자 입력 정보. 현재기준으로는 nickname, password가 있으나, password 변경은 별도로 관리.
@@ -97,14 +91,9 @@ userSchema.statics.setWaitingTime = async function(user_id) {
 
 // 비밀번호 일치여부 확인
 userSchema.statics.checkPassword = async function(user_id, password) {
-    const _hash = bcrypt.hash(password, 10);
-    const _userInfo = await this.find({user_id: user_id});
-    if(_hash === _userInfo.password){
-        return true;
-    } else {
-        return false;
-    }
-}
+    const _userInfo = await this.find({ user_id: user_id });
+    return await bcrypt.compare(password, _userInfo[0].password);
+};
 
 // 회원정보 요청 (user_id)
 userSchema.statics.getUserInfoById = async function(user_id) {
