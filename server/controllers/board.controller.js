@@ -90,6 +90,15 @@ module.exports = {
         const delPost = postmodel.removePost(req.body.post_id);
         
         return res.status(200).send({data: delPost, message: "Post removed"})
+    },
+
+    postbyid : async (req,res) => {
+        console.log('입력한 id의 게시물을 검색합니다.')
+        const postInfoById = await postmodel.getPostByUserId(req.body.user_id);
+
+        return res.status(200).send({data: postInfoById, message: "Completed search"})
+
     }
+
 }
 
