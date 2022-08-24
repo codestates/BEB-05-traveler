@@ -80,6 +80,7 @@ function PostCreate() {
               const imgOject = res.data["data"][4]["image"]["data"];
               const enc = new TextDecoder("utf-8");
               const arr = new Uint8Array(imgOject["data"])
+              console.log(enc.decode(arr));
               setBuffer(enc.decode(arr));
       });
   }

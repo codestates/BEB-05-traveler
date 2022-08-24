@@ -1,22 +1,35 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { theme } from '../../style/theme';
-import { Row,Col, Card, List, Image, Button, Space, Typography } from 'antd';
-import postlist from '../../../src/asset/dummy/fakeposts';
-import { FormOutlined } from '@ant-design/icons';
+import { Row, Card, List, Image, Space, Typography } from 'antd';
+import { ConsoleSqlOutlined, FormOutlined } from '@ant-design/icons';
+import axios from 'axios';
+
+
 
 const { Title } = Typography;
+const { Meta } = Card;
+
+const IconText = ({ icon, text }) => (
+  <Space>
+      {React.createElement(icon)}
+      {text}
+  </Space>
+);
 
 const item_list = (list) => {
   let array = [];
 
   for (let i=0; i<list.length; i++) {
       let el = list[i];
+      const enc = new TextDecoder("utf-8");
+      let arr;
+      if (el.image) {arr = new Uint8Array(el.image.data.data)};
       let obj = {
-          idx: `${i+1}`,
+          idx: el.post_id,
           title: el.title,
-          image: process.env.PUBLIC_URL + "/" + el.image,
+          image: arr ? enc.decode(arr) : process.env.PUBLIC_URL + "/noImage.png",
           place_name: el.place_name,
           place_address: el.place_address,
           created_at: el.created_at,
@@ -27,23 +40,23 @@ const item_list = (list) => {
   return array;
 };
 
-const data = item_list(postlist.concat(postlist));
-const { Meta } = Card;
-
-const idx = (i) => {
-  let result = Number(i)%5;
-  if (result === 0) {return 5}
-  else {return result;}
-}
-
-const IconText = ({ icon, text }) => (
-  <Space>
-      {React.createElement(icon)}
-      {text}
-  </Space>
-);
-
 function Posts() {
+  const [postList, setPostList] = useState([]);
+  const getPosts = async () => {
+    console.log("get")
+    axios
+      .get("http://localhost:4000/board/posts", {})
+      .then((res) => {
+        setPostList(res.data["data"]);
+      });
+  }
+
+  useEffect(() => {
+    getPosts();
+  },[]);
+
+  const data = item_list(postList);
+
   return (
     <Row justify="center" align="middle" wrap={true}>
       <Link to={"/posts/create"}>
@@ -82,7 +95,7 @@ function Posts() {
             dataSource={data}
             renderItem={(item) => (
             <List.Item>
-              <Link to={`/posts/${idx(item.idx)}`}>
+              <Link to={`/posts/${item.idx}`}>
                 <PreviewImage>
                   <Card
                     style={{width: '336px'}}
