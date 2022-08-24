@@ -1,5 +1,6 @@
 const postmodel = require('../models/post');
-const usermodel = require('../models/user');
+const usermodel = require("../models/user");
+const jwt = require("jsonwebtoken");
 
 const Web3 = require('web3');
 const web3 = new Web3(process.env.RPCURL);
@@ -94,15 +95,34 @@ module.exports = {
 
     postbyid : async (req,res) => {
         console.log('입력한 id의 게시물을 검색합니다.')
-        const postInfoById = await postmodel.getPostByUserId(req.body.user_id);
+        const accessToken = req.headers.authorization;
 
-        return res.status(200).send({data: postInfoById, message: "Complete Search"});
+        if (!accessToken) {
+            return res
+                .status(404)
+                .send({ data: null, message: "Invalid access token" });
+        } else {
+            // const token = accessToken.split(".")[1];
+            console.log(accessToken);
+            if (!accessToken) {
+                return res
+                    .status(404)
+                    .send({ data: null, message: "Invalid access token" });
+            } else {
+                const userInfo = jwt.verify(
+                    accessToken,
+                    process.env.ACCESS_SECRET
+                );
 
+                const postInfoById = await postmodel.getPostByUserId(userInfo.user_id);
+                return res.status(200).send({data: postInfoById, message: "Complete Search"});
+            }
+        }
     },
 
     postbypostid : async (req, res) => {
         console.log('입력한 post_id로 게시물을 검색합니다.')
-        const postInfoByPostid = await postmodel.getPostByNumber(req.body.post_id);
+        const postInfoByPostid = await postmodel.getPostByNumber(req.params.post_id);
 
         return res.status(200).send({data : postInfoByPostid, message : "Complete Search"});
     }

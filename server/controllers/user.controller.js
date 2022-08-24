@@ -9,7 +9,6 @@ module.exports = {
     // 회원 로그인
     login: async (req, res) => {
         const userInfo = await usermodel.getUserInfoById(req.body.user_id);
-
         if (!userInfo.length) {
             return res
                 .status(400)
@@ -26,13 +25,13 @@ module.exports = {
                     .send({ data: null, message: "Not autorized" });
             } else {
                 const userData = {
-                    user_id: userInfo.user_id,
-                    nickname: userInfo.nickname,
-                    address: userInfo.address,
-                    token_amount: userInfo.token_amount,
-                    eth_amount: userInfo.eth_amount,
-                    waiting_time: userInfo.waiting_time,
-                    created_at: userInfo.created_at,
+                    user_id: userInfo[0].user_id,
+                    nickname: userInfo[0].nickname,
+                    address: userInfo[0].address,
+                    token_amount: userInfo[0].token_amount,
+                    eth_amount: userInfo[0].eth_amount,
+                    waiting_time: userInfo[0].waiting_time,
+                    created_at: userInfo[0].created_at,
                 };
 
                 const accessToken = jwt.sign(
@@ -101,10 +100,40 @@ module.exports = {
 
     // 사용자 정보 조회
     info: async (req, res) => {
-        const userInfo = await usermodel.getUserInfoById(req.body.user_id);
+        console.log(req);
+        const accessToken = req.headers.authorization;
 
-        return res
-            .status(200)
-            .send({ data: userInfo, message: "Completed search" });
+        if (!accessToken) {
+            return res
+                .status(404)
+                .send({ data: null, message: "Invalid access token" });
+        } else {
+            // const token = accessToken.split(".")[1];
+            console.log(accessToken);
+            if (!accessToken) {
+                return res
+                    .status(404)
+                    .send({ data: null, message: "Invalid access token" });
+            } else {
+                const userInfo = jwt.verify(
+                    accessToken,
+                    process.env.ACCESS_SECRET
+                );
+
+                const userData = {
+                    user_id: userInfo.user_id,
+                    nickname: userInfo.nickname,
+                    address: userInfo.address,
+                    token_amount: userInfo.token_amount,
+                    eth_amount: userInfo.eth_amount,
+                    waiting_time: userInfo.waiting_time,
+                    created_at: userInfo.created_at,
+                };
+                console.log(userData);
+                return res
+                    .status(200)
+                    .send({ data: userData, message: "Completed search" });
+            }
+        }
     },
 };
