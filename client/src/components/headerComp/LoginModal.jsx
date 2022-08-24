@@ -5,16 +5,22 @@ import axios from 'axios';
 
 function LoginModal({
   isLoginVisible,
-  handleLoginCancel,
-  showJoinModal,
-  token,
   setToken,
   setIsLoginVisible,
-  userInfo,
   setUserInfo,
+  setCookie,
+  setIsJoinVisible,
 }) {
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
+
+  const handleLoginCancel = () => {
+    setIsLoginVisible(false);
+  };
+
+  const showJoinModal = () => {
+    setIsJoinVisible(true);
+  };
 
   const handleLoginOk = async () => {
     const res = await axios.post('http://localhost:4000/user/login', {
@@ -25,6 +31,7 @@ function LoginModal({
       console.log(res.data.data.accessToken, '저장전');
       setToken(res.data.data.accessToken);
       setIsLoginVisible(false);
+      setCookie('rememberUser', res.data.data.accessToken, { path: '/', maxAge: 2000 });
     }
 
     const userinfo = await axios.get('http://localhost:4000/user/info', {

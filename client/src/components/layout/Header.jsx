@@ -7,26 +7,14 @@ import axios from 'axios';
 import * as HeaderComp from '../headerComp';
 
 const { Header: _Header } = Layout;
-function HeaderComponent({ userInfo, setUserInfo, token, setToken }) {
+
+function HeaderComponent({ userInfo, setUserInfo, token, setToken, setCookie }) {
   const [visible, setVisible] = useState(false);
   const [isLoginVisible, setIsLoginVisible] = useState(false);
   const [isJoinVisible, setIsJoinVisible] = useState(false);
   const [joinID, setJoinID] = useState('');
   const [joinName, setJoinName] = useState('');
   const [joinPW, setJoinPW] = useState('');
-
-  useEffect(() => {
-    console.log(token, '저장후');
-    console.log(userInfo);
-  }, [token, userInfo]);
-
-  const handleLoginCancel = () => {
-    setIsLoginVisible(false);
-  };
-
-  const showJoinModal = () => {
-    setIsJoinVisible(true);
-  };
 
   const handleJoinOk = () => {
     axios
@@ -38,7 +26,6 @@ function HeaderComponent({ userInfo, setUserInfo, token, setToken }) {
       .then((res) => {
         if (res.status === 200) {
           console.log(res);
-          // setIsLogin(true);
           setIsJoinVisible(false);
         }
       });
@@ -65,16 +52,15 @@ function HeaderComponent({ userInfo, setUserInfo, token, setToken }) {
               isLoginVisible={isLoginVisible}
               setIsLoginVisible={setIsLoginVisible}
               token={token}
+              userInfo={userInfo}
             />
             <HeaderComp.LoginModal
               isLoginVisible={isLoginVisible}
-              handleLoginCancel={handleLoginCancel}
-              showJoinModal={showJoinModal}
-              token={token}
               setToken={setToken}
               setIsLoginVisible={setIsLoginVisible}
-              userInfo={userInfo}
+              setIsJoinVisible={setIsJoinVisible}
               setUserInfo={setUserInfo}
+              setCookie={setCookie}
             />
 
             <Modal

@@ -30,15 +30,6 @@ function DrawerComp({ visible, setVisible, token, userInfo }) {
           <Link to="/posts">
             <Title style={{ fontSize: 30 }}>Posts</Title>
           </Link>
-          {/* <Link
-            to={{
-              pathname: '/mypage',
-              state: {
-                token: token,
-                userInfo: userInfo,
-              },
-            }}
-          > */}
           <Link to="/mypage" state={{ token: token, userInfo: userInfo }}>
             <Title style={{ fontSize: 30 }}>My Page</Title>
           </Link>
