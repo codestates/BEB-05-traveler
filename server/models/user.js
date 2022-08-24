@@ -96,15 +96,10 @@ userSchema.statics.setWaitingTime = async function(user_id) {
 }
 
 // 비밀번호 일치여부 확인
-userSchema.statics.checkPassword = async function(user_id, password) {
-    const _hash = bcrypt.hash(password, 10);
-    const _userInfo = await this.find({user_id: user_id});
-    if(_hash === _userInfo.password){
-        return true;
-    } else {
-        return false;
-    }
-}
+userSchema.statics.checkPassword = async function (user_id, password) {
+    const _userInfo = await this.find({ user_id: user_id });
+    return await bcrypt.compare(password, _userInfo[0].password);
+};
 
 // 회원정보 요청 (user_id)
 userSchema.statics.getUserInfoById = async function(user_id) {
