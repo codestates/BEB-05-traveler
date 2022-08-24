@@ -1,5 +1,6 @@
 import { Result, Row } from 'antd';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
 import { theme } from '../../style/theme';
 import {
@@ -9,29 +10,10 @@ import {
   EnvironmentOutlined,
 } from '@ant-design/icons';
 import { Typography, Space, List, Image, Tag } from 'antd';
-import postlist from '../../../src/asset/dummy/fakeposts';
+import { useLocation } from 'react-router-dom';
 
-const item_list = (list) => {
-  let array = [];
 
-  for (let i = 0; i < list.length; i++) {
-    let el = list[i];
-    let obj = {
-      idx: `${i + 1}`,
-      title: el.title,
-      avatar: process.env.PUBLIC_URL + el.image,
-      place_name: el.place_name,
-      place_address: el.place_address,
-      created_at: el.created_at,
-      content: el.content,
-    };
-    array.push(obj);
-  }
-  return array;
-};
-
-const data = item_list(postlist);
-
+const { Title } = Typography;
 const IconText = ({ icon, text }) => (
   <Space>
     {React.createElement(icon)}
@@ -39,8 +21,49 @@ const IconText = ({ icon, text }) => (
   </Space>
 );
 
+const item_list = (list) => {
+  let array = [];
+
+  for (let i=0; i<list.length; i++) {
+      let el = list[i];
+      const enc = new TextDecoder("utf-8");
+      let arr;
+      if (el.image) {arr = new Uint8Array(el.image.data.data)};
+      let obj = {
+          idx: el.post_id,
+          title: el.title,
+          image: arr ? enc.decode(arr) : process.env.PUBLIC_URL + "/noImage.png",
+          place_name: el.place_name,
+          place_address: el.place_address,
+          created_at: el.created_at,
+          content: el.content,
+      };
+      array.push(obj);
+  }
+  return array;
+};
 function MP_sec1() {
-  const { Title } = Typography;
+  const location = useLocation();
+  const user = location;
+  const userObject = user.state
+
+  const [postList, setPostList] = useState([]);
+  const getPosts = async () => {
+    console.log("get post by id")
+    axios
+      .get("http://localhost:4000/board/postbyid",{
+        headers: {authorization: userObject["token"]}
+      })
+      .then((res) => {
+        setPostList(res.data.data);
+      });
+  }
+  
+  useEffect(() => {
+    getPosts();
+  },[]);
+  
+  const data = item_list(postList);
   return (
     <div>
       <Row gutter={[8, 8]} justify="center" align="middle" wrap={true}>
@@ -86,7 +109,7 @@ function MP_sec1() {
                       {item.title}
                     </a>
                   }
-                  avatar={<Image src={item.avatar} width={272} alt="logo" preview={true} />}
+                  avatar={<Image src={item.image} width={272} alt="logo" preview={true} />}
                   description={
                     <>
                       <div>{item.created_at}</div>

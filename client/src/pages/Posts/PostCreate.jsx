@@ -52,7 +52,6 @@ function PostCreate() {
     //DB post 요청
     const [file, setFile] = useState(process.env.PUBLIC_URL + "/noImage.png");
     const [imgType, setImgType] = useState('image/png'); //initial value
-    const [buffer, setBuffer] = useState();
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -72,17 +71,7 @@ function PostCreate() {
                 console.log(res);
             });
     };
-  
-  const getIMG = async () => {
-      axios
-          .get("http://localhost:4000/board/posts", {})
-          .then((res) => {
-              const imgOject = res.data["data"][4]["image"]["data"];
-              const enc = new TextDecoder("utf-8");
-              const arr = new Uint8Array(imgOject["data"])
-              setBuffer(enc.decode(arr));
-      });
-  }
+
 
   return (
     <Row justify="center" align="middle">
@@ -123,10 +112,6 @@ function PostCreate() {
                 <Button onClick={onSubmit}>작성 완료</Button>
             </div>
             {/* 이미지 버퍼로부터 가져오는 테스트 */}
-            <div>
-                <Button onClick={getIMG}>DB로부터 이미지 불러오기 테스트</Button>
-                <img src={buffer} />
-            </div>
         </Row>
       </Col>
     </Row>
