@@ -19,10 +19,7 @@ const postSchema = new mongoose.Schema({
         type : String,
         required : true
     },
-    image : {
-        data : Buffer,
-        contentType: String
-    },
+    image : String,
     place_name : String,
     place_address : String,
     reward : Number,
@@ -52,11 +49,6 @@ postSchema.statics.getAllPosts = async function() {
     return await this.find({});
 }
 
-// 총 게시글 번호 조회
-postSchema.statics.getPostId = async function() {
-    return await this.find({}).sort({post_id : -1}).limit(1);
-}
-
 // 게시글 번호로 조회
 postSchema.statics.getPostByNumber = async function(post_id) {
     return await this.find({post_id: post_id});
@@ -83,12 +75,7 @@ postSchema.statics.setPost = async function(obj) {
 
 // 게시글 삭제
 postSchema.statics.removePost = async function(post_id) {
-    return await this.deleteOne({post_id: post_id});
-}
-
-// 최신 게시물 조회
-postSchema.statics.getRecentPost = async function() {
-    return await this.find({}).sort({created_at : -1}).limit(4);
+    return await this.remove({post_id: post_id});
 }
 
 
