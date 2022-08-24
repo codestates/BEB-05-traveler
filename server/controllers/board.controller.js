@@ -96,9 +96,17 @@ module.exports = {
         console.log('입력한 id의 게시물을 검색합니다.')
         const postInfoById = await postmodel.getPostByUserId(req.body.user_id);
 
-        return res.status(200).send({data: postInfoById, message: "Completed search"})
+        return res.status(200).send({data: postInfoById, message: "Complete Search"});
 
+    },
+
+    postbypostid : async (req, res) => {
+        console.log('입력한 post_id로 게시물을 검색합니다.')
+        const postInfoByPostid = await postmodel.getPostByNumber(req.body.post_id);
+
+        return res.status(200).send({data : postInfoByPostid, message : "Complete Search"});
     }
+
 
 }
 
