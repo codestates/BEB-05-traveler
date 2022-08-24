@@ -9,6 +9,16 @@ const fs = require("fs");
 const Web3 = require("web3");
 const nftstorage = new NFTStorage({ token: process.env.NFT_STORAGE_KEY });
 
+<<<<<<< HEAD
+=======
+const { NFTStorage } = require("nft.storage");
+const nftstorage = new NFTStorage({token: process.env.NFT_STORAGE_KEY});
+
+const jwt = require("jsonwebtoken");
+const fs = require("fs");
+
+const Web3 = require('web3');
+>>>>>>> 8367bd60f33d71ef1fb6b26b5f26d720329a581e
 const web3 = new Web3(process.env.RPCURL);
 
 // const Provider = require("@truffle/hdwallet-provider");
@@ -149,6 +159,7 @@ module.exports = {
         });
     },
 
+<<<<<<< HEAD
     mint: async (req, res) => {
         const accessToken = req.headers.authorization;
         console.log(accessToken, "hihi");
@@ -248,6 +259,61 @@ module.exports = {
                 //     data: updateSenderInfo,
                 //     message: "Minting completed",
                 // });
+=======
+    // image, name, description, access token
+    mint: async (req, res) => {
+        const accessToken = req.headers.authorization;
+
+        if(!accessToken) {
+            return res.status(404).send({data: null, message: 'Invalid access token'})
+        } else {
+            const token = accessToken.split(' ')[1];
+            
+            if(!token){
+                return res.status(404).send({data: null, message: 'Invalid access token'})
+            } else {
+                const userInfo = jwt.verify(token, process.env.ACCESS_SECRET);
+                console.log(userInfo);
+                const imgFile = fs.readFileSync(req.file.path, (err, data) => {
+                    if(err){
+                        console.log("Don't read file :", err);
+                        return res.status(500).send({data:null, message:"Internal server error"})
+                    }
+                    console.log(data)
+                    return data[0];
+                })
+
+                const blob = new File(imgFile, {type : req.file.mimetype })
+
+                // image IPFS upload
+                const rawMetaData = {
+                    name: "test",
+                    description: "ddddd",
+                    image: blob
+                }
+                const nftCID = await nftstorage.store(rawMetaData);
+                console.log(nftCID)
+                const newTokenURI = "https://ipfs.io/ipfs/" + nftCID.url.replace("ipfs://", "");
+
+                // Contract mintNFT 함수 실행하는 트랜잭션 발행
+                let senderBalance;
+                const data = contract721.methods.mintNFT(userInfo.address, newTokenURI).encodeABI();
+                const rawTransaction = {"to": address721, "gas": 100000, "data": data};
+                web3.eth.account.signTransaction(rawTransaction, process.env.ADMIN_WALLET_PRIVATE_KEY)
+                    .then( signedTx => web3.eth.sendSignedTransaction(signedTx.rawTransaction))
+                    .then( req => {
+                        senderBalance = contract721.methods.balanceOf(userInfo.address).call();
+                        return true;
+                    })
+                    .catch(err => {
+                        console.error(err, "Minting failure")
+                    });
+
+                // 몽고DB 의 user정보 업데이트.           
+                const updateSenderInfo = await usermodel.setTokenAmountById(userInfo.address, senderBalance);
+
+                return res.status(200).send({data: updateSenderInfo, message: "Minting completed"})
+>>>>>>> 8367bd60f33d71ef1fb6b26b5f26d720329a581e
             }
         }
     },

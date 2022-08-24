@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { theme } from '../../style/theme';
@@ -48,22 +49,6 @@ function Posts() {
       setPostList(res.data['data']);
     });
   };
-
-  const idx = (i) => {
-    let result = Number(i) % 5;
-    if (result === 0) {
-      return 5;
-    } else {
-      return result;
-    }
-  };
-
-  const IconText = ({ icon, text }) => (
-    <Space>
-      {React.createElement(icon)}
-      {text}
-    </Space>
-  );
 
   useEffect(() => {
     getPosts();
