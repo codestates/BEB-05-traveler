@@ -30,7 +30,7 @@ const getTransactions = cron.schedule('* * * * * *', async function () {
             token_id: i,
             token_uri: token_uri
         }
-        await nftmodel.saveNft(newNft);
+        const createNFT = await new nftmodel(newNft).saveNFT();
     }
 },{
     scheduled: false

@@ -29,14 +29,8 @@ const nftSchema = new mongoose.Schema({
 })
 
 // nft 저장
-nftSchema.statics.saveNft = async function(obj) {
-    const _nft = new this({
-        user_id: obj.user_id,
-        user_address: obj.user_address,
-        token_id: obj.token_id,
-        token_uri: obj.token_uri,
-    });
-    return await _nft.save();
+nftSchema.methods.saveNft = async function() {
+    return await this.save();
 }
 
 // nft 판매 등록
