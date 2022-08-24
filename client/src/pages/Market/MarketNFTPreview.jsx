@@ -15,10 +15,7 @@ function MarketNFTPreivew({ collectionData }) {
   }, [collectionData]);
 
   const getNFTInfo = async () => {
-    console.log(collectionData);
     const response = await Axios.get(collectionData.link);
-
-    console.log(response.data.image);
 
     setImg(`https://ipfs.io/ipfs/${response.data.image.split('//')[1]}`);
     setName(response.data.name);

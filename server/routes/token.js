@@ -7,8 +7,9 @@ const storage = multer.diskStorage({
     destination: "uploads/",
     filename: function (req, file, cb) {
         cb(null, file.originalname);
-    }
-})
+    },
+});
+
 const upload = multer({ storage: storage });
 
 router.get("/findallnft", controller.findallnft);

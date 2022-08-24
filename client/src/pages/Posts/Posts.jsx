@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
+
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { theme } from '../../style/theme';
@@ -6,35 +7,36 @@ import { Row, Card, List, Image, Space, Typography } from 'antd';
 import { ConsoleSqlOutlined, FormOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
-
 const { Title } = Typography;
 const { Meta } = Card;
 
 const IconText = ({ icon, text }) => (
   <Space>
-      {React.createElement(icon)}
-      {text}
+    {React.createElement(icon)}
+    {text}
   </Space>
 );
 
 const item_list = (list) => {
   let array = [];
 
-  for (let i=0; i<list.length; i++) {
-      let el = list[i];
-      const enc = new TextDecoder("utf-8");
-      let arr;
-      if (el.image) {arr = new Uint8Array(el.image.data.data)};
-      let obj = {
-          idx: el.post_id,
-          title: el.title,
-          image: arr ? enc.decode(arr) : process.env.PUBLIC_URL + "/noImage.png",
-          place_name: el.place_name,
-          place_address: el.place_address,
-          created_at: el.created_at,
-          content: el.content,
-      };
-      array.push(obj);
+  for (let i = 0; i < list.length; i++) {
+    let el = list[i];
+    const enc = new TextDecoder('utf-8');
+    let arr;
+    if (el.image) {
+      arr = new Uint8Array(el.image.data.data);
+    }
+    let obj = {
+      idx: el.post_id,
+      title: el.title,
+      image: arr ? enc.decode(arr) : process.env.PUBLIC_URL + '/noImage.png',
+      place_name: el.place_name,
+      place_address: el.place_address,
+      created_at: el.created_at,
+      content: el.content,
+    };
+    array.push(obj);
   }
   return array;
 };
@@ -42,29 +44,33 @@ const item_list = (list) => {
 function Posts() {
   const [postList, setPostList] = useState([]);
   const getPosts = async () => {
-    console.log("get")
-    axios
-      .get("http://localhost:4000/board/posts", {})
-      .then((res) => {
-        setPostList(res.data["data"]);
-      });
-  }
+    console.log('get');
+    axios.get('http://localhost:4000/board/posts', {}).then((res) => {
+      setPostList(res.data['data']);
+    });
+  };
 
   useEffect(() => {
     getPosts();
-  },[]);
+  }, []);
 
   const data = item_list(postList);
 
   return (
     <Row justify="center" align="middle" wrap={true}>
-      <Link to={"/posts/create"}>
+      <Link to={'/posts/create'}>
         <button>
           <ButtonWrapper>
-            <img src={process.env.PUBLIC_URL + "/sky.png"} style={{width:'100%'}} />
+            <img src={process.env.PUBLIC_URL + '/sky.png'} style={{ width: '100%' }} />
             <ButtonText0>
-              <ButtonText1>{"당신의 이야기를 들려주세요."}</ButtonText1>
-              <div style={{color: `${theme.sky_blue}`, fontSize: `${theme.fs_10}`, fontWeight: `${theme.fw_300}`}}>
+              <ButtonText1>{'당신의 이야기를 들려주세요.'}</ButtonText1>
+              <div
+                style={{
+                  color: `${theme.sky_blue}`,
+                  fontSize: `${theme.fs_10}`,
+                  fontWeight: `${theme.fw_300}`,
+                }}
+              >
                 <IconText icon={FormOutlined} text="작성하기" />
               </div>
             </ButtonText0>
@@ -85,19 +91,19 @@ function Posts() {
         </Title>
       </TitleFont>
       <ListWrapper>
-          <List
-            grid={{
-              gutter: 16,
-              column: 4,
-            }}
-            pagination={{onChange: (page) => {}, pageSize: 8}}
-            dataSource={data}
-            renderItem={(item) => (
+        <List
+          grid={{
+            gutter: 16,
+            column: 4,
+          }}
+          pagination={{ onChange: (page) => {}, pageSize: 8 }}
+          dataSource={data}
+          renderItem={(item) => (
             <List.Item>
               <Link to={`/posts/${item.idx}`}>
                 <PreviewImage>
                   <Card
-                    style={{width: '336px'}}
+                    style={{ width: '336px' }}
                     key={item.idx}
                     hoverable
                     cover={
@@ -105,7 +111,7 @@ function Posts() {
                         alt="collection-card"
                         src={item.image}
                         preview={false}
-                        style={{ objectFit: 'cover', height: 350}}
+                        style={{ objectFit: 'cover', height: 350 }}
                       />
                     }
                   >
@@ -115,8 +121,8 @@ function Posts() {
               </Link>
             </List.Item>
           )}
-          />
-    </ListWrapper>
+        />
+      </ListWrapper>
     </Row>
   );
 }
@@ -146,7 +152,7 @@ const ButtonText0 = styled.span`
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate( -50%, -50% );
+  transform: translate(-50%, -50%);
   color: white;
 `;
 
@@ -158,7 +164,6 @@ const ListWrapper = styled.div`
   padding-right: 20px;
   padding-left: 20px;
   width: 100%;
-  
 `;
 
 export default Posts;
