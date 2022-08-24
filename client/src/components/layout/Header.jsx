@@ -109,8 +109,4 @@ const LogoWrapper = styled.div`
   border: 5px solid transparent;
 `;
 
-const SideBar = styled.span`
-  margin-right: 15px;
-`;
-
 export default HeaderComponent;
