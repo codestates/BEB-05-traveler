@@ -5,17 +5,22 @@ import axios from 'axios';
 
 function LoginModal({
   isLoginVisible,
-  handleLoginCancel,
-  showJoinModal,
-  token,
   setToken,
   setIsLoginVisible,
-  userInfo,
   setUserInfo,
   setCookie,
+  setIsJoinVisible,
 }) {
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
+
+  const handleLoginCancel = () => {
+    setIsLoginVisible(false);
+  };
+
+  const showJoinModal = () => {
+    setIsJoinVisible(true);
+  };
 
   const handleLoginOk = async () => {
     const res = await axios.post('http://localhost:4000/user/login', {

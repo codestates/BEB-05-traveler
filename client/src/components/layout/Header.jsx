@@ -16,14 +16,6 @@ function HeaderComponent({ userInfo, setUserInfo, token, setToken, setCookie }) 
   const [joinName, setJoinName] = useState('');
   const [joinPW, setJoinPW] = useState('');
 
-  const handleLoginCancel = () => {
-    setIsLoginVisible(false);
-  };
-
-  const showJoinModal = () => {
-    setIsJoinVisible(true);
-  };
-
   const handleJoinOk = () => {
     axios
       .post('http://localhost:4000/user/join', {
@@ -34,7 +26,6 @@ function HeaderComponent({ userInfo, setUserInfo, token, setToken, setCookie }) 
       .then((res) => {
         if (res.status === 200) {
           console.log(res);
-          // setIsLogin(true);
           setIsJoinVisible(false);
         }
       });
@@ -65,12 +56,9 @@ function HeaderComponent({ userInfo, setUserInfo, token, setToken, setCookie }) 
             />
             <HeaderComp.LoginModal
               isLoginVisible={isLoginVisible}
-              handleLoginCancel={handleLoginCancel}
-              showJoinModal={showJoinModal}
-              token={token}
               setToken={setToken}
               setIsLoginVisible={setIsLoginVisible}
-              userInfo={userInfo}
+              setIsJoinVisible={setIsJoinVisible}
               setUserInfo={setUserInfo}
               setCookie={setCookie}
             />
