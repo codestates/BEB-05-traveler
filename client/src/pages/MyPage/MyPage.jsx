@@ -1,12 +1,11 @@
 import { Result, Row, Form, Input, Button, Select, Typography, Avatar } from 'antd';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { theme } from '../../style/theme';
 import { ContactsOutlined } from '@ant-design/icons';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
-// const address = '0x12B345f752DAD296371A07EA86931096E7f9BdEb';
-const amount = 1000;
 const { Option } = Select;
 
 function MyPage() {
@@ -28,6 +27,21 @@ function MyPage() {
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
+
+  const [numOfPosts, setNumOfPosts] = useState(0);
+  const getPostNum = async () => {
+    axios
+      .get("http://localhost:4000/board/postbyid",{
+        headers: {authorization: user.state["token"]}
+      })
+      .then((res) => {
+        setNumOfPosts(res.data.data.length);
+      });
+  }
+  
+  useEffect(() => {
+    getPostNum();
+  },[]);
 
   const showForm = (value) => {
     if (value === '0') {
@@ -134,19 +148,16 @@ function MyPage() {
             >
               <Avatar size={140} icon={<ContactsOutlined />} />
               <div style={{ paddingTop: '40px' }}>
-                {user.state.userInfo.nickname}({user.state.userInfo.user_id})
+                {user.state.userInfo.nickname}&ensp;({user.state.userInfo.user_id})
               </div>
               <div style={{ paddingTop: '15px', fontSize: `${theme.fs_9}` }}>
-                {'게시글 수 : 10 '}&ensp;{'보유 NFT 수 : 10'}
+                {`게시글 수 : ${numOfPosts}`}&ensp;{'보유 NFT 수 : 10'}
               </div>
               <div style={{ paddingTop: '15px', fontSize: `${theme.fs_9}`, whiteSpace: 'nowrap' }}>
                 {`내 주소 : ${user.state.userInfo.address}`}
               </div>
               <div style={{ paddingTop: '15px', fontSize: `${theme.fs_9}` }}>
                 {`토큰 잔액: ${user.state.userInfo.token_amount}`}
-              </div>
-              <div style={{ paddingTop: '15px', fontSize: `${theme.fs_9}` }}>
-                {`이더 잔액: ${user.state.userInfo.eth_amount}`}
               </div>
             </Title>
           </TitleFont>
