@@ -86,5 +86,10 @@ postSchema.statics.removePost = async function(post_id) {
     return await this.deleteOne({post_id: post_id});
 }
 
+// 최신 게시물 조회
+postSchema.statics.getRecentPost = async function() {
+    return await this.find({}).sort({created_at : -1}).limit(4);
+}
+
 
 module.exports = mongoose.model("Post", postSchema);
