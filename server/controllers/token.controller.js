@@ -7,12 +7,7 @@ const { NFTStorage, File, Blob } = require("nft.storage");
 const fs = require("fs");
 
 const Web3 = require("web3");
-const { NFTStorage } = require("nft.storage");
-const nftstorage = new NFTStorage({token: process.env.NFT_STORAGE_KEY});
-
-const jwt = require("jsonwebtoken");
-const fs = require("fs");
-
+const nftstorage = new NFTStorage({ token: process.env.NFT_STORAGE_KEY });
 
 const web3 = new Web3(process.env.RPCURL);
 
@@ -154,7 +149,6 @@ module.exports = {
         });
     },
 
-<<<<<<< HEAD
     mint: async (req, res) => {
         const accessToken = req.headers.authorization;
         console.log(accessToken, "hihi");
