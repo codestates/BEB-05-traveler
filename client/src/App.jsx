@@ -22,8 +22,7 @@ function App() {
   const [token, setToken] = useState('');
   const [cookies, setCookie, removeCookie] = useCookies(['rememberUser']);
 
-  useEffect(() => {
-  }, [cookies, userInfo, token]);
+  useEffect(() => {}, [cookies, userInfo, token]);
 
   return (
     <div className="App">
