@@ -14,7 +14,7 @@ app.use(cors());
 const mongoConnect = require("./models");
 const getTransactions = require("./controllers/contract.controller");
 mongoConnect();
-getTransactions.start();
+// getTransactions.start();
 
 const routes = require("./routes");
 

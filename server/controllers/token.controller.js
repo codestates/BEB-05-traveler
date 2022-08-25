@@ -2,12 +2,9 @@ const abi20 = require("../abi20");
 const abi721 = require("../abi721");
 const address20 = require("../address20");
 const address721 = require("../address721");
-const jwt = require("jsonwebtoken");
-const { NFTStorage, File, Blob } = require("nft.storage");
-
 const fs = require("fs");
-
-const nftstorage = new NFTStorage({ token: process.env.NFT_STORAGE_KEY });
+const jwt = require("jsonwebtoken");
+const { NFTStorage, File } = require("nft.storage");
 
 const Web3 = require("web3");
 const web3 = new Web3(process.env.RPCURL);
@@ -17,290 +14,330 @@ const contract721 = new web3.eth.Contract(abi721, address721);
 
 const nftmodel = require("../models/nft");
 const usermodel = require("../models/user");
-const { send } = require("process");
 
 module.exports = {
     transfer_20: async (req, res) => {
-        // req : user 정보(user_id, nickname, sender_address)는 토큰으로 온다.
-        // password는 body
-        // recipient(user_id or nickname), amount는 body
+        try {
+            const accessToken = req.headers.authorization;
 
-        const sender = "토큰을 복호화해서 address";
-        let recipientInfo;
-        if (req.body.recipient_id) {
-            recipientInfo = await usermodel.getUserInfoById(
-                req.body.recipient_id
-            );
+            if (!accessToken) {
+                return res
+                    .status(404)
+                    .send({ data: null, message: "Invalid access token" });
+            } else {
+                const token = accessToken.split(" ")[1];
+
+                if (!token) {
+                    return res
+                        .status(404)
+                        .send({ data: null, message: "Invalid access token" });
+                } else {
+                    const userInfo = jwt.verify(token, process.env.ACCESS_SECRET);
+
+                    const senderAddress = userInfo.address;
+
+                    let recipientAddress;
+                    if(req.body.user_id){
+                        const recipientInfo = await usermodel.getUserInfoById(req.body.user_id);
+                        recipientAddress = recipientInfo[0].address;
+                    } else if (req.body.nickname){
+                        const recipientInfo = await usermodel.getUserInfoByNickname(req.body.nickname);
+                        recipientAddress = recipientInfo[0].address;
+                    } else {
+                        recipientAddress = req.body.recipient;
+                    }
+                    console.log("수신자: ", recipientAddress)
+                    
+                    const amount = req.body.amount;
+
+                    const data = contract20.methods
+                        .transferFrom(
+                            process.env.ADMIN_WALLET_ACOUNT, // senderAddress,
+                            recipientAddress,
+                            amount
+                        )
+                        .encodeABI();
+
+                    const rawTransaction = {
+                        to: address20,
+                        gas: 100000,
+                        data: data,
+                    };
+
+                    const signedTX = await web3.eth.accounts.signTransaction(
+                        rawTransaction,
+                        process.env.ADMIN_WALLET_PRIVATE_KEY
+                    );
+
+                    const sendingTX = await web3.eth.sendSignedTransaction(
+                        signedTX.rawTransaction
+                    );
+                    
+                    res.status(200).send({ data: sendingTX, message: "Transfer success"});
+                }
+            }
+        } catch (err) {
+            console.log(err);
+            res.status(400).send({ data: null, message: "Can't execute request"});
         }
-        if (req.body.recipient_nickname) {
-            recipientInfo = await usermodel.getUserInfoByNickname(
-                req.body.recipient_nickname
-            );
-        }
-        if (req.body.recipient_address) {
-            recipientInfo = await usermodel.getUserInfoByAddress(
-                req.body.recipient_address
-            );
-        }
-
-        const recipientAddress = recipientInfo.address;
-
-        let senderBalance;
-        let recipientBalance;
-        const data = contract20.methods
-            .transfer(sender, recipientAddress, amount)
-            .encodeABI();
-        const rawTransaction = { to: address20, gas: 100000, data: data };
-        web3.eth.account
-            .signTransaction(
-                rawTransaction,
-                process.env.ADMIN_WALLET_PRIVATE_KEY
-            )
-            .then((signedTX) =>
-                web3.eth.sendSignedTransaction(signedTX.rawTransaction)
-            )
-            .then((req) => {
-                senderBalance = contract20.methods.balanceOf(sender).call();
-                recipientBalance = contract20.methods
-                    .balanceOf(recipientAddress)
-                    .call();
-                return true;
-            })
-            .catch((err) => {
-                console.error(err, "Transaction failure");
-            });
-
-        const updateSenderInfo = await usermodel.setEthAmountById(
-            "토큰을 복호화해서 user_id",
-            senderBalance
-        );
-        const updateRecipientInfo = await usermodel.setEthAmountById(
-            recipientInfo.user_id,
-            recipientBalance
-        );
-
-        return res.status(200).send({
-            data: { updateSenderInfo, updateRecipientInfo },
-            message: "Transaction success",
-        });
     },
 
     transfer_721: async (req, res) => {
-        const accessToken = req.headers.authorization;
-        let recipientInfo;
+        try {
+            const accessToken = req.headers.authorization;
 
-        if (req.body.recipient_id) {
-            recipientInfo = await usermodel.getUserInfoById(
-                req.body.recipient_id
-            );
-        }
-        if (req.body.recipient_nickname) {
-            recipientInfo = await usermodel.getUserInfoByNickname(
-                req.body.recipient_nickname
-            );
-        }
-        if (req.body.recipient_address) {
-            recipientInfo = await usermodel.getUserInfoByAddress(
-                req.body.recipient_address
-            );
-        }
-
-        const recipientAddress = recipientInfo[0].address;
-        const token_id = req.body.token_id;
-
-        if (!accessToken) {
-            return res
-                .status(404)
-                .send({ data: null, message: "Invalid access token" });
-        } else {
-            const token = accessToken.split(" ")[1];
-            console.log("token", token);
-            if (!token) {
+            if (!accessToken) {
                 return res
                     .status(404)
                     .send({ data: null, message: "Invalid access token" });
             } else {
-                const userInfo = jwt.verify(token, process.env.ACCESS_SECRET);
-                const sender = userInfo.address;
+                const token = accessToken.split(" ")[1];
+                console.log("token", token);
+                if (!token) {
+                    return res
+                        .status(404)
+                        .send({ data: null, message: "Invalid access token" });
+                } else {
+                    const userInfo = jwt.verify(token, process.env.ACCESS_SECRET);
 
-                const data = contract721.methods
-                    .transferFrom(sender, recipientAddress, token_id)
-                    .encodeABI();
+                    const senderAddress = userInfo.address;
 
-                const rawTransaction = {
-                    to: address721,
-                    gas: 10000000,
-                    data: data,
-                };
+                    let recipientAddress;
+                    if(req.body.user_id){
+                        const recipientInfo = await usermodel.getUserInfoById(req.body.user_id);
+                        recipientAddress = recipientInfo[0].address;
+                    } else if (req.body.nickname){
+                        const recipientInfo = await usermodel.getUserInfoByNickname(req.body.nickname);
+                        recipientAddress = recipientInfo[0].address;
+                    } else {
+                        recipientAddress = req.body.recipient;
+                    }
+                    console.log("수신자: ", recipientAddress)
+                    
+                    const tokenId = req.body.token_id;
 
-                const test = await web3.eth.accounts.signTransaction(
-                    rawTransaction,
-                    process.env.ADMIN_WALLET_PRIVATE_KEY
-                );
+                    const nft_owner = await contract721.methods.ownerOf(tokenId);
 
-                const test2 = await web3.eth.sendSignedTransaction(
-                    test.rawTransaction
-                );
+                    if(nft_owner !== senderAddress){
+                        return res.status(404).send({data:null, message:"Not owner of NFT"})
+                    } else {
+                        const nft_owner = await contract721.methods.ownerOf(tokenId);
+                        console.log("NFT 소유자: ", nft_owner);
+
+                        const data = contract721.methods
+                            .safeTransferFrom(senderAddress, recipientAddress, tokenId)
+                            .encodeABI();
+                        
+                        const rawTransaction = {
+                            to: address721,
+                            gas: 100000,
+                            data: data,
+                        };
+
+                        const signedTX = await web3.eth.accounts.signTransaction(
+                            rawTransaction,
+                            process.env.ADMIN_WALLET_PRIVATE_KEY
+                        );
+
+                        const sendingTX = await web3.eth.sendSignedTransaction(
+                            signedTX.rawTransaction
+                        );
+
+                        res.status(200).send({ data: sendingTX, message: "Transfer success"});
+                    }
+                }
             }
-        }
-
-        // const updateSenderInfo = await usermodel.setTokenAmountById(
-        //     "토큰을 복호화해서 user_id",
-        //     senderBalance
-        // );
-        // const updateRecipientInfo = await usermodel.setTokenAmountById(
-        //     recipientInfo.user_id,
-        //     recipientBalance
-        // );
-
-        // return res.status(200).send({
-        //     data: { updateSenderInfo, updateRecipientInfo },
-        //     message: "Transaction success",
-        // });
+        } catch (err) {
+            console.error(err);
+            res.status(400).send({ data: null, message: "Can't execute request"});
+        }  
     },
 
     mint: async (req, res) => {
-        const accessToken = req.headers.authorization;
-        console.log(accessToken, "hihi");
-
-        if (!accessToken) {
-            return res
-                .status(404)
-                .send({ data: null, message: "Invalid access token" });
-        } else {
-            const token = accessToken.split(" ")[1];
-
-            if (!token) {
+        try {
+            const accessToken = req.headers.authorization;
+            if (!accessToken) {
                 return res
                     .status(404)
                     .send({ data: null, message: "Invalid access token" });
             } else {
-                const userInfo = jwt.verify(token, process.env.ACCESS_SECRET);
+                const token = accessToken.split(" ")[1];
 
-                console.log(userInfo.address);
+                if (!token) {
+                    return res
+                        .status(404)
+                        .send({ data: null, message: "Invalid access token" });
+                } else {
+                    const userInfo = jwt.verify(token, process.env.ACCESS_SECRET);
 
-                const client = new NFTStorage({
-                    token: process.env.NFT_STORAGE_TOKEN,
-                });
-                console.log(req.file);
-                const imageFile = new File(
-                    [await fs.promises.readFile(req.file.path)],
-                    req.file.originalname,
-                    {
-                        type: req.file.mimetype,
-                    }
-                );
+                    const client = new NFTStorage({
+                        token: process.env.NFT_STORAGE_KEY,
+                    });
+            
+                    const imageFile = new File(
+                        [await fs.promises.readFile(req.file.path)],
+                        req.file.originalname,
+                        {
+                            type: req.file.mimetype,
+                        }
+                    );
 
-                const nftCID = await client.store({
-                    name: req.body.img[0],
-                    description: req.body.img[1],
-                    image: imageFile,
-                });
+                    const nftCID = await client.store({
+                        name: req.body.img[0],
+                        description: req.body.img[1],
+                        image: imageFile,
+                    });
 
-                console.log("nft url: ", nftCID.url);
+                    console.log("nft url: ", nftCID.url)
 
-                const newTokenURI =
-                    "https://ipfs.io/ipfs/" + nftCID.url.replace("ipfs://", "");
+                    const newTokenURI = "https://ipfs.io/ipfs/" + nftCID.url.replace("ipfs://", "");
 
-                console.log(newTokenURI);
-                // Contract mintNFT 함수 실행하는 트랜잭션 발행
-                let senderBalance;
-                const data = contract721.methods
-                    .mintNFT(userInfo.address, newTokenURI)
-                    .encodeABI();
+                    // Contract mintNFT 함수 실행하는 트랜잭션 발행
+                    const data = contract721.methods
+                        .mintNFT(
+                            req.body.address,
+                            newTokenURI
+                        )
+                        .encodeABI();
 
-                const rawTransaction = {
-                    // to: address721,
-                    to: address721,
-                    gas: 10000000,
-                    data: data,
-                };
+                    const rawTransaction = {
+                        to: address721,
+                        gas: 10000000,
+                        data: data,
+                    };
 
-                //https://dapp-world.com/smartbook/send-transaction-using-web3-in-node-project-RETu
+                    const signedTX = await web3.eth.accounts.signTransaction(
+                        rawTransaction,
+                        process.env.ADMIN_WALLET_PRIVATE_KEY
+                    );
 
-                const test = await web3.eth.accounts.signTransaction(
-                    rawTransaction,
-                    process.env.ADMIN_WALLET_PRIVATE_KEY
-                );
+                    const sendingTX = await web3.eth.sendSignedTransaction(
+                        signedTX.rawTransaction
+                    );
 
-                const test2 = await web3.eth.sendSignedTransaction(
-                    test.rawTransaction
-                );
-
-                console.log(test2, "test2");
-
-                senderBalance = await contract20.methods
-                    .balanceOf(userInfo.address)
-                    .call();
-
-                console.log(senderBalance, "센더발란스!");
-
-                // 몽고DB 의 user정보 업데이트.
-                // const updateSenderInfo = await usermodel.setTokenAmountById(
-                //     userInfo.user_id,
-                //     senderBalance
-                // );
-
-                return res.status(200).send({
-                    // data: updateSenderInfo,
-                    message: "Minting completed",
-                });
+                    res.status(200).send({ data: sendingTX, message: "Your NFT is created"})
+                }
             }
+        } catch (err) {
+            console.error(err);
+            res.status(400).send({ data: null, message: "Can't execute request"});
         }
     },
 
     buynft: async (req, res) => {
-        // 판매등록만...트랜잭션 x
-        const { token_id, buyer_id, payment } = req.body;
+        try {
+            const accessToken = req.headers.authorization;
 
-        const data = contract721.methods
-            .buyNFT(sender, recipientAddress, token_id, payment)
-            .encodeABI();
-        const rawTransaction = { to: address721, gas: 100000, data: data };
+            if (!accessToken) {
+                return res
+                    .status(404)
+                    .send({ data: null, message: "Invalid access token" });
+            } else {
+                const token = accessToken.split(" ")[1];
 
-        web3.eth.account
-            .signTransaction(
-                rawTransaction,
-                process.env.ADMIN_WALLET_PRIVATE_KEY
-            )
-            .then((signedTX) =>
-                web3.eth.sendSignedTransaction(signedTX.rawTransaction)
-            )
-            .then((req) => {
-                senderBalance = contract721.methods.balanceOf(sender).call();
-                recipientBalance = contract721.methods
-                    .balanceOf(recipientAddress)
-                    .call();
-                return true;
-            })
-            .catch((err) => {
-                console.error(err, "Transaction failure");
-            });
+                if (!token) {
+                    return res
+                        .status(404)
+                        .send({ data: null, message: "Invalid access token" });
+                } else {
+                    const userInfo = jwt.verify(token, process.env.ACCESS_SECRET);
 
-        const buyResult = nftmodel.buynft(token_id, buyer_id, recipientAddress);
-        return res
-            .status(200)
-            .send({ data: buyResult, message: "NFT를 구매합니다" });
+                    const senderAddress = userInfo.address;
+
+                    let recipientAddress;
+                    if(req.body.user_id){
+                        const recipientInfo = await usermodel.getUserInfoById(req.body.user_id);
+                        recipientAddress = recipientInfo[0].address;
+                    } else if (req.body.nickname){
+                        const recipientInfo = await usermodel.getUserInfoByNickname(req.body.nickname);
+                        recipientAddress = recipientInfo[0].address;
+                    } else {
+                        recipientAddress = req.body.recipient;
+                    }
+
+                    const tokenId = req.body.token_id;
+                    const amount = req.body.amount;
+                    const nft_owner = await contract721.methods.ownerOf(tokenId);
+
+                    if(nft_owner !== senderAddress){
+                        return res.status(404).send({data:null, message:"Not owner of NFT"})
+                    } else {
+                        console.log("현재 NFT 소유자: ", nft_owner);
+
+                        const data = contract721.methods
+                            .buyNFT(senderAddress, recipientAddress, tokenId, amount)
+                            .encodeABI();
+                        
+                        const rawTransaction = {
+                            to: address721,
+                            gas: 1000000,
+                            data: data,
+                        };
+
+                        const signedTX = await web3.eth.accounts.signTransaction(
+                            rawTransaction,
+                            process.env.ADMIN_WALLET_PRIVATE_KEY
+                        );
+
+                        const sendingTX = await web3.eth.sendSignedTransaction(
+                            signedTX.rawTransaction
+                        );
+
+                        res.status(200).send({ data: sendingTX, message: "Congratulations! The NFT is yours!"})
+                    }
+                }
+            }
+        } catch (err) {
+            console.log(err);
+            res.status(400).send({ data: null, message: "Can't execute request"});
+        }
     },
 
     sellnft: async (req, res) => {
-        const { user_id, token_id, price } = req.body;
-        const haveNFT = "판매하고자하는 nft를 소유했는지 확인절차";
-        const sellResult = nftmodel.sellnft(token_id, price);
+        // 판매 등록만 하기 때문에 DB의 isSelling, price 값만 변경
+        try {
+            const accessToken = req.headers.authorization;
 
-        return res
-            .status(200)
-            .send({ data: sellResult, message: "NFT를 판매합니다." });
+            if (!accessToken) {
+                return res
+                    .status(404)
+                    .send({ data: null, message: "Invalid access token" });
+            } else {
+                const token = accessToken.split(" ")[1];
+
+                if (!token) {
+                    return res
+                        .status(404)
+                        .send({ data: null, message: "Invalid access token" });
+                } else {
+                    const userInfo = jwt.verify(token, process.env.ACCESS_SECRET);
+                    const userId = userInfo.user_id;
+
+                    const tokenId = req.body.token_id;
+                    const nftPrice = req.body.price;
+                    const tokenInfo = await nftmodel.getInfoByTokenId(tokenId);
+
+                    if( userId !== tokenInfo.user_id){
+                        res.status(404).send({ data: null, message: "Not owner of NFT"})
+                    } else {
+                        const registration = await nftmodel.sellNft(tokenId, nftPrice)
+                        res.status(200).send({data: registration, message: "Sales-Registration completed"})
+                    }
+                }
+            }
+        } catch (err) {
+            console.log(err);
+            res.status(400).send({ data: null, message: "Can't execute request"});
+        }
     },
 
     findallnft: async (req, res) => {
-        console.log(req);
-
-        // console.log("모든 NFT 정보를 불러옵니다.");
-        // const data = await contract721.methods
-        //     .getMarketList()
-        //     .call({ from: test_account });
-        // console.log(data);
-        return res.status(200).send("모든 NFT 정보를 불러옵니다.");
+        try {
+            const allNFTsInfo = await nftmodel.getAllNfts();
+            res.status(200).send({ data: allNFTsInfo, })
+        } catch (err) {
+            console.error(err);
+            res.status(400).send({ data: null, message: "Can't execute request"});
+        }
     },
 };
