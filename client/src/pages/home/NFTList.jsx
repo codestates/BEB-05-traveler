@@ -4,6 +4,7 @@ import NFTPreview from './NFTPreview';
 import styled from 'styled-components';
 
 function NFTList({ collectionData }) {
+  console.log(collectionData, 'yyoyoyoyo');
   useEffect(() => {}, [collectionData]);
   return (
     <Lists>

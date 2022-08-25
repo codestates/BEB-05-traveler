@@ -1,15 +1,28 @@
 import { Result, Image, Row, Typography } from 'antd';
 import { WalletOutlined } from '@ant-design/icons';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import NFTList from './NFTList';
 import collectionData from '../../asset/dummy/fakeNFT';
 import { theme } from '../../style/theme';
+import axios from 'axios';
+import { useEffect } from 'react';
 
 const { Title } = Typography;
 
-function Section3() {
-  const recentData = collectionData.filter((e) => e.content_id <= 4);
+function Section3({ state }) {
+  const [collectionData, setCollectionData] = useState([]);
+  const getNFTs = async () => {
+    axios.get('http://localhost:4000/').then((res) => {
+      console.log(res.data.data.nftInfo);
+      setCollectionData(res.data.data.nftInfo);
+    });
+  };
+
+  useEffect(() => {
+    getNFTs();
+    console.log(collectionData);
+  }, [state]);
 
   return (
     <Row justify="center" align="middle" wrap={true}>
@@ -27,7 +40,7 @@ function Section3() {
       </TitleFont>
 
       <List>
-        <NFTList collectionData={recentData} />
+        <NFTList collectionData={collectionData} />
       </List>
     </Row>
   );
