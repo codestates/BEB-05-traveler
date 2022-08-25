@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { theme } from '../../style/theme';
 import { Row, Card, List, Image, Space, Typography } from 'antd';
-import { ConsoleSqlOutlined, FormOutlined } from '@ant-design/icons';
+import { FormOutlined } from '@ant-design/icons';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const { Title } = Typography;
@@ -42,6 +43,11 @@ const item_list = (list) => {
 };
 
 function Posts() {
+  const location = useLocation();
+  const user = location;
+  const token = user.state.token;
+  const userInfo = user.state.userInfo;
+
   const [postList, setPostList] = useState([]);
   const getPosts = async () => {
     console.log('get');
@@ -58,7 +64,7 @@ function Posts() {
 
   return (
     <Row justify="center" align="middle" wrap={true}>
-      <Link to={'/posts/create'}>
+      <Link to={"/posts/create"} state={{token: token, userInfo: userInfo}}>
         <button>
           <ButtonWrapper>
             <img src={process.env.PUBLIC_URL + '/sky.png'} style={{ width: '100%' }} />
@@ -100,7 +106,7 @@ function Posts() {
           dataSource={data}
           renderItem={(item) => (
             <List.Item>
-              <Link to={`/posts/${item.idx}`}>
+              <Link to={`/posts/${item.idx}`} state={{ token: token, userInfo: userInfo }}>
                 <PreviewImage>
                   <Card
                     style={{ width: '336px' }}

@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { theme } from '../../style/theme';
 import axios from 'axios';
 
+
 const item_list = (list) => {
   let array = [];
 
@@ -29,7 +30,7 @@ const item_list = (list) => {
 
 
 const { Title } = Typography;
-function Section2() {
+function Section2({state}) {
   const [postList, setPostList] = useState([]);
   const getPosts = async () => {
     console.log("get")
@@ -42,8 +43,10 @@ function Section2() {
 
   useEffect(() => {
     getPosts();
-  },[]);
+  },[state]);
 
+  const token = state.token;
+  const userInfo = state.userInfo;
   const data = item_list(postList);
 
   return (
@@ -61,7 +64,7 @@ function Section2() {
         </Title>
       </TitleFont>
       <List>
-        <PostsList collectionData={data} />
+        <PostsList collectionData={data} state={{token: token, userInfo: userInfo}}/>
       </List>
     </Row>
   );

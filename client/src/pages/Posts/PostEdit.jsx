@@ -1,35 +1,60 @@
 import { Col, Row, Typography, Input, Button} from 'antd';
 import {PushpinOutlined, EnvironmentOutlined} from '@ant-design/icons';
 import React, { useState, useRef, useEffect } from 'react';
-import collectionData from '../../asset/dummy/fakeposts.js';
-import { useParams } from 'react-router-dom';
 import ImageUpload from './ImageUpload.jsx';
-import mainImg from '../../../src/asset/dummy/image1.jpeg';
-import mainImg2 from '../../../src/asset/dummy/image2.jpg';
-import mainImg3 from '../../../src/asset/dummy/image3.png';
-import mainImg4 from '../../../src/asset/dummy/image4.png';
+import { useLocation } from 'react-router-dom';
 import { theme } from '../../style/theme.js';
+import axios from 'axios';
 
 const { Text } = Typography;
 const { TextArea } = Input;
 
 function PostEdit() {
-  const pa = useParams();
-  const filteredData = collectionData.filter((res) => res.content_id === pa.content_id);
-  const image_array = [mainImg, mainImg2, mainImg3, mainImg4];
-  
   const ref = useRef(null);
   const ref1 = useRef(null);
   const ref2 = useRef(null);
   const ref3 = useRef(null);
 
-  const [title, setTitle] = useState(filteredData[0].title);
+  // 서버로부터 가져오는 부분
+  const location = useLocation();
+  const post_id = location.pathname.split("/").pop();
+
+  const [title, setTitle] = useState("");
+  const [place, setPlace] = useState("");
+  const [addr, setAddr] = useState("");
+  const [content, setContent] = useState("");
+  const [file, setFile] = useState(process.env.PUBLIC_URL + "/noImage.png");
+  const [postOwner, setPostOwner] = useState("");
+
+  const getPost = async () => {
+    console.log("get post by post id")
+    axios
+      .get(`http://localhost:4000/board/post/${post_id}`,{
+      })
+      .then((res) => {
+        const postObject = res.data.data[0];
+        setPostOwner(postObject.user_id);
+        setTitle(postObject.title);
+        setPlace(postObject.place_name);
+        setAddr(postObject.place_address);
+        setContent(postObject.content);
+        const enc = new TextDecoder("utf-8");
+        let arr;
+        if (postObject.image) {arr = new Uint8Array(postObject.image.data.data)};
+        setFile(arr ? enc.decode(arr) : process.env.PUBLIC_URL + "/noImage.png");
+      });
+  }
+  
+  useEffect(() => {
+    getPost();
+  },[]);
+
+  // 이미지타입
+  const [imgType, setImgType] = useState('image/png'); //initial value
+
   const [editTitle,setEditTitle] = useState(false);
-  const [place, setPlace] = useState(filteredData[0].place_name);
   const [editPlace, setEditPlace] = useState(false);
-  const [addr, setAddr] = useState(filteredData[0].place_address);
   const [editAddr, setEditAddr] = useState(false);
-  const [content, setContent] = useState(filteredData[0].content);
   const [editContent, setEditContent] = useState(false);
 
   const editTitleOn = () => {setEditTitle(true);};
@@ -58,11 +83,36 @@ function PostEdit() {
     window.addEventListener("click", handleClickOutside, true);
   });
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (location.state.userInfo.user_id !== postOwner || location.state.userInfo.user_id === '') {
+        window.alert("해당 게시물의 수정 권한이 없습니다.")
+    }
+    else {
+        axios
+            .post("http://localhost:4000/board/post_update",{
+                post_id : post_id,
+                user_id : postOwner,
+                title : title,
+                content : content,
+                image : {
+                    data: file,
+                    contentType: imgType
+                },
+                place_name: place,
+                place_address: addr,
+            })
+            .then((res) => {
+                console.log(res);
+            });
+        }
+    };
+
   return (
     <Row justify="center" align="middle">
       <Col xs={24} xl={16}>
         <Row gutter={[8, 8]} type="flex">
-            <ImageUpload defaultImg={image_array[pa.content_id - 1]} />
+            <ImageUpload file={file} setFile={setFile} setImgType={setImgType}/>
             <div style={{paddingLeft: '10px', paddingRight:'10px'}}>
                 <div ref={ref} style={{paddingBottom:'7px'}}>
                     {editTitle ? (
@@ -94,7 +144,7 @@ function PostEdit() {
                 </div>
             </div>
             <div style={{width: '100%',paddingLeft: '10px', paddingTop:'30px', textAlign:'center'}}>
-                <Button>수정 완료</Button>
+                <Button onClick={onSubmit}>수정 완료</Button>
             </div>
         </Row>
       </Col>
