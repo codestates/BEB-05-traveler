@@ -4,6 +4,7 @@ const address20 = require("../address20");
 const address721 = require("../address721");
 const jwt = require("jsonwebtoken");
 const { NFTStorage, File, Blob } = require("nft.storage");
+
 const fs = require("fs");
 
 const nftstorage = new NFTStorage({ token: process.env.NFT_STORAGE_KEY });
@@ -20,7 +21,7 @@ const contract721 = new web3.eth.Contract(abi721, address721);
 
 const nftmodel = require("../models/nft");
 const usermodel = require("../models/user");
-const { default: Upload } = require("antd/lib/upload/Upload");
+const { send } = require("process");
 
 module.exports = {
     transfer_20: async (req, res) => {
@@ -89,8 +90,9 @@ module.exports = {
     },
 
     transfer_721: async (req, res) => {
-        const sender = "토큰을 복호화해서 address";
+        const accessToken = req.headers.authorization;
         let recipientInfo;
+
         if (req.body.recipient_id) {
             recipientInfo = await usermodel.getUserInfoById(
                 req.body.recipient_id
@@ -107,46 +109,102 @@ module.exports = {
             );
         }
 
-        const recipientAddress = recipientInfo.address;
+        const recipientAddress = recipientInfo[0].address;
+        const token_id = req.body.token_id;
 
-        let senderBalance;
-        let recipientBalance;
-        const data = contract721.methods
-            .transferFrom(sender, recipientAddress, token_id)
-            .encodeABI();
-        const rawTransaction = { to: address721, gas: 100000, data: data };
-        web3.eth.account
-            .signTransaction(
-                rawTransaction,
-                process.env.ADMIN_WALLET_PRIVATE_KEY
-            )
-            .then((signedTX) =>
-                web3.eth.sendSignedTransaction(signedTX.rawTransaction)
-            )
-            .then((req) => {
-                senderBalance = contract721.methods.balanceOf(sender).call();
-                recipientBalance = contract721.methods
-                    .balanceOf(recipientAddress)
-                    .call();
-                return true;
-            })
-            .catch((err) => {
-                console.error(err, "Transaction failure");
-            });
+        if (!accessToken) {
+            return res
+                .status(404)
+                .send({ data: null, message: "Invalid access token" });
+        } else {
+            const token = accessToken.split(" ")[1];
+            console.log("token", token);
+            if (!token) {
+                return res
+                    .status(404)
+                    .send({ data: null, message: "Invalid access token" });
+            } else {
+                const userInfo = jwt.verify(token, process.env.ACCESS_SECRET);
+                const sender = userInfo.address;
 
-        const updateSenderInfo = await usermodel.setTokenAmountById(
-            "토큰을 복호화해서 user_id",
-            senderBalance
-        );
-        const updateRecipientInfo = await usermodel.setTokenAmountById(
-            recipientInfo.user_id,
-            recipientBalance
-        );
+                const data = contract721.methods
+                    .transferFrom(sender, recipientAddress, token_id)
+                    .encodeABI();
 
-        return res.status(200).send({
-            data: { updateSenderInfo, updateRecipientInfo },
-            message: "Transaction success",
-        });
+                const rawTransaction = {
+                    to: address721,
+                    gas: 10000000,
+                    data: data,
+                };
+
+                const test = await web3.eth.accounts.signTransaction(
+                    rawTransaction,
+                    process.env.ADMIN_WALLET_PRIVATE_KEY
+                );
+
+                const test2 = await web3.eth.sendSignedTransaction(
+                    test.rawTransaction
+                );
+            }
+        }
+
+        // let recipientInfo;
+        // if (req.body.recipient_id) {
+        //     recipientInfo = await usermodel.getUserInfoById(
+        //         req.body.recipient_id
+        //     );
+        // }
+        // if (req.body.recipient_nickname) {
+        //     recipientInfo = await usermodel.getUserInfoByNickname(
+        //         req.body.recipient_nickname
+        //     );
+        // }
+        // if (req.body.recipient_address) {
+        //     recipientInfo = await usermodel.getUserInfoByAddress(
+        //         req.body.recipient_address
+        //     );
+        // }
+
+        // const recipientAddress = recipientInfo.address;
+
+        // let senderBalance;
+        // let recipientBalance;
+        // const data = contract721.methods
+        //     .transferFrom(sender, recipientAddress, token_id)
+        //     .encodeABI();
+        // const rawTransaction = { to: address721, gas: 100000, data: data };
+        // web3.eth.account
+        //     .signTransaction(
+        //         rawTransaction,
+        //         process.env.ADMIN_WALLET_PRIVATE_KEY
+        //     )
+        //     .then((signedTX) =>
+        //         web3.eth.sendSignedTransaction(signedTX.rawTransaction)
+        //     )
+        //     .then((req) => {
+        //         senderBalance = contract721.methods.balanceOf(sender).call();
+        //         recipientBalance = contract721.methods
+        //             .balanceOf(recipientAddress)
+        //             .call();
+        //         return true;
+        //     })
+        //     .catch((err) => {
+        //         console.error(err, "Transaction failure");
+        //     });
+
+        // const updateSenderInfo = await usermodel.setTokenAmountById(
+        //     "토큰을 복호화해서 user_id",
+        //     senderBalance
+        // );
+        // const updateRecipientInfo = await usermodel.setTokenAmountById(
+        //     recipientInfo.user_id,
+        //     recipientBalance
+        // );
+
+        // return res.status(200).send({
+        //     data: { updateSenderInfo, updateRecipientInfo },
+        //     message: "Transaction success",
+        // });
     },
 
     mint: async (req, res) => {
@@ -167,12 +225,14 @@ module.exports = {
             } else {
                 const userInfo = jwt.verify(token, process.env.ACCESS_SECRET);
 
+                console.log(userInfo.address);
+
                 const client = new NFTStorage({
                     token: process.env.NFT_STORAGE_TOKEN,
                 });
-
+                console.log(req.file);
                 const imageFile = new File(
-                    req.file.path,
+                    [await fs.promises.readFile(req.file.path)],
                     req.file.originalname,
                     {
                         type: req.file.mimetype,
@@ -185,11 +245,12 @@ module.exports = {
                     image: imageFile,
                 });
 
+                console.log("nft url: ", nftCID.url);
+
                 const newTokenURI =
                     "https://ipfs.io/ipfs/" + nftCID.url.replace("ipfs://", "");
 
                 console.log(newTokenURI);
-
                 // Contract mintNFT 함수 실행하는 트랜잭션 발행
                 let senderBalance;
                 const data = contract721.methods
@@ -198,8 +259,8 @@ module.exports = {
 
                 const rawTransaction = {
                     // to: address721,
-                    to: "0x21e73194294e09F969Bed0e12435cdB3CD5BEcF0",
-                    gas: 100000,
+                    to: address721,
+                    gas: 10000000,
                     data: data,
                 };
 
@@ -214,40 +275,24 @@ module.exports = {
                     test.rawTransaction
                 );
 
-                const test3 = await contract721.methods
+                console.log(test2, "test2");
+
+                senderBalance = await contract20.methods
                     .balanceOf(userInfo.address)
                     .call();
 
-                console.log(test3);
+                console.log(senderBalance, "센더발란스!");
 
-                // web3.eth
-                //     .signTransaction(
-                //         rawTransaction,
-                //         process.env.ADMIN_WALLET_PRIVATE_KEY
-                //     )
-                //     .then((signedTx) =>
-                //         web3.eth.sendSignedTransaction(signedTx.rawTransaction)
-                //     )
-                //     .then((req) => {
-                //         senderBalance = contract721.methods
-                //             .balanceOf(userInfo.address)
-                //             .call();
-                //         return true;
-                //     })
-                //     .catch((err) => {
-                //         console.error(err, "Minting failure");
-                //     });
-
-                // // 몽고DB 의 user정보 업데이트.
+                // 몽고DB 의 user정보 업데이트.
                 // const updateSenderInfo = await usermodel.setTokenAmountById(
-                //     userInfo.address,
+                //     userInfo.user_id,
                 //     senderBalance
                 // );
 
-                // return res.status(200).send({
-                //     data: updateSenderInfo,
-                //     message: "Minting completed",
-                // });
+                return res.status(200).send({
+                    // data: updateSenderInfo,
+                    message: "Minting completed",
+                });
             }
         }
     },

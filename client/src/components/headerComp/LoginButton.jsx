@@ -3,7 +3,7 @@ import { Button } from 'antd';
 import { theme } from '../../style/theme';
 import { Link } from 'react-router-dom';
 
-function LoginButton({ token, setIsLoginVisible, userInfo }) {
+function LoginButton({ token, setIsLoginVisible, userInfo, loading }) {
   const showLoginModal = () => {
     setIsLoginVisible(true);
   };
@@ -18,6 +18,7 @@ function LoginButton({ token, setIsLoginVisible, userInfo }) {
         <Button
           shape="round"
           size="large"
+          loading={loading}
           onClick={showLoginModal}
           style={{ color: `${theme.brown}`, fontWeight: 'bold' }}
         >

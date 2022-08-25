@@ -24,7 +24,8 @@ function App() {
 
   useEffect(() => {
     console.log(cookies);
-  }, [cookies]);
+    console.log(userInfo);
+  }, [cookies, userInfo]);
 
   return (
     <div className="App">
@@ -52,7 +53,7 @@ function App() {
           }}
           className="site-layout-content"
         >
-          <Router />
+          <Router userInfo={userInfo} />
         </Content>
         <Footer />
       </Layout>

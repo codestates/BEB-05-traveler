@@ -15,10 +15,10 @@ import PostEdit from '../pages/Posts/PostEdit';
 import PostCreate from '../pages/Posts/PostCreate';
 import NFTDetail from '../pages/Market/NFTDetail';
 
-export default function Router() {
+export default function Router({ userInfo }) {
   return (
     <Routes>
-      <Route path="/" element={[<Section1 />, <Section2 />, <Section3 />]} />
+      <Route path="/" element={[<Section1 />, <Section2 userInfo={userInfo} />, <Section3 />]} />
       <Route path="/posts" element={[<Posts />]} />
       <Route path="/posts/:content_id" element={<PostDetail />} />
       <Route path="posts/edit/:content_id" element={[<PostEdit />]} />
