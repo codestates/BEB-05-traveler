@@ -72,7 +72,7 @@ contract ERC20 is ERC20Interface, Ownable {
     //     return true;
     // }
     // spender가 거래 가능하도록 양도 받은 토큰을 전송
-    function transferFrom(address sender, address recipient, uint256 amount) external virtual override onlyOwner returns (bool) {
+    function transferFrom(address sender, address recipient, uint256 amount) external virtual override returns (bool) {
         _transfer(sender, recipient, amount);
         emit Transfer(msg.sender, sender, recipient, amount);
         // uint256 currentAllowance = _allowances[sender][msg.sender];
