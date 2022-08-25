@@ -1,16 +1,20 @@
 import { Card, Image } from 'antd';
 import Meta from 'antd/lib/card/Meta';
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-function PostsPreview({ collectionData }) {
+function PostsPreview({ collectionData, state }) {
+  useEffect(() => {}, [collectionData,state]);
+  const token = state.token;
+  const userInfo = state.userInfo;
 
   return (
-    <Link to={`/posts/${collectionData.post_id}`}>
+    
+    <Link to={`/posts/${collectionData.idx}`} state={{token: token, userInfo: userInfo}}>
       <PreviewImage>
         <Card
-          key={collectionData.post_id}
+          key={collectionData.idx}
           hoverable
           cover={
             <Image

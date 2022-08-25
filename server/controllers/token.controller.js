@@ -12,10 +12,6 @@ const nftstorage = new NFTStorage({ token: process.env.NFT_STORAGE_KEY });
 const Web3 = require("web3");
 const web3 = new Web3(process.env.RPCURL);
 
-// const Provider = require("@truffle/hdwallet-provider");
-// const provider = new Provider(process.env.PRI_KEY, process.env.RPCURL);
-// const web3 = new Web3(provider);
-
 const contract20 = new web3.eth.Contract(abi20, address20);
 const contract721 = new web3.eth.Contract(abi721, address721);
 

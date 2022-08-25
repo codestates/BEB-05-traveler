@@ -11,7 +11,7 @@ const { Option } = Select;
 function MyPage() {
   const location = useLocation();
   const user = location;
-  console.log(user.state.userInfo);
+  console.log(user.state);
 
   const { Title } = Typography;
   const [optionVal, setOptionVal] = useState(null);
@@ -30,13 +30,15 @@ function MyPage() {
 
   const [numOfPosts, setNumOfPosts] = useState(0);
   const getPostNum = async () => {
-    axios
-      .get("http://localhost:4000/board/postbyid",{
-        headers: {authorization: user.state["token"]}
-      })
-      .then((res) => {
-        setNumOfPosts(res.data.data.length);
-      });
+    if (user.state["token"] !== '') {
+      axios
+        .get("http://localhost:4000/board/postbyid",{
+          headers: {authorization: user.state["token"]}
+        })
+        .then((res) => {
+          setNumOfPosts(res.data.data.length);
+        });
+    };
   }
   
   useEffect(() => {
