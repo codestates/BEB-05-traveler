@@ -22,14 +22,7 @@ function App() {
   const [token, setToken] = useState('');
   const [cookies, setCookie, removeCookie] = useCookies(['rememberUser']);
 
-  useEffect(() => {
-<<<<<<< HEAD
-    console.log(cookies);
-    console.log(userInfo);
-  }, [cookies, userInfo]);
-=======
-  }, [cookies, userInfo, token]);
->>>>>>> c9477c1c5ad9a489bfcd88aa897487c028c324a9
+  useEffect(() => {}, [cookies, userInfo, token]);
 
   return (
     <div className="App">
@@ -57,11 +50,7 @@ function App() {
           }}
           className="site-layout-content"
         >
-<<<<<<< HEAD
-          <Router userInfo={userInfo} />
-=======
           <Router token={token} userInfo={userInfo} />
->>>>>>> c9477c1c5ad9a489bfcd88aa897487c028c324a9
         </Content>
         <Footer />
       </Layout>

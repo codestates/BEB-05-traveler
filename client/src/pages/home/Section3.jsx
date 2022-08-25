@@ -5,26 +5,11 @@ import styled from 'styled-components';
 import NFTList from './NFTList';
 import collectionData from '../../asset/dummy/fakeNFT';
 import { theme } from '../../style/theme';
-import axios from 'axios';
 
 const { Title } = Typography;
 
 function Section3() {
   const recentData = collectionData.filter((e) => e.content_id <= 4);
-
-  const [postList, setPostList] = useState([]);
-  const getPosts = async () => {
-    console.log('get', userInfo);
-    axios.get('http://localhost:4000/').then((res) => {
-      setPostList(res.data.data.postInfo);
-    });
-  };
-
-  useEffect(() => {
-    getPosts();
-  }, []);
-
-  const data = item_list(postList);
 
   return (
     <Row justify="center" align="middle" wrap={true}>
@@ -42,7 +27,7 @@ function Section3() {
       </TitleFont>
 
       <List>
-        <NFTList collectionData={data} />
+        <NFTList collectionData={recentData} />
       </List>
     </Row>
   );
