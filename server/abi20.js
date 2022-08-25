@@ -21,29 +21,17 @@ const abi20 = [
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "owner",
+				"name": "previousOwner",
 				"type": "address"
 			},
 			{
 				"indexed": true,
 				"internalType": "address",
-				"name": "spender",
+				"name": "newOwner",
 				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "oldAmount",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
 			}
 		],
-		"name": "Approval",
+		"name": "OwnershipTransferred",
 		"type": "event"
 	},
 	{
@@ -101,30 +89,6 @@ const abi20 = [
 		],
 		"name": "Transfer",
 		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "_allowances",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
 	},
 	{
 		"inputs": [],
@@ -182,54 +146,6 @@ const abi20 = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "spender",
-				"type": "address"
-			}
-		],
-		"name": "allowance",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "spender",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "approve",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
 				"name": "account",
 				"type": "address"
 			}
@@ -259,6 +175,30 @@ const abi20 = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "viator",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "getBack",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "name",
 		"outputs": [
@@ -269,6 +209,26 @@ const abi20 = [
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -349,7 +309,20 @@ const abi20 = [
 		],
 		"stateMutability": "nonpayable",
 		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	}
-];
+]
 
 module.exports = abi20;
