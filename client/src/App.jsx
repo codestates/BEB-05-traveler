@@ -23,8 +23,7 @@ function App() {
   const [cookies, setCookie, removeCookie] = useCookies(['rememberUser']);
 
   useEffect(() => {
-    console.log(cookies);
-  }, [cookies]);
+  }, [cookies, userInfo, token]);
 
   return (
     <div className="App">
@@ -52,7 +51,7 @@ function App() {
           }}
           className="site-layout-content"
         >
-          <Router />
+          <Router token={token} userInfo={userInfo} />
         </Content>
         <Footer />
       </Layout>
