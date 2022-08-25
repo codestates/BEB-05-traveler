@@ -17,10 +17,13 @@ const getTransactions = cron.schedule('* * * * * *', async function () {
     // 블록체인에 기록된 nft의 수와 DB에 저장된 nft의 수를 가져온다.
     console.log("1초마다 블록체인네트워크를 탐색합니다.")
     const totalSupply = await contract721.methods.totalSupply().call();
+    console.log("블록체인에 저장된 NFT의 수: ", totalSupply);
     const nftCount = await nftmodel.getAllNfts().sort({ token_id: -1 }).limit(1);
+    console.log("데이터베이스에 저장된 NFT의 수: ", nftCount);
 
     // 새로운 nft만 추가해서 DB에 적재한다.
     for ( let i = nftCount+1 ; i <= totalSupply ; i++ ){
+        console.log("새로운 NFT 정보를 업데이트합니다.")
         const user_address = await contract721.methods.ownerOf(i).call();
         const token_uri = await contract721.methods.tokenURI(i).call();
         const userInfo = await usermodel.getUserInfoByAddress(user_address);
