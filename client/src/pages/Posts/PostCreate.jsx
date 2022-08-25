@@ -3,15 +3,12 @@ import {PushpinOutlined, EnvironmentOutlined} from '@ant-design/icons';
 import React, { useState, useRef, useEffect } from 'react';
 import ImageUpload from './ImageUpload.jsx';
 import { theme } from '../../style/theme.js';
-import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const { Text } = Typography;
 const { TextArea } = Input;
 
 function PostCreate() {
-    const location = useLocation();
-
     const ref = useRef(null);
     const ref1 = useRef(null);
     const ref2 = useRef(null);
@@ -57,13 +54,10 @@ function PostCreate() {
     const [imgType, setImgType] = useState('image/png'); //initial value
 
     const onSubmit = async (e) => {
-        const user_id = location.state.userInfo.user_id;
         e.preventDefault();
-
-        if (user_id === '') {window.alert("로그인 필요")}
-        else {
-            axios
+        axios
             .post("http://localhost:4000/board/newpost",{
+                user_id : "barista0102",
                 title : title,
                 content : content,
                 image : {
@@ -72,11 +66,10 @@ function PostCreate() {
                 },
                 place_name: place,
                 place_address: addr,
-            },{headers:{authorization: location.state.token}})
+            })
             .then((res) => {
                 console.log(res);
             });
-        }
     };
 
 

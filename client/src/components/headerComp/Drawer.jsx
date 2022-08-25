@@ -24,10 +24,10 @@ function DrawerComp({ visible, setVisible, token, userInfo }) {
           key={placement}
           style={{ fontSize: '150%' }}
         >
-          <Link to="/" state={{ token: token, userInfo: userInfo }}>
+          <Link to="/">
             <Title style={{ fontSize: 30 }}>Home</Title>
           </Link>
-          <Link to="/posts" state={{ token: token, userInfo: userInfo }}>
+          <Link to="/posts">
             <Title style={{ fontSize: 30 }}>Posts</Title>
           </Link>
           <Link to="/mypage" state={{ token: token, userInfo: userInfo }}>

@@ -38,7 +38,6 @@ function LoginModal({
       headers: { authorization: res.data.data.accessToken },
     });
     if (userinfo.status === 200) {
-      console.log('yoyoyoyoyoyoyo', userinfo);
       setUserInfo({
         user_id: userinfo.data.data.user_id,
         nickname: userinfo.data.data.nickname,

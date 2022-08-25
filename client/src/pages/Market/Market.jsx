@@ -4,22 +4,10 @@ import styled from 'styled-components';
 import { theme } from '../../style/theme';
 import collectionData from '../../asset/dummy/fakeNFT';
 import MarketNFTList from './MarketNFTList';
-import axios from 'axios';
-import { useEffect } from 'react';
 
 const { Title } = Typography;
 
 function Market() {
-  useEffect(() => {
-    getNFT();
-  }, []);
-
-  const getNFT = async () => {
-    const NFT_list = await axios.get('http://localhost:4000/user/info', {
-      // headers: { authorization: res.data.data.accessToken },
-    });
-  };
-
   return (
     <Row gutter={[8, 8]} justify="center" align="middle" wrap={true}>
       <TitleFont>

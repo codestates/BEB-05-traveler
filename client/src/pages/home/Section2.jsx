@@ -1,5 +1,5 @@
 import { Row, Typography } from 'antd';
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import PostsList from './PostsList';
 import styled from 'styled-components';
 import { theme } from '../../style/theme';
@@ -8,44 +8,42 @@ import axios from 'axios';
 const item_list = (list) => {
   let array = [];
 
-  for (let i = 0; i < list.length; i++) {
-    let el = list[i];
-    const enc = new TextDecoder('utf-8');
-    let arr;
-    if (el.image) {
-      arr = new Uint8Array(el.image.data.data);
-    }
-    let obj = {
-      idx: el.post_id,
-      title: el.title,
-      image: arr ? enc.decode(arr) : process.env.PUBLIC_URL + '/noImage.png',
-      place_name: el.place_name,
-      place_address: el.place_address,
-      created_at: el.created_at,
-      content: el.content,
-    };
-    array.push(obj);
+  for (let i=0; i<list.length; i++) {
+      let el = list[i];
+      const enc = new TextDecoder("utf-8");
+      let arr;
+      if (el.image) {arr = new Uint8Array(el.image.data.data)};
+      let obj = {
+          idx: el.post_id,
+          title: el.title,
+          image: arr ? enc.decode(arr) : process.env.PUBLIC_URL + "/noImage.png",
+          place_name: el.place_name,
+          place_address: el.place_address,
+          created_at: el.created_at,
+          content: el.content,
+      };
+      array.push(obj);
   }
   return array;
 };
 
-const { Title } = Typography;
 
-function Section2({ state }) {
+const { Title } = Typography;
+function Section2() {
   const [postList, setPostList] = useState([]);
   const getPosts = async () => {
-    console.log('get', userInfo);
-    axios.get('http://localhost:4000/').then((res) => {
-      setPostList(res.data.data.postInfo);
-    });
-  };
+    console.log("get")
+    axios
+      .get("http://localhost:4000/")
+      .then((res) => {
+        setPostList(res.data.data.postInfo);
+      });
+  }
 
   useEffect(() => {
     getPosts();
-  }, [state]);
+  },[]);
 
-  const token = state.token;
-  const userInfo = state.userInfo;
   const data = item_list(postList);
 
   return (
@@ -63,7 +61,7 @@ function Section2({ state }) {
         </Title>
       </TitleFont>
       <List>
-        <PostsList collectionData={data} state={{ token: token, userInfo: userInfo }} />
+        <PostsList collectionData={data} />
       </List>
     </Row>
   );

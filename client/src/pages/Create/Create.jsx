@@ -17,32 +17,22 @@ function Create() {
   const user = location;
 
   const onMint = async () => {
-    setLoadings((prevLoadings) => {
-      const newLoadings = [...prevLoadings];
-      newLoadings[1] = true;
-      return newLoadings;
-    });
     console.log('hihi', image, user.state.token);
+    // let tmp = new Blob([image], { type: `${image.type}` });
     const formData = new FormData();
+    // formData.append('data', JSON.stringify({ name: 'hihi' }));
     console.log('name', name, description);
     formData.append('img', image);
     formData.append('img', name);
     formData.append('img', description);
-
+    // console.log(formData.getAll('img'));
+    // console.log(formData.values().next(), 'checkcheck');
     const headers = {
       Authorization: `JWT ${user.state.token}`,
       'Content-Type': 'multipart/form-data',
     };
     const res = await axios.post('http://localhost:4000/token/mint', formData, { headers });
     console.log(res);
-
-    setTimeout(() => {
-      setLoadings((prevLoadings) => {
-        const newLoadings = [...prevLoadings];
-        newLoadings[1] = false;
-        return newLoadings;
-      });
-    }, 10);
   };
 
   const beforeUpload = (file) => {

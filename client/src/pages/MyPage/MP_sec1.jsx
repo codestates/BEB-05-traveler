@@ -10,7 +10,7 @@ import {
   EnvironmentOutlined,
 } from '@ant-design/icons';
 import { Typography, Space, List, Image, Tag } from 'antd';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 
 const { Title } = Typography;
@@ -42,7 +42,6 @@ const item_list = (list) => {
   }
   return array;
 };
-
 function MP_sec1() {
   const location = useLocation();
   const user = location;
@@ -50,35 +49,19 @@ function MP_sec1() {
 
   const [postList, setPostList] = useState([]);
   const getPosts = async () => {
-    if (user.state.token !== ''){
-      console.log("get post by id")
-      axios
-        .get("http://localhost:4000/board/postbyid",{
-          headers: {authorization: userObject["token"]}
-        })
-        .then((res) => {
-          setPostList(res.data.data);
-        });
-    }
+    console.log("get post by id")
+    axios
+      .get("http://localhost:4000/board/postbyid",{
+        headers: {authorization: userObject["token"]}
+      })
+      .then((res) => {
+        setPostList(res.data.data);
+      });
   }
   
   useEffect(() => {
     getPosts();
   },[]);
-
-  const onDelete = (post_id) => {
-    console.log("delete", post_id);
-    axios
-      .post("http://localhost:4000/board/post_delete",{
-        post_id: post_id
-      },{
-        headers: {authorization: userObject["token"]}
-      })
-      .then((res) => {
-        console.log("응답");
-        console.log(res);
-      });
-  }
   
   const data = item_list(postList);
   return (
@@ -111,21 +94,20 @@ function MP_sec1() {
               <List.Item
                 key={item.title}
                 actions={[
-                  <Link to={'/posts/edit/' + item.idx} state={userObject}>
+                  <a href={'http://localhost:3000/posts/edit/' + item.idx}>
                     <IconText icon={EditOutlined} text="수정" />
-                  </Link>,
-                  <button onClick={(e)=>{e.preventDefault(); onDelete(item.idx)}}><IconText icon={DeleteOutlined} text="삭제" /></button>
+                  </a>,
+                  <IconText icon={DeleteOutlined} text="삭제" />,
                 ]}
               >
                 <List.Item.Meta
                   title={
-                    <Link
-                      to={'/posts/' + item.idx}
-                      state={userObject}
+                    <a
+                      href={'http://localhost:3000/posts/' + item.idx}
                       style={{ fontSize: '18px', color: '#464646' }}
                     >
                       {item.title}
-                    </Link>
+                    </a>
                   }
                   avatar={<Image src={item.image} width={272} alt="logo" preview={true} />}
                   description={

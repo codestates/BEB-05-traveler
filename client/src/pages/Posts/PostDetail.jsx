@@ -1,108 +1,69 @@
 import { Col, Image, Row, Space, Typography } from 'antd';
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
+import collectionData from '../../asset/dummy/fakeposts.js';
 import {PushpinOutlined, EnvironmentOutlined, UserOutlined, EditOutlined, DeleteOutlined} from '@ant-design/icons';
 import styled from 'styled-components';
 import { theme } from '../../style/theme';
-import { useLocation, Link } from 'react-router-dom';
-import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const { Text } = Typography;
 
 function PostDetail() {
   const location = useLocation();
-  const user = location.state;
-  const post_id = location.pathname.split("/").pop();
-
-  const [postObject, setPostObject] = useState({
-    title: '',
-    place_name: '',
-    place_address: '' ,
-    content: '',
-    user_id: '',
-    created_at: '',
-  });
-
-  const getPost = async () => {
-    console.log("get post by post id")
-    axios
-      .get(`http://localhost:4000/board/post/${post_id}`,{
-      })
-      .then((res) => {
-        setPostObject(res.data.data[0]);
-      });
-  }
-
-
-  useEffect(() => {
-    getPost();
-  },[]);
-
-  const title = postObject.title;
-  const place = postObject.place_name;
-  const address = postObject.place_address;
-  const content = postObject.content;
-  const nickname = postObject.user_id;   // 나중에 nickname으로 변경!
-  const time = postObject.created_at;
-  const enc = new TextDecoder("utf-8");
-  let arr;
-  if (postObject.image) {arr = new Uint8Array(postObject.image.data.data)};
-  const image = arr ? enc.decode(arr) : process.env.PUBLIC_URL + "/noImage.png"
-
+  console.log(location);
+  
+  const pa = useParams();
+  const filteredData = collectionData.filter((res) => res.content_id === pa.content_id);
+  const title = filteredData[0].title;
+  const place = filteredData[0].place_name;
+  const address = filteredData[0].place_address;
+  const content = filteredData[0].content;
+  const nickname = filteredData[0].user_id;   // 나중에 nickname으로 변경!
+  const time = filteredData[0].created_at;
+  const image = process.env.PUBLIC_URL + "/" +filteredData[0].image;
   const IconText = ({ icon, text }) => (
     <Space>
         {React.createElement(icon)}
         {text}
     </Space>
   );
-  
-  const onDelete = () => {
-    console.log(11,user.token);
-    axios
-      .post("http://localhost:4000/board/post_delete",{
-        post_id: post_id
-      },{
-        headers: {authorization: user.token}
-      })
-      .then((res) => {
-        console.log(res);
-      });
-  }
-    
+  // post의 수정 권한이 있는 경우만 수정, 삭제 버튼 보이도록 할 예정
+  const [visible, setVisible] = useState(true);
+
+
   return (
-    <Row justify="left" align="middle">
-      <Wrapper>
-        <TextWrapper>
-          <Col flex={2}>
-            <Space direction="vertical">
-              <TitleFont style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_8}`, color: '#424242'}}>{title}</TitleFont>
-              <Text type="secondary" style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_5}`}}><PushpinOutlined style={{paddingTop: '4px'}}/>&nbsp;{place}</Text>
-              <Text type="secondary" style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_5}`}}><EnvironmentOutlined style={{paddingTop: '4px'}}/>&nbsp;{address}</Text>
-            </Space>
-          </Col>
-        </TextWrapper>
-        <CardWrapper>
-          <Col flex={3} style={{width: '800px', paddingTop:'10px', paddingBottom: '10px'}}>
-            <Image src={image} style={{paddingBottom:'10px', objectFit: 'cover'}}/>
-            <div style={{textAlign: 'left', whiteSpace: 'nowrap'}}>
-              <Text type="secondary" style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_5}`}}><UserOutlined style={{paddingTop: '4px'}}/>&nbsp;{nickname}</Text>
-              <Text type="secondary" style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_5}`}}>&ensp;&ensp;{time}</Text>
-            </div>
-            <div style={{textAlign: 'left'}}>
-              <Text style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_6}`, marginTop:'10px'}}>{content}</Text>
-            </div>
-            {user.userInfo.user_id === nickname & user.userInfo.user_id !== '' ?
-              <div style={{textAlign: 'right', whiteSpace: 'nowrap'}}>
-                <Link to={"/posts/edit/"+ post_id} state={location.state}><IconText icon={EditOutlined} text="수정" /></Link>
-                <Space>&ensp;&ensp;</Space>
-                <button onClick={onDelete}><IconText icon={DeleteOutlined} text="삭제" /></button>
-              </div>
-              : <div></div>
-            }
-          </Col>
-        </CardWrapper>
-      </Wrapper>
-    </Row>
-  );
+    // <Row justify="left" align="middle">
+    //   <Wrapper>
+    //     <TextWrapper>
+    //       <Col flex={2}>
+    //         <Space direction="vertical">
+    //           <TitleFont style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_8}`, color: '#424242'}}>{title}</TitleFont>
+    //           <Text type="secondary" style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_5}`}}><PushpinOutlined style={{paddingTop: '4px'}}/>&nbsp;{place}</Text>
+    //           <Text type="secondary" style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_5}`}}><EnvironmentOutlined style={{paddingTop: '4px'}}/>&nbsp;{address}</Text>
+    //         </Space>
+    //       </Col>
+    //     </TextWrapper>
+    //     <CardWrapper>
+    //       <Col flex={3} style={{width: '800px', paddingTop:'10px', paddingBottom: '10px'}}>
+    //         <Image src={image} style={{paddingBottom:'10px', objectFit: 'cover'}}/>
+    //         <div style={{textAlign: 'left', whiteSpace: 'nowrap'}}>
+    //           <Text type="secondary" style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_5}`}}><UserOutlined style={{paddingTop: '4px'}}/>&nbsp;{nickname}</Text>
+    //           <Text type="secondary" style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_5}`}}>&ensp;&ensp;{time}</Text>
+    //         </div>
+    //         <div style={{textAlign: 'left'}}>
+    //           <Text style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_6}`, marginTop:'10px'}}>{content}</Text>
+    //         </div>
+    //         <div style={{textAlign: 'right', whiteSpace: 'nowrap'}} visible={visible}>
+    //           <a href={"http://localhost:3000/posts/edit/"+ pa.content_id}><IconText icon={EditOutlined} text="수정" /></a>
+    //           <Space>&ensp;&ensp;</Space>
+    //           <IconText icon={DeleteOutlined} text="삭제" />
+    //         </div>
+    //       </Col>
+    //     </CardWrapper>
+    //   </Wrapper>
+    // </Row>
+  1);
 }
 
 const Wrapper = styled.div`
