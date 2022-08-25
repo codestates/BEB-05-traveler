@@ -144,50 +144,6 @@ module.exports = {
             }
         }
 
-        // let recipientInfo;
-        // if (req.body.recipient_id) {
-        //     recipientInfo = await usermodel.getUserInfoById(
-        //         req.body.recipient_id
-        //     );
-        // }
-        // if (req.body.recipient_nickname) {
-        //     recipientInfo = await usermodel.getUserInfoByNickname(
-        //         req.body.recipient_nickname
-        //     );
-        // }
-        // if (req.body.recipient_address) {
-        //     recipientInfo = await usermodel.getUserInfoByAddress(
-        //         req.body.recipient_address
-        //     );
-        // }
-
-        // const recipientAddress = recipientInfo.address;
-
-        // let senderBalance;
-        // let recipientBalance;
-        // const data = contract721.methods
-        //     .transferFrom(sender, recipientAddress, token_id)
-        //     .encodeABI();
-        // const rawTransaction = { to: address721, gas: 100000, data: data };
-        // web3.eth.account
-        //     .signTransaction(
-        //         rawTransaction,
-        //         process.env.ADMIN_WALLET_PRIVATE_KEY
-        //     )
-        //     .then((signedTX) =>
-        //         web3.eth.sendSignedTransaction(signedTX.rawTransaction)
-        //     )
-        //     .then((req) => {
-        //         senderBalance = contract721.methods.balanceOf(sender).call();
-        //         recipientBalance = contract721.methods
-        //             .balanceOf(recipientAddress)
-        //             .call();
-        //         return true;
-        //     })
-        //     .catch((err) => {
-        //         console.error(err, "Transaction failure");
-        //     });
-
         // const updateSenderInfo = await usermodel.setTokenAmountById(
         //     "토큰을 복호화해서 user_id",
         //     senderBalance
