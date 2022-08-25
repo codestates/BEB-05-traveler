@@ -40,8 +40,9 @@ contract NFTLootBox is ERC721URIStorage {
     // NFT 구매 함수
     function buyNFT (address _sender, address _recipient, uint _tokenId, uint _price) public onlyOwner returns (bool) {
         require( token.balanceOf(_recipient) >= _price );
-        safeTransferFrom(_sender, _recipient, _tokenId);
+        require( ownerOf(_tokenId) == _sender );
         token.transferFrom(_recipient, _sender, _price);
+        safeTransferFrom(_sender, _recipient, _tokenId);
         return true;
     }
 
