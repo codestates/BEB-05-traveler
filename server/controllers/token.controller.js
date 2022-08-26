@@ -202,7 +202,7 @@ module.exports = {
 
                     const rawTransaction = {
                         to: address721,
-                        gas: 10000000,
+                        gas: 100000,
                         data: data,
                     };
 
@@ -270,7 +270,7 @@ module.exports = {
                         
                         const rawTransaction = {
                             to: address721,
-                            gas: 1000000,
+                            gas: 100000,
                             data: data,
                         };
 
