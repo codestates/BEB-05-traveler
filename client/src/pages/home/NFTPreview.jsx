@@ -17,7 +17,7 @@ function PostsPreview({ collectionData }) {
     const response = await Axios.get(collectionData.token_uri);
 
     setImg(`https://ipfs.io/ipfs/${response.data.image.split('//')[1]}`);
-    setName(collectionData.token_uri);
+    setName(response.data.name);
     setDesc(response.data.description);
   };
 
