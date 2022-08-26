@@ -11,7 +11,7 @@ const { Option } = Select;
 function MyPage() {
   const location = useLocation();
   const user = location;
-  console.log(user.state);
+  console.log(user.state.token);
 
   const [userInfo, setUserInfo] = useState({
     user_id: '',
@@ -51,8 +51,29 @@ function MyPage() {
     }
   };
 
+  const getUserInfo = async () => {
+    axios
+      .get('http://localhost:4000/user/info', {
+        headers: { authorization: user.state.token },
+      })
+      .then((userinfo) => {
+        console.log(userinfo.data.data);
+        setUserInfo({
+          user_id: userinfo.data.data.user_id,
+          nickname: userinfo.data.data.nickname,
+          address: userinfo.data.data.address,
+          token_amount: userinfo.data.data.token_amount,
+          eth_amount: userinfo.data.data.eth_amount,
+          waiting_time: userinfo.data.data.waiting_time,
+          created_at: userinfo.data.data.created_at,
+        });
+      });
+  };
+
   useEffect(() => {
     getPostNum();
+    getUserInfo();
+    console.log(userInfo, 'hihihi');
   }, []);
 
   const showForm = (value) => {
@@ -160,17 +181,17 @@ function MyPage() {
             >
               <Avatar size={140} icon={<ContactsOutlined />} />
               <div style={{ paddingTop: '40px' }}>
-                {user.state.userInfo.nickname}&ensp;({user.state.userInfo.user_id})
+                {userInfo.nickname}&ensp;({userInfo.user_id})
               </div>
               <div style={{ paddingTop: '15px', fontSize: `${theme.fs_9}` }}>
                 {`게시글 수 : ${numOfPosts}`}&ensp;
-                {`보유 NFT 수 : ${user.state.userInfo.token_amount}`}
+                {`보유 NFT 수 : `} {userInfo.token_amount}
               </div>
               <div style={{ paddingTop: '15px', fontSize: `${theme.fs_9}`, whiteSpace: 'nowrap' }}>
-                {`내 주소 : ${user.state.userInfo.address}`}
+                {`내 주소 : `} {userInfo.address}
               </div>
               <div style={{ paddingTop: '15px', fontSize: `${theme.fs_9}` }}>
-                {`토큰 잔액: ${user.state.userInfo.eth_amount}`}
+                {`토큰 잔액: `} {userInfo.eth_amount}
               </div>
             </Title>
           </TitleFont>
