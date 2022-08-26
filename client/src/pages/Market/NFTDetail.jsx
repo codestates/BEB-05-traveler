@@ -29,6 +29,7 @@ function NFTDetail() {
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
   const [price, setPrice] = useState('');
+  const [username, setUsername] = useState('');
   useEffect(() => {
     getNFTInfo();
   }, [collectionData]);
@@ -57,6 +58,7 @@ function NFTDetail() {
     setName(response.data.name);
     setDesc(response.data.description);
     setPrice(user.state.collectionData.price);
+    setUsername(user.state.collectionData.user_id);
   };
   return (
     <Lists>
@@ -90,7 +92,7 @@ function NFTDetail() {
                   </Row>
                   <Row gutter={[8, 8]} type="flex">
                     <Text type="primary" style={{ marginLeft: 20, marginTop: 20, fontSize: 20 }}>
-                      owned by {name}
+                      owned by {username}
                     </Text>
                   </Row>
                   <Row gutter={[8, 8]} type="flex">
