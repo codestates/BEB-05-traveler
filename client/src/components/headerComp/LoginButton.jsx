@@ -1,20 +1,32 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Button } from 'antd';
 import { theme } from '../../style/theme';
-import { Link } from 'react-router-dom';
+import { authToken } from '../../authToken';
 
-function LoginButton({ token, setIsLoginVisible, userInfo, loading }) {
-  const showLoginModal = () => {
+function LoginButton({ setIsLoginVisible, btnVisible, setBtnVisible, userInfo, loading, cookieRemove }) {
+
+  const showLoginModal = (e) => { 
+    e.preventDefault();
     setIsLoginVisible(true);
   };
 
+
+  useEffect(()=>{
+    if (authToken.getToken() === ''){setBtnVisible(true);}
+    else {setBtnVisible(false);}
+  },[]);
+
+  const clickHandler = (e) => {
+    e.preventDefault();
+    cookieRemove('rememberUser',{path:'/'});
+    authToken.setToken('');
+    console.log("로그아웃!")
+    setBtnVisible(true);
+  }
+
   return (
     <>
-      {token ? (
-        <Link to="/mypage" state={{ token: token, userInfo: userInfo }}>
-          <Button>My page</Button>
-        </Link>
-      ) : (
+      {btnVisible ? (
         <Button
           shape="round"
           size="large"
@@ -24,6 +36,13 @@ function LoginButton({ token, setIsLoginVisible, userInfo, loading }) {
         >
           Login
         </Button>
+      ):
+      (
+        <Button
+          shape="round"
+          size="large"
+          onClick={clickHandler}
+        >Logout</Button>
       )}
     </>
   );

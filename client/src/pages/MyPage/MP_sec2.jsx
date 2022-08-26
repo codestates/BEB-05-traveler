@@ -1,9 +1,10 @@
 import { Input, Row, Col, Card, Image, Button, Typography,} from 'antd';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import { theme } from '../../style/theme';
 import {WalletOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 import mainImg from '../../../src/asset/dummy/image1.jpeg';
 import mainImg2 from '../../../src/asset/dummy/image2.jpg';
@@ -14,26 +15,67 @@ import mainImg5 from '../../../src/asset/dummy/image5.png';
 const image_array = [mainImg, mainImg2, mainImg3, mainImg4, mainImg5,mainImg, mainImg2, mainImg3, mainImg4, mainImg5];
 const { Title, Text } = Typography;
 
-
 const returnTitle = (text) => {
     return (
         <TitleFont>
-            <Title
-            style={{
-                marginBottom: `${theme.space_2}`,
-                marginTop: `${theme.space_2}`,
-                fontSize: `${theme.fs_12}`,
-                fontWeight: `${theme.fw_700}`,
-                color: '#575E89',
-            }}
-            >
-                {text}
-            </Title>
-        </TitleFont>
+        <Title
+          style={{
+            marginBottom: `${theme.space_7}`,
+            fontSize: `${theme.fs_14}`,
+            fontWeight: `${theme.fw_700}`,
+            color: `${theme.brown}`,
+          }}
+        >
+          {text}
+        </Title>
+      </TitleFont>
     );
 }
 
-function MP_sec2() {
+function MP_sec2({ state }) {
+    const [collectionData1, setCollectionData1] = useState([]);
+    const [nftInfo1, setNftInfo1] = useState([]);
+    const [collectionData2, setCollectionData2] = useState([]);
+    const [nftInfo2, setNftInfo2] = useState([]);
+  
+    const getNFTs = async () => {
+      axios
+        .get('http://localhost:4000/user/info', {
+          headers: { authorization: state.token },
+        })
+        .then((res) => {
+            setCollectionData1(res.data.user_nftInfo_sell);
+            setCollectionData2(res.data.user_nftInfo_notsell);
+        });
+    };
+
+    const getNFTInfo = async (collectionData,func) => {
+        const infoList = [];
+        for (let i=0; i<collectionData.length; i++) {
+            axios
+            .get(collectionData[i].link)
+            .then((res) => {
+                const info = {
+                    img: `https://ipfs.io/ipfs/${res.data.image.split('//')[1]}`,
+                    name: res.data.name,
+                    desc: res.data.description,
+                    price: collectionData[i].price,
+                    content_id: collectionData[i].content_id
+                }
+                infoList.push(info);
+                func(infoList);
+            })
+        }
+      };
+
+    useEffect(() => {
+        getNFTs();
+        getNFTInfo(collectionData1,setNftInfo1);
+        getNFTInfo(collectionData2,setNftInfo2);
+      }, [state]);
+
+
+
     const { Meta } = Card;
     // 판매 등록 버튼 visible
     const [visible, setVisible] = useState(true);
@@ -47,34 +89,32 @@ function MP_sec2() {
         return(
             <List>
                 <Row gutter={[16, 16]}>
-                    {image_array.map((_, idx) => {
+                    {image_array.map((nft, idx) => {
                         return (
                             <Col xs={12} xl={6}>
-                            {/* '/market/:content_id' 로 바꿔야함!! */}
-                            
                             <PreviewImage>
                             <Card
                                 hoverable
                                 cover={
                                 <Image
                                     alt="collection-card"
-                                    src={image_array[idx]}
+                                    src={nft.img}
                                     preview={false}
                                     style={{ objectFit: 'cover', height: 350 }}
                                 />
                                 }
                             >
-                                <div style={{fontSize: `${theme.fs_3}`, width:'100%',textAlign:'right'}}><Link to={`/posts/${idx+1}`}><Text type="secondary" underline={true}>상세보기</Text></Link></div>
+                                <div style={{fontSize: `${theme.fs_3}`, width:'100%',textAlign:'right'}}><Link to={`/market/${nft.content_id}`}><Text type="secondary" underline={true}>상세보기</Text></Link></div>
                                 <Card.Meta
                                     style={{width:'100%'}}
                                     title={
                                         <div style={{display:'flex'}}>
-                                            <span>{`NFT${idx} title`}</span>
+                                            <span>{nft.name}</span>
                                         </div>} 
                                     description={
                                         SellBool ?
                                         <div style={{width : '100%'}}>
-                                            <div>{`Price: ${0}`}</div>
+                                            <div>{`Price: ${nft.price}`}</div>
                                             <BTNWrapper>
                                                 <Button shape="round" style={{margin:'auto',display:'inline-block'}}>{"등록 취소"}</Button>
                                             </BTNWrapper>
@@ -119,9 +159,9 @@ function MP_sec2() {
                 </TitleFont>
             </div>
             {returnTitle("NFT for sale")}
-            {returnNFTs(image_array,true)}
+            {returnNFTs(nftInfo1,true)}
             {returnTitle("NFT not for sale")}
-            {returnNFTs(image_array,false)}
+            {returnNFTs(nftInfo2,false)}
         </Row>
     );
 }
@@ -131,7 +171,12 @@ const TitleFont = styled.div`
 
   text-align: center;
   font-weight: 400;
+  font-family: 'Aboreto', cursive;
   font-family: 'Noto Sans KR', sans-serif;
+  width: 100%;
+  border-top: 0.1rem dotted black;
+  padding-top: 40px;
+  text-decoration: underline overline #decfac;
 `;
 
 const List = styled.div`

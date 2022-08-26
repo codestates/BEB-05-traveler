@@ -11,7 +11,6 @@ const { Option } = Select;
 function MyPage() {
   const location = useLocation();
   const user = location;
-  console.log(user.state.token);
 
   const [userInfo, setUserInfo] = useState({
     user_id: '',
@@ -57,7 +56,6 @@ function MyPage() {
         headers: { authorization: user.state.token },
       })
       .then((userinfo) => {
-        console.log(userinfo.data.data);
         setUserInfo({
           user_id: userinfo.data.data.user_id,
           nickname: userinfo.data.data.nickname,
