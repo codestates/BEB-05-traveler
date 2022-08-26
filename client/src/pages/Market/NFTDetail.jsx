@@ -23,21 +23,25 @@ const { Meta } = Card;
 function NFTDetail() {
   const location = useLocation();
   const user = location;
-  console.log(user.state.token);
 
   const [num, setNum] = useState('');
   const [Img, setImg] = useState('');
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
-  const [price, setPrice] = useState('1 ETH');
+  const [price, setPrice] = useState('');
   useEffect(() => {
     getNFTInfo();
   }, [collectionData]);
 
   const onBuy = async () => {
+    console.log(user.state.collectionData);
     const res = await axios.post(
       'http://localhost:4000/token/buynft',
-      { token_id: user.state.collectionData.content_id },
+      {
+        token_id: user.state.collectionData.token_id,
+        user_id: user.state.collectionData.user_id,
+        price: user.state.collectionData.price,
+      },
       {
         headers: { authorization: `Bearer ${user.state.token}` },
       }
@@ -52,6 +56,7 @@ function NFTDetail() {
     setImg(`https://ipfs.io/ipfs/${response.data.image.split('//')[1]}`);
     setName(response.data.name);
     setDesc(response.data.description);
+    setPrice(user.state.collectionData.price);
   };
   return (
     <Lists>
