@@ -2,20 +2,29 @@ import { Result, Image, Row, Typography } from 'antd';
 import { WalletOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import NFTList from './NFTList';
+import NFTList from '../home/NFTList';
 import collectionData from '../../asset/dummy/fakeNFT';
 import { theme } from '../../style/theme';
 import axios from 'axios';
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const { Title } = Typography;
 
-function Section3({ state }) {
-  const [collectionData, setCollectionData] = useState([]);
+function MP_sec3({ state }) {
+  const location = useLocation();
+  const user = location;
+  const [collectionData1, setCollectionData1] = useState([]);
+  const [collectionData2, setCollectionData2] = useState([]);
   const getNFTs = async () => {
-    axios.get('http://localhost:4000/').then((res) => {
-      setCollectionData(res.data.data.nftInfo);
-    });
+    axios
+      .get('http://localhost:4000/user/info', {
+        headers: { authorization: user.state.token },
+      })
+      .then((res) => {
+        setCollectionData1(res.data.user_nftInfo_sell);
+        setCollectionData2(res.data.user_nftInfo_notsell);
+      });
   };
 
   useEffect(() => {
@@ -33,12 +42,27 @@ function Section3({ state }) {
             color: `${theme.brown}`,
           }}
         >
-          Recent NFT
+          My NFT for sale
         </Title>
       </TitleFont>
 
       <List>
-        <NFTList collectionData={collectionData} />
+        <NFTList collectionData={collectionData1} />
+      </List>
+      <TitleFont>
+        <Title
+          style={{
+            marginBottom: `${theme.space_7}`,
+            fontSize: `${theme.fs_14}`,
+            fontWeight: `${theme.fw_700}`,
+            color: `${theme.brown}`,
+          }}
+        >
+          My NFT NOT for sale
+        </Title>
+      </TitleFont>
+      <List>
+        <NFTList collectionData={collectionData2} />
       </List>
     </Row>
   );
@@ -64,4 +88,4 @@ const List = styled.div`
   margin
 `;
 
-export default Section3;
+export default MP_sec3;

@@ -33,8 +33,9 @@ function Create() {
       Authorization: `JWT ${user.state.token}`,
       'Content-Type': 'multipart/form-data',
     };
+    console.log(headers);
     const res = await axios.post('http://localhost:4000/token/mint', formData, { headers });
-    console.log(res);
+    console.log(res, 'TEST_RESUTL');
 
     setTimeout(() => {
       setLoadings((prevLoadings) => {

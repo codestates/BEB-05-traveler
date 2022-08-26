@@ -24,7 +24,7 @@ function MarketNFTPreivew({ collectionData }) {
   };
 
   return (
-    <Link to={`/market/${collectionData.content_id}`}>
+    <Link to={`/market/${collectionData.content_id}`} state={{ collectionData: collectionData }}>
       <PreviewImage>
         <Card
           key={collectionData.name}
