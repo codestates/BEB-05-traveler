@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
 
+// 최초 접속 시 클라이언트에 n개의 NFT 정보 전송
+const quantity = 4;
+
 const nftSchema = new mongoose.Schema({
     user_id: {
         type: String,
@@ -41,6 +44,14 @@ nftSchema.statics.sellNft = async function (token_id, price) {
     );
 };
 
+// nft 판매 등록 취소
+nftSchema.statics.cancelSale = async function (token_id) {
+    return await this.findOneAndUpdate(
+        { token_id: token_id },
+        { isselling: false, price: Number.MAX_SAFE_INTEGER }
+    );
+};
+
 // nft 구매
 nftSchema.statics.buynft = async function (token_id, buyer_id, buyer_address) {
     const _nft = {
@@ -68,8 +79,13 @@ nftSchema.statics.getInfoByTokenId = async function (token_id) {
 };
 
 // nft token_id로 토큰 정보 조회
-nftSchema.statics.getInfoBySellingStatus = async function (ok) {
-    return await this.find({ isselling: ok });
+nftSchema.statics.getInfoBySellingStatus = async function (status) {
+    return await this.find({ isselling: status });
 };
+
+// 최신 게시물 n개 조회
+nftSchema.statics.getRecentNft = async function() {
+    return await this.find({}).sort({token_id : -1}).limit(quantity);
+}
 
 module.exports = mongoose.model("Nft", nftSchema);

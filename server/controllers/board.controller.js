@@ -1,5 +1,4 @@
 const postmodel = require('../models/post');
-const usermodel = require("../models/user");
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
 
@@ -15,153 +14,173 @@ const token = 100 * (10 ** 18);
 const REWARD = web3.utils.toBN(token)
 
 module.exports = {
+    // 모든 게시글의 정보를 DB에서 읽어와 클라이언트로 송신
     posts: async (req, res) => {
-        console.log('모든 게시글을 불러옵니다.');
-        const postInfo = await postmodel.getAllPosts();
+        try {
+            const postInfo = await postmodel.getAllPosts();
 
-        return res.status(200).send({data: postInfo, message: "Completed search"})
+            console.log("모든 게시글의 조회가 완료되었습니다.")
+            return res.status(200).send({data: postInfo, message: "Completed search"})
+        } catch (err) {
+            console.error(err)
+            return res.status(404).send({data: null})
+        }
     },
 
+    // 클라이언트에서 작성된 새로운 글을 DB에 저장
     newpost: async (req, res) => {
-        const accessToken = req.headers.authorization;
-
-        if (!accessToken) {
-            return res.status(404).send({ data: null, message: "Invalid access token" });
-        } 
-        else {
-            const token = accessToken.split(" ")[0];
-
-            if (!token) {
-                return res.status(404).send({ data: null, message: "Invalid token" });
+        try {
+            const accessToken = req.headers.authorization;
+            if (!accessToken) {
+                return res.status(404).send({ data: null, message: "Invalid access token" });
             } 
             else {
-                const userInfo = jwt.verify(token, process.env.ACCESS_SECRET);
-                const postsAll = await postmodel.getPostId();
-                const postsCount = postsAll[0].post_id;
-                const newPost = {
-                    user_id: userInfo.user_id,
-                    title: req.body.title,
-                    content: req.body.content,
-                    image: req.body.image,
-                    place_name: req.body.place_name,
-                    place_address: req.body.place_address,
-                    reward: REWARD
-                };
-                const inputPost = postmodel.savePost(newPost, postsCount+1);
-                console.log('새로운 게시글을 저장합니다.');
-                // 보상 지급
-                let userBalance;
-                console.log(userInfo.address);
-                const data = contract20.methods.transfer(userInfo.address, REWARD).encodeABI();
-                const rawTransaction = {"to": address20, "gas": 100000, "data": data};
-                web3.eth.accounts.signTransaction(rawTransaction, process.env.ADMIN_WALLET_PRIVATE_KEY)
-                    .then( signedTX => web3.eth.sendSignedTransaction(signedTX.rawTransaction))
-                    .then( req => {
-                        return contract20.methods.balanceOf(userInfo.address).call();
+                const token = accessToken.split(" ")[0];
+                if (!token) {
+                    return res.status(404).send({ data: null, message: "Invalid token" });
+                } 
+                else {
+                    // 새로운 게시글 저장
+                    const userInfo = jwt.verify(token, process.env.ACCESS_SECRET);
+                    const postsAll = await postmodel.getPostId();
+                    const postsCount = postsAll[0].post_id;
+                    const newPost = {
+                        user_id: userInfo.user_id,
+                        title: req.body.title,
+                        content: req.body.content,
+                        image: req.body.image,
+                        place_name: req.body.place_name,
+                        place_address: req.body.place_address,
+                        reward: REWARD
+                    };
+                    const inputPost = postmodel.savePost(newPost, postsCount+1);
+                    console.log('새로운 게시글을 저장합니다.');
+
+                    // 보상 지급
+                    let userBalance;
+                    const data = contract20.methods.transfer(userInfo.address, REWARD).encodeABI();
+                    const rawTransaction = {"to": address20, "gas": 100000, "data": data};
+                    web3.eth.accounts.signTransaction(rawTransaction, process.env.ADMIN_WALLET_PRIVATE_KEY)
+                        .then( signedTX => web3.eth.sendSignedTransaction(signedTX.rawTransaction))
+                        .then( req => {
+                            return contract20.methods.balanceOf(userInfo.address).call();
+                            })
+                            .then(bal => {
+                                console.log(bal);
+                                return true;
+                            })
+                        .catch(err =>{
+                            console.error(err, "Transaction failure")
                         })
-                        .then(bal => {
-                            console.log(bal);
-                            return true;
-                        })
-                    .catch(err =>{
-                        console.error(err, "Transaction failure")
-                    })
-                // user 20토큰 정보 업데이트
-                // const updateInfo = await usermodel.setEthAmountById(req.body.user_id, userBalance);   
-                return res.status(200).send({data: inputPost, message: "Transaction success"})
+                    
+                    console.log("게시글 작성에 대한 보상으로 토큰이 지급되었습니다.")
+                    return res.status(200).send({data: inputPost, message: "Transaction success"})
+                }
             }
+        } catch (err) {
+            console.error(err)
+            return res.status(404).send({data: null})
         }
     },
 
+    // 게시글의 내용 수정
     post_update: async (req, res) => {
-        console.log('게시글의 내용을 수정합니다.')
-        const updatePost = await postmodel.setPost(req.body)
+        try {
+            const updatePost = await postmodel.setPost(req.body)
 
-        return res.status(200).send({data: updatePost, message: "Post updated"})
-    },
-
-    post_delete: async (req, res) => {
-        const accessToken = req.headers.authorization;
-        
-        if (!accessToken) {
-            return res.status(404).send({ data: null, message: "Invalid access token" });
-        } 
-        else {
-            const token = accessToken.split(" ")[0];
-
-            if (!token) {
-                return res.status(404).send({ data: null, message: "Invalid token" });
-            } 
-            else {
-                
-                const userInfo = jwt.verify(token, process.env.ACCESS_SECRET);
-
-                console.log('게시글을 삭제합니다.')
-
-                // // 1. 스마트컨트랙트에 owner 권한으로 token을 회수하는 함수(getBack)를 추가해야함
-                // // 2. 해결해야할 문제
-                // //    사용자가 게시글에 대한 보상을 받은 뒤 토큰을 모두 사용하면,
-                // //    이후 게시글을 삭제하더라도 지급된 토큰을 회수할 수 없다.
-                // //    사용자는 새로운 아이디를 만들어 보상을 노리고 동일한 게시물을 올리는 등 치팅을 시도할 수 있다.
-                let userBalance;
-                const data = contract20.methods.getBack(userInfo.address, REWARD).encodeABI();
-                const rawTransaction = {"to": address20, "gas": 100000, "data": data};
-                web3.eth.accounts.signTransaction(rawTransaction, process.env.ADMIN_WALLET_PRIVATE_KEY)
-                    .then( signedTX => web3.eth.sendSignedTransaction(signedTX.rawTransaction))
-                    .then( req => {
-                        return contract20.methods.balanceOf(userInfo.address).call();
-                        })
-                        .then(bal => {
-                            console.log(bal);
-                            return true;
-                        })
-                    .catch(err =>{
-                        return console.error(err, "Transaction failure")
-                    })
-                
-                // user 20토큰 정보 업데이트
-                // const updateInfo = await usermodel.setEthAmountById(req.body.user_id, userBalance);
-                // post 지우는 부분을 트랜잭션이 끝나고 실행되도록 하는 방법이 없을까?
-                const delPost = postmodel.removePost(req.body.post_id);
-                
-                return res.status(200).send({data: delPost, message: "Post removed"})
-            }
+            console.log('게시글 수정이 완료되었습니다.')
+            return res.status(200).send({data: updatePost, message: "Post updated"})
+        } catch (err) {
+            console.error(err)
+            return res.status(404).send({data: null})
         }
     },
 
-    postbyid : async (req,res) => {
-        console.log('입력한 id의 게시물을 검색합니다.')
-        const accessToken = req.headers.authorization;
+    // 특정 게시글 삭제 & 게시글 작성 보상으로 지급된 토큰 회수
+    post_delete: async (req, res) => {
+        try {
+            const accessToken = req.headers.authorization;
+            if (!accessToken) {
+                return res.status(404).send({ data: null, message: "Invalid access token" });
+            } 
+            else {
+                const token = accessToken.split(" ")[0];
+                if (!token) {
+                    return res.status(404).send({ data: null, message: "Invalid token" });
+                } 
+                else {
+                    const userInfo = jwt.verify(token, process.env.ACCESS_SECRET);
 
-        if (!accessToken) {
-            return res
-                .status(404)
-                .send({ data: null, message: "Invalid access token" });
-        } else {
-            // const token = accessToken.split(".")[1];
+                    const data = contract20.methods.getBack(userInfo.address, REWARD).encodeABI();
+                    const rawTransaction = {"to": address20, "gas": 100000, "data": data};
+                    web3.eth.accounts.signTransaction(rawTransaction, process.env.ADMIN_WALLET_PRIVATE_KEY)
+                        .then( signedTX => web3.eth.sendSignedTransaction(signedTX.rawTransaction))
+                        .then( req => {
+                            return contract20.methods.balanceOf(userInfo.address).call();
+                            })
+                            .then(bal => {
+                                console.log(bal);
+                                return true;
+                            })
+                        .catch(err =>{
+                            return console.error(err, "Transaction failure")
+                        })
+
+                    const delPost = postmodel.removePost(req.body.post_id);
+                    
+                    console.log("게시글이 삭제되어, 보상으로 지급된 토큰을 회수하였습니다.")
+                    return res.status(200).send({data: delPost, message: "Post removed"})
+                }
+            }
+        } catch (err) {
+            console.error(err)
+            return res.status(404).send({data: null})
+        }
+    },
+
+    // 특정 사용자가 작성한 게시글을 user_id로 검색
+    postbyid : async (req,res) => {
+        try {
+            const accessToken = req.headers.authorization;
+
             if (!accessToken) {
                 return res
                     .status(404)
                     .send({ data: null, message: "Invalid access token" });
             } else {
-                const userInfo = jwt.verify(
-                    accessToken,
-                    process.env.ACCESS_SECRET
-                );
+                if (!accessToken) {
+                    return res
+                        .status(404)
+                        .send({ data: null, message: "Invalid access token" });
+                } else {
+                    const userInfo = jwt.verify(
+                        accessToken,
+                        process.env.ACCESS_SECRET
+                    );
 
-                const postInfoById = await postmodel.getPostByUserId(userInfo.user_id);
-                return res.status(200).send({data: postInfoById, message: "Complete Search"});
+                    const postInfoById = await postmodel.getPostByUserId(userInfo.user_id);
+
+                    console.log("사용자가 요청한 게시글 조회를 완료하였습니다.")
+                    return res.status(200).send({data: postInfoById, message: "Complete Search"});
+                }
             }
+        } catch (err) {
+            console.error(err)
+            return res.status(404).send({data: null})
         }
     },
 
+    // 게시글 번호로 게시글의 정보 조회
     postbypostid : async (req, res) => {
-        console.log('입력한 post_id로 게시물을 검색합니다.')
-        const postInfoByPostid = await postmodel.getPostByNumber(req.params.post_id);
+        try {
+            const postInfoByPostid = await postmodel.getPostByNumber(req.params.post_id);
 
-        return res.status(200).send({data : postInfoByPostid, message : "Complete Search"});
+            console.log("사용자가 요청한 게시글 조회를 완료하였습니다.")
+            return res.status(200).send({data : postInfoByPostid, message : "Complete Search"});
+        } catch (err) {
+            console.error(err)
+            return res.status(404).send({data: null})
+        }
     }
-
-
 }
 

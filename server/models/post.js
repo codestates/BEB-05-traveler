@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const { findAll } = require('../controllers/main.controller');
+
+// 최초 접속 시 클라이언트에 n개의 게시물 정보 전송
+const quantity = 4;
 
 const postSchema = new mongoose.Schema({
     post_id : {
@@ -86,9 +88,9 @@ postSchema.statics.removePost = async function(post_id) {
     return await this.deleteOne({post_id: post_id});
 }
 
-// 최신 게시물 조회
+// 최신 게시물 n개 조회
 postSchema.statics.getRecentPost = async function() {
-    return await this.find({}).sort({created_at : -1}).limit(4);
+    return await this.find({}).sort({created_at : -1}).limit(quantity);
 }
 
 
