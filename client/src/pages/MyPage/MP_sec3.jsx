@@ -1,5 +1,4 @@
 import { Result, Image, Row, Typography } from 'antd';
-import { WalletOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import NFTList from '../home/NFTList';
@@ -16,6 +15,7 @@ function MP_sec3({ state }) {
   const user = location;
   const [collectionData1, setCollectionData1] = useState([]);
   const [collectionData2, setCollectionData2] = useState([]);
+
   const getNFTs = async () => {
     axios
       .get('http://localhost:4000/user/info', {
@@ -30,6 +30,7 @@ function MP_sec3({ state }) {
   useEffect(() => {
     getNFTs();
   }, [state]);
+  // console.log(collectionData1);
 
   return (
     <Row justify="center" align="middle" wrap={true}>

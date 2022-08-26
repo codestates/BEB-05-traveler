@@ -7,10 +7,6 @@ import Footer from './components/layout/Footer';
 import { theme } from './style/theme';
 import { useCookies } from 'react-cookie';
 import {authToken} from './authToken';
-import axios from 'axios';
-
-// import { connect } from 'react-redux';
-// import {bindActionCreators} from 'redux';
 
 const { Content } = Layout;
 
