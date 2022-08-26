@@ -14,8 +14,6 @@ const contract721 = new web3.eth.Contract(abi721, address721);
 
 const nftmodel = require("../models/nft");
 const usermodel = require("../models/user");
-const { ADDRCONFIG } = require("dns");
-const nft = require("../models/nft");
 
 module.exports = {
     transfer_20: async (req, res) => {
@@ -61,11 +59,7 @@ module.exports = {
                     const amount = req.body.amount;
 
                     const data = contract20.methods
-                        .transferFrom(
-                            process.env.ADMIN_WALLET_ACOUNT, // senderAddress,
-                            recipientAddress,
-                            amount
-                        )
+                        .transferFrom(senderAddress, recipientAddress, amount)
                         .encodeABI();
 
                     const rawTransaction = {
@@ -81,6 +75,20 @@ module.exports = {
 
                     const sendingTX = await web3.eth.sendSignedTransaction(
                         signedTX.rawTransaction
+                    );
+
+                    // 블록체인에서 최신 정보를 받아와 업데이트
+                    const ethAmount = await contract20.methods
+                        .balanceOf(senderAddress)
+                        .call();
+
+                    const updateEthAmount = await usermodel.setEthAmountById(
+                        userInfo.user_id,
+                        ethAmount
+                    );
+                    console.log(
+                        "DB 업데이트된 20 Token의 양: ",
+                        updateEthAmount
                     );
 
                     res.status(200).send({
@@ -254,8 +262,6 @@ module.exports = {
                         process.env.ADMIN_WALLET_PRIVATE_KEY
                     );
 
-                    console.log("Signed", signedTX);
-
                     const sendingTX = await web3.eth.sendSignedTransaction(
                         signedTX.rawTransaction
                     );
@@ -304,27 +310,27 @@ module.exports = {
                         token,
                         process.env.ACCESS_SECRET
                     );
-                    console.log(userInfo);
-                    const senderAddress = userInfo.address;
 
-                    let recipientAddress;
+                    const recipientAddress = userInfo.address;
+
+                    let senderAddress;
                     if (req.body.user_id) {
-                        const recipientInfo = await usermodel.getUserInfoById(
+                        const senderInfo = await usermodel.getUserInfoById(
                             req.body.user_id
                         );
-                        recipientAddress = recipientInfo[0].address;
+                        senderAddress = senderInfo[0].address;
                     } else if (req.body.nickname) {
-                        const recipientInfo =
+                        const senderInfo =
                             await usermodel.getUserInfoByNickname(
                                 req.body.nickname
                             );
-                        recipientAddress = recipientInfo[0].address;
+                        senderAddress = senderInfo[0].address;
                     } else {
-                        recipientAddress = req.body.recipient;
+                        senderAddress = req.body.recipient;
                     }
 
                     const tokenId = req.body.token_id;
-                    const amount = req.body.amount;
+                    const price = req.body.price;
                     const nft_owner = await contract721.methods.ownerOf(
                         tokenId
                     );
@@ -332,7 +338,10 @@ module.exports = {
                     if (nft_owner !== senderAddress) {
                         return res
                             .status(404)
-                            .send({ data: null, message: "Not owner of NFT" });
+                            .send({
+                                data: null,
+                                message: "Seller isn't owner",
+                            });
                     } else {
                         console.log("현재 NFT 소유자: ", nft_owner);
 
@@ -341,7 +350,7 @@ module.exports = {
                                 senderAddress,
                                 recipientAddress,
                                 tokenId,
-                                amount
+                                price
                             )
                             .encodeABI();
 
@@ -363,7 +372,7 @@ module.exports = {
 
                         res.status(200).send({
                             data: sendingTX,
-                            message: "Congratulations! The NFT is yours!",
+                            message: "Transaction success",
                         });
                     }
                 }
@@ -428,26 +437,58 @@ module.exports = {
         }
     },
 
+    // NFT의 판매 등록 취소
+    cancelsale: async (req, res) => {
+        try {
+            if (!accessToken) {
+                return res
+                    .status(404)
+                    .send({ data: null, message: "Invalid access token" });
+            } else {
+                const token = accessToken.split(" ")[1];
+
+                if (!token) {
+                    return res
+                        .status(404)
+                        .send({ data: null, message: "Invalid access token" });
+                } else {
+                    const userInfo = jwt.verify(
+                        token,
+                        process.env.ACCESS_SECRET
+                    );
+                    const userId = userInfo.user_id;
+
+                    const tokenId = req.body.token_id;
+                    const tokenInfo = await nftmodel.getInfoByTokenId(tokenId);
+
+                    if (userId !== tokenInfo.user_id) {
+                        res.status(404).send({
+                            data: null,
+                            message: "Not owner of NFT",
+                        });
+                    } else {
+                        const cancelResist = await nftmodel.cancelSale(tokenId);
+                        res.status(200).send({
+                            data: cancelResist,
+                            message: "Sales-Registration canceled",
+                        });
+                    }
+                }
+            }
+        } catch (err) {
+            console.log(err);
+            res.status(400).send({
+                data: null,
+                message: "Can't execute request",
+            });
+        }
+    },
+
     findallnft: async (req, res) => {
         try {
             const allNFTsInfo = await nftmodel.getAllNfts();
-            const totalNFT = await contract721.methods.totalSupply().call();
-            const value = [];
-            for (i = 1; i <= totalNFT; i++) {
-                value.push(i);
-            }
-            const nftInfo = await Promise.all(
-                value.map(async (i) => {
-                    const link = await contract721.methods.tokenURI(i).call();
-                    console.log("test");
-                    return {
-                        content_id: i,
-                        link,
-                    };
-                })
-            );
             return res.status(200).send({
-                data: { nftInfo },
+                data: { allNFTsInfo },
                 message: "모든 NFT 정보를 불러옵니다.",
             });
         } catch (err) {
@@ -460,21 +501,12 @@ module.exports = {
     },
 
     market: async (req, res) => {
-        console.log(req);
         try {
-            const nftInfo = [];
-            const sellingList = await nftmodel.getInfoBySellingStatus("true");
-            console.log(sellingList);
-            for (i = 0; i < sellingList.length; i++) {
-                nftInfo.push({
-                    content_id: sellingList[i].token_id,
-                    link: sellingList[i].token_uri,
-                });
-            }
-            console.log(nftInfo);
+            const sellingList = await nftmodel.getInfoBySellingStatus(true);
+
             return res.status(200).send({
-                data: { nftInfo },
-                message: "모든 NFT 정보를 불러옵니다.",
+                data: sellingList,
+                message: "판매 등록된 NFT 정보를 불러옵니다.",
             });
         } catch (err) {
             console.log(err);

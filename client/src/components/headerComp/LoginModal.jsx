@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Modal, Input, Space } from 'antd';
 import { EyeInvisibleOutlined, UserOutlined, EyeTwoTone, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import { authToken } from '../../authToken';
 
 function LoginModal({
   isLoginVisible,
@@ -10,6 +11,7 @@ function LoginModal({
   setUserInfo,
   setCookie,
   setIsJoinVisible,
+  setBtnVisible
 }) {
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
@@ -23,23 +25,25 @@ function LoginModal({
   };
 
   const handleLoginOk = async () => {
+    let token;
+    let userInfo;
     const res = await axios.post('http://localhost:4000/user/login', {
       user_id: id,
       password: pw,
     });
     if (res.status === 200) {
       console.log(res.data.data.accessToken, '저장전');
-      setToken(res.data.data.accessToken);
+      token = res.data.data.accessToken;
+      setToken(token);
+      authToken.setToken(token);
       setIsLoginVisible(false);
-      setCookie('rememberUser', res.data.data.accessToken, { path: '/', maxAge: 2000 });
     }
 
     const userinfo = await axios.get('http://localhost:4000/user/info', {
       headers: { authorization: res.data.data.accessToken },
     });
     if (userinfo.status === 200) {
-      console.log('yoyoyoyoyoyoyo', userinfo);
-      setUserInfo({
+      userInfo = {
         user_id: userinfo.data.data.user_id,
         nickname: userinfo.data.data.nickname,
         address: userinfo.data.data.address,
@@ -47,7 +51,10 @@ function LoginModal({
         eth_amount: userinfo.data.data.eth_amount,
         waiting_time: userinfo.data.data.waiting_time,
         created_at: userinfo.data.data.created_at,
-      });
+      }
+      setUserInfo({userInfo});
+      setCookie('rememberUser', {token: token, userInfo: userInfo}, { path: '/', maxAge: 2000 });
+      setBtnVisible(false);
     }
 
     // const userinfo = await axios.get('http://localhost:4000/user/info', {
