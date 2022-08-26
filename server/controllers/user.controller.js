@@ -6,7 +6,6 @@ const address721 = require("../address721");
 const usermodel = require("../models/user");
 const jwt = require("jsonwebtoken");
 const Web3 = require("web3");
-const user = require("../models/user");
 
 // infura를 web3 프로바이더로 사용함
 const web3 = new Web3(process.env.RPCURL);
@@ -34,8 +33,8 @@ module.exports = {
                         .send({ data: null, message: "Not autorized" });
                 } else {
                     // 20토큰과 721토큰은 블록체인 네트워크에서 최신 정보를 받아와서 업데이트!
-                    const ethAmount = await contract20.methods.balanceOf(userInfo[0].address);
-                    const nftAmount = await contract721.methods.balanceOf(userInfo[0].address);
+                    const ethAmount = await contract20.methods.balanceOf(userInfo[0].address).call();
+                    const nftAmount = await contract721.methods.balanceOf(userInfo[0].address).call();
 
                     const updateEthAmount = await usermodel.setEthAmountById(userInfo[0].user_id, ethAmount);
                     const updateNftAmount = await usermodel.setTokenAmountById(userInfo[0].user_id, nftAmount);
@@ -58,14 +57,13 @@ module.exports = {
                         { expiresIn: "10h" }
                     );
 
-                    return res.status(200).send({
-                        data: { accessToken: accessToken },
-                        message: `Logged in`,
-                    });
+                    console.log("accessToken: ", accessToken)
+
+                    return res.status(200).send({ data: { accessToken: accessToken }, message: "Logged in" });
                 }
             }
         } catch (err) {
-            console.log(err);
+            // console.log(err);
             res.status(400).send({ data: null, message: "Can't execute request"});
         }
     },
@@ -128,8 +126,6 @@ module.exports = {
                     .status(404)
                     .send({ data: null, message: "Invalid access token" });
             } else {
-                // const token = accessToken.split(".")[1];
-                console.log(accessToken);
                 if (!accessToken) {
                     return res
                         .status(404)
@@ -137,13 +133,16 @@ module.exports = {
                 } else {
                     const userInfo = jwt.verify(accessToken, process.env.ACCESS_SECRET);
 
-                    // 20토큰과 721토큰은 블록체인 네트워크에서 최신 정보를 받아와서 업데이트!
-                    const ethAmount = await contract20.methods.balanceOf(userInfo[0].address);
-                    const nftAmount = await contract721.methods.balanceOf(userInfo[0].address);
+                    console.log("User information: ", userInfo)
 
-                    const updateEthAmount = await usermodel.setEthAmountById(userInfo[0].user_id, ethAmount);
-                    const updateNftAmount = await usermodel.setTokenAmountById(userInfo[0].user_id, nftAmount);
+                    // 20토큰과 721토큰은 블록체인 네트워크에서 최신 정보를 받아와서 업데이트!
+                    const ethAmount = await contract20.methods.balanceOf(userInfo.address).call();
+                    const nftAmount = await contract721.methods.balanceOf(userInfo.address).call();
+
+                    const updateEthAmount = await usermodel.setEthAmountById(userInfo.user_id, ethAmount);
+                    const updateNftAmount = await usermodel.setTokenAmountById(userInfo.user_id, nftAmount);
                     console.log("DB 업데이트된 20 Token의 양: ", updateEthAmount, " / NFT의 양: ", updateNftAmount);
+                    
 
                     // 20토큰과 NFT 정보를 업데이트하고, 최신 정보를 userInfo 객체에 담아 응답
                     const userData = {
