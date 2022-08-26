@@ -38,53 +38,70 @@ userSchema.methods.saveUser = async function () {
 
 // 회원정보 수정 : nickname 외 기타 사용자 입력 정보. 현재기준으로는 nickname, password가 있으나, password 변경은 별도로 관리.
 userSchema.statics.setUserInfo = async function (user_id, nickname) {
-    const _user = {
-        nickname: nickname,
-    };
-    return await this.findOneAndUpdate({ user_id: user_id }, _user);
+    return await this.findOneAndUpdate(
+        { user_id: user_id },
+        { nickname: nickname },
+        { new: true }
+    );
 };
 
 // 회원정보 수정 : password
 userSchema.statics.setPassword = async function (user_id, password) {
     const _hash = bcrypt.hash(password, 10);
-    const _password = {
-        password: _hash,
-    };
-    return await this.findOneAndUpdate({ user_id: user_id }, _password);
+    return await this.findOneAndUpdate(
+        { user_id: user_id },
+        { password: _hash },
+        { new: true }
+    );
 };
 
 // 20 token 변경(user_id)
 userSchema.statics.setEthAmountById = async function (user_id, amount) {
-    const _userInfo = await this.find({ user_id: user_id });
-    _userInfo.eth_amount = amount;
-    return await this.findOneAndUpdate({ user_id: user_id }, _userInfo);
+    return await this.findOneAndUpdate(
+        { user_id: user_id },
+        { eth_amount: amount },
+        { new: true }
+    );
 };
 
 // 20 token 변경(nickname)
-userSchema.statics.setEthAmountById = async function (nickname, amount) {
-    const _userInfo = await this.find({ nickname: nickname });
-    _userInfo.eth_amount = amount;
-    return await this.findOneAndUpdate({ nickname: nickname }, _userInfo);
+userSchema.statics.setEthAmountByNickname = async function (nickname, amount) {
+    return await this.findOneAndUpdate(
+        { nickname: nickname },
+        { eth_amount: amount },
+        { new: true }
+    );
 };
 
 // nft token 변경(user_id)
-userSchema.statics.setTokenAmountById = async function (user_id, token_amount) {
-    return await this.findOneAndUpdate({ user_id: user_id }, { token_amount });
+
+userSchema.statics.setTokenAmountById = async function (user_id, amount) {
+    return await this.findOneAndUpdate(
+        { user_id: user_id },
+        { token_amount: amount },
+        { new: true }
+    );
 };
 
 // nft token 변경(nickname)
-userSchema.statics.setEthAmountById = async function (nickname, amount) {
-    const _userInfo = await this.find({ nickname: nickname });
-    _userInfo.token_amount = amount;
-    return await this.findOneAndUpdate({ nickname: nickname }, _userInfo);
+userSchema.statics.setTokenAmountByNickname = async function (
+    nickname,
+    amount
+) {
+    return await this.findOneAndUpdate(
+        { nickname: nickname },
+        { token_amount: amount },
+        { new: true }
+    );
 };
 
 // 게시글 등록시 time-lock 설정
 userSchema.statics.setWaitingTime = async function (user_id) {
-    const _waiting_time = {
-        waiting_time: new Date(),
-    };
-    return await this.findOneAndUpdate({ user_id: user_id }, _waiting_time);
+    return await this.findOneAndUpdate(
+        { user_id: user_id },
+        { waiting_time: new Date() },
+        { new: true }
+    );
 };
 
 // 비밀번호 일치여부 확인

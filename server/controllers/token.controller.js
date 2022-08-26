@@ -70,7 +70,7 @@ module.exports = {
 
                     const rawTransaction = {
                         to: address20,
-                        gas: 100000,
+                        gas: 1000000,
                         data: data,
                     };
 
@@ -164,7 +164,7 @@ module.exports = {
 
                         const rawTransaction = {
                             to: address721,
-                            gas: 100000,
+                            gas: 1000000,
                             data: data,
                         };
 
@@ -348,7 +348,7 @@ module.exports = {
 
                         const rawTransaction = {
                             to: address721,
-                            gas: 100000,
+                            gas: 1000000,
                             data: data,
                         };
 

@@ -11,7 +11,8 @@ const address20 = require("../address20");
 const contract20 = new web3.eth.Contract(abi20, address20);
 
 // 게시글 보상 토큰의 양 설정
-const REWARD = 10000
+const token = 100 * (10 ** 18);
+const REWARD = web3.utils.toBN(token)
 
 module.exports = {
     posts: async (req, res) => {
@@ -29,7 +30,6 @@ module.exports = {
         } 
         else {
             const token = accessToken.split(" ")[0];
-            console.log(token);
 
             if (!token) {
                 return res.status(404).send({ data: null, message: "Invalid token" });
@@ -57,10 +57,12 @@ module.exports = {
                 web3.eth.accounts.signTransaction(rawTransaction, process.env.ADMIN_WALLET_PRIVATE_KEY)
                     .then( signedTX => web3.eth.sendSignedTransaction(signedTX.rawTransaction))
                     .then( req => {
-                        userBalance = contract20.methods.balanceOf(userInfo.address).call();
-                        console.log(userBalance);
-                        return true;
-                    })
+                        return contract20.methods.balanceOf(userInfo.address).call();
+                        })
+                        .then(bal => {
+                            console.log(bal);
+                            return true;
+                        })
                     .catch(err =>{
                         console.error(err, "Transaction failure")
                     })
@@ -86,7 +88,6 @@ module.exports = {
         } 
         else {
             const token = accessToken.split(" ")[0];
-            console.log(token);
 
             if (!token) {
                 return res.status(404).send({ data: null, message: "Invalid token" });
@@ -108,10 +109,12 @@ module.exports = {
                 web3.eth.accounts.signTransaction(rawTransaction, process.env.ADMIN_WALLET_PRIVATE_KEY)
                     .then( signedTX => web3.eth.sendSignedTransaction(signedTX.rawTransaction))
                     .then( req => {
-                        userBalance = contract20.methods.balanceOf(userInfo.address).call();
-                        // 이부분에 removePost 넣어봣는데 작동하지 않음.
-                        return true;
-                    })
+                        return contract20.methods.balanceOf(userInfo.address).call();
+                        })
+                        .then(bal => {
+                            console.log(bal);
+                            return true;
+                        })
                     .catch(err =>{
                         return console.error(err, "Transaction failure")
                     })
@@ -136,7 +139,6 @@ module.exports = {
                 .send({ data: null, message: "Invalid access token" });
         } else {
             // const token = accessToken.split(".")[1];
-            console.log(accessToken);
             if (!accessToken) {
                 return res
                     .status(404)
