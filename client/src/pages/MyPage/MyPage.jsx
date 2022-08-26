@@ -1,4 +1,4 @@
-import { Result, Row, Form, Input, Button, Select, Typography, Avatar } from 'antd';
+import { Result, Row, Form, Input, Button, Select, Typography, Avatar, Checkbox } from 'antd';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { theme } from '../../style/theme';
@@ -39,10 +39,10 @@ function MyPage() {
 
   const [numOfPosts, setNumOfPosts] = useState(0);
   const getPostNum = async () => {
-    if (user.state['token'] !== '') {
+    if (user.state.token !== '') {
       axios
         .get('http://localhost:4000/board/postbyid', {
-          headers: { authorization: user.state['token'] },
+          headers: { authorization: user.state.token },
         })
         .then((res) => {
           setNumOfPosts(res.data.data.length);
@@ -71,11 +71,36 @@ function MyPage() {
   useEffect(() => {
     getPostNum();
     getUserInfo();
-    console.log(userInfo, 'hihihi');
   }, []);
 
-  const showForm = (value) => {
-    if (value === '0') {
+  // 토큰 전송 part
+  const [transType, setTransType] = useState("");
+  const [inputType, setInputType] = useState("");
+  const [toInfo, setToInfo] = useState(""); //ID or 닉네임 or 주소
+  const [numInfo, setNumInfo] = useState(""); // 전송량 or NFT_id
+
+  const tokenClick = (e) => {
+    e.preventDefault();
+    setTransType('토큰');
+    setInputType("전송량");
+  }
+  const nftClick = (e) => {
+    e.preventDefault();
+    setTransType('NFT')
+    setInputType("토큰 id");
+  }
+
+  const selInput = (val) => {
+    if (val === "0") {return 'ID'}
+    if (val === "1") {return '닉네임'}
+    if (val === "2") {return '주소'}
+  }
+
+  const handleInput1 = (e) => {setToInfo(e.target.value);};
+  const handleInput2 = (e) => {setNumInfo(Number(e.target.value));};
+
+  const showForm = (val) => {
+    if (val) {
       return (
         <Form
           name="transfer"
@@ -84,84 +109,89 @@ function MyPage() {
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
         >
-          <Form.Item label="ID" name="ID" rules={[{ required: true, message: 'ID를 입력하세요.' }]}>
-            <Input />
+          <Form.Item label={selInput(val)} name={selInput(val)} rules={[{ required: true, message: `${selInput(val)}를 입력하세요.` }]}>
+            <Input onChange={(e) => handleInput1(e)} />
           </Form.Item>
 
           <Form.Item
-            label="전송량"
-            name="amount"
-            rules={[{ required: true, message: '전송량을 입력하세요.' }]}
+            label={inputType}
+            name={transType==="NFT" ? "nft_id" : "amount"}
+            rules={[{ required: true, message: `${inputType}을 입력하세요.`}]}
           >
-            <Input />
+            <Input onChange={(e) => handleInput2(e)} />
           </Form.Item>
-          <Button type="primary" htmlType="submit">
-            전송
+          <Button type="primary" shape="round" htmlType="submit" onClick={handleTransfer}>
+            {`${transType} 전송`}
           </Button>
         </Form>
       );
-    }
-    if (value === '1') {
-      return (
-        <Form
-          name="transfer"
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 8 }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-        >
-          <Form.Item
-            label="닉네임"
-            name="Nick"
-            rules={[{ required: true, message: '닉네임을 입력하세요.' }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="전송량"
-            name="amount"
-            rules={[{ required: true, message: '전송량을 입력하세요.' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Button type="primary" htmlType="submit">
-            전송
-          </Button>
-        </Form>
-      );
-    }
-    if (value === '2') {
-      return (
-        <Form
-          name="transfer"
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 8 }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-        >
-          <Form.Item
-            label="주소"
-            name="Add"
-            rules={[{ required: true, message: '주소를 입력하세요.' }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="전송량"
-            name="amount"
-            rules={[{ required: true, message: '전송량을 입력하세요.' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Button type="primary" htmlType="submit">
-            전송
-          </Button>
-        </Form>
-      );
-    }
+    } else {return <div></div>}
   };
+
+
+  const showSelect = () => {
+    return (
+      <Select
+        placeholder="전송 방법 선택"
+        style={{
+          width: 200,
+          marginTop: 0,
+          marginBottom: 20,
+        }}
+        onChange={handleChange}
+      >
+        <Option value="0">ID로 전송</Option>
+        <Option value="1">닉네임으로 전송</Option>
+        <Option value="2">주소로 전송</Option>
+      </Select>
+    );
+  }
+
+  // POST 요청 부분!!
+  const handleTransfer = () => {
+    const obj = optionVal==="0" ? {user_id: toInfo} : optionVal==="1" ? {nickname: toInfo} : {recipient: toInfo};
+    if (toInfo === "" || numInfo === "" || numInfo === NaN){
+      window.alert("입력값을 확인하세요!")
+    }
+    else {
+      const req_header = {headers : {authorization: `Bearer ${user.state.token}`}};
+      console.log("무엇을 전송:",transType);
+      if (transType === "토큰") {
+        let req_body = {
+          amount: numInfo,
+          ...obj
+        };
+        console.log("req body",req_body);
+        axios
+        .post('http://localhost:4000/token/transfer_20', req_body, req_header)
+        .then((res) => {
+          console.log(res);
+          if (res.status === 200) {
+            console.log(res);
+            window.alert("토큰 전송 완료!");
+          }
+          else {window.alert("토큰 전송 실패!");}
+        });
+      }
+      if (transType === "NFT") {
+        console.log(`${transType}을 전송함`)
+        let req_body = {
+          token_id: numInfo,
+          ...obj
+        };
+        console.log("req body",req_body);
+        axios
+        .post('http://localhost:4000/token/transfer_721', req_body, req_header)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res);
+            window.alert("NFT 전송 완료!");
+          }
+          else {window.alert("NFT 전송 실패!");}
+        });
+      };
+    }
+  }
 
   return (
     <div>
@@ -193,21 +223,15 @@ function MyPage() {
               </div>
             </Title>
           </TitleFont>
+
           <ElWrapper>
             <>
-              <Select
-                placeholder="타인에게 전송하기"
-                style={{
-                  width: 200,
-                  marginTop: 0,
-                  marginBottom: 30,
-                }}
-                onChange={handleChange}
-              >
-                <Option value="0">ID로 전송</Option>
-                <Option value="1">닉네임으로 전송</Option>
-                <Option value="2">주소로 전송</Option>
-              </Select>
+              <div style={{paddingBottom:'20px'}}>
+                <Button shape="round" onClick={tokenClick}>{"토큰 전송"}</Button>
+                &ensp;&ensp;&ensp;&ensp;
+                <Button shape="round" onClick={nftClick}>{"NFT 전송"}</Button>
+              </div>
+              {transType === "" ? <div></div> : showSelect()}
             </>
             {showForm(optionVal)}
           </ElWrapper>
