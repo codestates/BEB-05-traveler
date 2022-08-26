@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Component } from 'react';
 import 'antd/dist/antd.min.css';
 import Router from './router/Router';
 import { Layout } from 'antd';
@@ -6,10 +6,16 @@ import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import { theme } from './style/theme';
 import { useCookies } from 'react-cookie';
+import {authToken} from './authToken';
+import axios from 'axios';
+
+// import { connect } from 'react-redux';
+// import {bindActionCreators} from 'redux';
 
 const { Content } = Layout;
 
 function App() {
+
   const [userInfo, setUserInfo] = useState({
     user_id: '',
     nickname: '',
@@ -20,10 +26,18 @@ function App() {
     created_at: '',
   });
   const [token, setToken] = useState('');
-  const [cookies, setCookie, removeCookie] = useCookies(['rememberUser']);
+  const [cookies, setCookie, cookieRemove] = useCookies(['rememberUser']);
 
-  useEffect(() => {}, [cookies, userInfo, token]);
-
+  useEffect(() => {
+    console.log("쿠키",cookies.rememberUser);
+    if (cookies.rememberUser !== undefined){
+      console.log("로그인 유지");
+      authToken.setToken(cookies.rememberUser.token);
+      setToken(authToken.getToken());
+      setUserInfo(cookies.rememberUser.userInfo);
+    }
+  }, [cookies, userInfo, token]);
+  
   return (
     <div className="App">
       <Layout
@@ -41,6 +55,7 @@ function App() {
           token={token}
           setToken={setToken}
           setCookie={setCookie}
+          cookieRemove={cookieRemove}
         />
         <Content
           style={{

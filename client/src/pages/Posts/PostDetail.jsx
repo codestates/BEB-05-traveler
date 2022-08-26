@@ -56,7 +56,6 @@ function PostDetail() {
   );
   
   const onDelete = () => {
-    console.log(11,user.token);
     axios
       .post("http://localhost:4000/board/post_delete",{
         post_id: post_id

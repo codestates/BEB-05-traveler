@@ -8,13 +8,16 @@ import * as HeaderComp from '../headerComp';
 
 const { Header: _Header } = Layout;
 
-function HeaderComponent({ userInfo, setUserInfo, token, setToken, setCookie }) {
+function HeaderComponent({ userInfo, setUserInfo, token, setToken, setCookie, cookieRemove}) {
   const [visible, setVisible] = useState(false);
   const [isLoginVisible, setIsLoginVisible] = useState(false);
   const [isJoinVisible, setIsJoinVisible] = useState(false);
   const [joinID, setJoinID] = useState('');
   const [joinName, setJoinName] = useState('');
   const [joinPW, setJoinPW] = useState('');
+  // 로그인 버튼, 로그아웃 버튼 중 무엇을 보여줄지
+  console.log(token);
+  const [btnVisible, setBtnVisible] = useState(token==='');
 
   const handleJoinOk = () => {
     axios
@@ -50,9 +53,11 @@ function HeaderComponent({ userInfo, setUserInfo, token, setToken, setCookie }) 
             <HeaderComp.LogoTitle />
             <HeaderComp.LoginButton
               isLoginVisible={isLoginVisible}
+              cookieRemove={cookieRemove}
               setIsLoginVisible={setIsLoginVisible}
-              token={token}
               userInfo={userInfo}
+              btnVisible={btnVisible}
+              setBtnVisible={setBtnVisible}
             />
             <HeaderComp.LoginModal
               isLoginVisible={isLoginVisible}
@@ -61,6 +66,7 @@ function HeaderComponent({ userInfo, setUserInfo, token, setToken, setCookie }) 
               setIsJoinVisible={setIsJoinVisible}
               setUserInfo={setUserInfo}
               setCookie={setCookie}
+              setBtnVisible={setBtnVisible}
             />
 
             <Modal

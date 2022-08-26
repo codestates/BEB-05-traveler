@@ -210,12 +210,14 @@ module.exports = {
                         user_nftInfo_sell.push({
                             content_id: nftList[i].token_id,
                             link: nftList[i].token_uri,
+                            price: nftList[i].price,
                         });
                     }
                     if (nftList[i].isselling === false) {
                         user_nftInfo_notsell.push({
                             content_id: nftList[i].token_id,
                             link: nftList[i].token_uri,
+                            price: nftList[i].price,
                         });
                     }
                 }
