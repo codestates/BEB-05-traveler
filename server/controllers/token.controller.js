@@ -288,7 +288,6 @@ module.exports = {
     buynft: async (req, res) => {
         try {
             const accessToken = req.headers.authorization;
-
             if (!accessToken) {
                 return res
                     .status(404)
@@ -305,7 +304,7 @@ module.exports = {
                         token,
                         process.env.ACCESS_SECRET
                     );
-
+                    console.log(userInfo);
                     const senderAddress = userInfo.address;
 
                     let recipientAddress;
