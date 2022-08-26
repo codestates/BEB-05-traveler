@@ -46,8 +46,8 @@ function NFTDetail() {
   };
 
   const getNFTInfo = async () => {
-    setNum(user.state.collectionData.content_id);
-    const response = await Axios.get(user.state.collectionData.link);
+    setNum(user.state.collectionData.token_id);
+    const response = await Axios.get(user.state.collectionData.token_uri);
 
     setImg(`https://ipfs.io/ipfs/${response.data.image.split('//')[1]}`);
     setName(response.data.name);

@@ -15,7 +15,7 @@ function MarketNFTPreivew({ collectionData, token }) {
   }, [collectionData]);
 
   const getNFTInfo = async () => {
-    const response = await Axios.get(collectionData.link);
+    const response = await Axios.get(collectionData.token_uri);
 
     setImg(`https://ipfs.io/ipfs/${response.data.image.split('//')[1]}`);
     setName(response.data.name);
@@ -25,7 +25,7 @@ function MarketNFTPreivew({ collectionData, token }) {
 
   return (
     <Link
-      to={`/market/${collectionData.content_id}`}
+      to={`/market/${collectionData.token_id}`}
       state={{ collectionData: collectionData, token: token }}
     >
       <PreviewImage>
