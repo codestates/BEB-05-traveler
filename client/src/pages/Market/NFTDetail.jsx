@@ -8,18 +8,22 @@ import {
 } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import collectionData from '../../asset/dummy/fakeNFT';
-import { useParams } from 'react-router-dom';
 import Axios from 'axios';
 import styled from 'styled-components';
 import eth from '../../asset/imgs/ethereum-icon-2.jpg';
 import { theme } from '../../style/theme';
+
+import { useLocation } from 'react-router-dom';
 
 const { Text } = Typography;
 const { Title } = Typography;
 const { Meta } = Card;
 
 function NFTDetail() {
-  const pa = useParams();
+  const location = useLocation();
+  const user = location;
+  console.log(user.state);
+
   const [num, setNum] = useState('');
   const [Img, setImg] = useState('');
   const [name, setName] = useState('');
@@ -34,8 +38,8 @@ function NFTDetail() {
   };
 
   const getNFTInfo = async () => {
-    setNum(pa.content_id);
-    const response = await Axios.get(collectionData[pa.content_id - 1].link);
+    setNum(user.state.collectionData.content_id);
+    const response = await Axios.get(user.state.collectionData.link);
 
     setImg(`https://ipfs.io/ipfs/${response.data.image.split('//')[1]}`);
     setName(response.data.name);

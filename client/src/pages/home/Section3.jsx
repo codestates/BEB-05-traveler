@@ -14,14 +14,12 @@ function Section3({ state }) {
   const [collectionData, setCollectionData] = useState([]);
   const getNFTs = async () => {
     axios.get('http://localhost:4000/').then((res) => {
-      console.log(res.data.data.nftInfo);
       setCollectionData(res.data.data.nftInfo);
     });
   };
 
   useEffect(() => {
     getNFTs();
-    console.log(collectionData);
   }, [state]);
 
   return (

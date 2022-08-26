@@ -30,20 +30,20 @@ function MyPage() {
 
   const [numOfPosts, setNumOfPosts] = useState(0);
   const getPostNum = async () => {
-    if (user.state["token"] !== '') {
+    if (user.state['token'] !== '') {
       axios
-        .get("http://localhost:4000/board/postbyid",{
-          headers: {authorization: user.state["token"]}
+        .get('http://localhost:4000/board/postbyid', {
+          headers: { authorization: user.state['token'] },
         })
         .then((res) => {
           setNumOfPosts(res.data.data.length);
         });
-    };
-  }
-  
+    }
+  };
+
   useEffect(() => {
     getPostNum();
-  },[]);
+  }, []);
 
   const showForm = (value) => {
     if (value === '0') {
@@ -153,13 +153,13 @@ function MyPage() {
                 {user.state.userInfo.nickname}&ensp;({user.state.userInfo.user_id})
               </div>
               <div style={{ paddingTop: '15px', fontSize: `${theme.fs_9}` }}>
-                {`게시글 수 : ${numOfPosts}`}&ensp;{'보유 NFT 수 : 10'}
+                {`게시글 수 : ${user.state.userInfo.token_amount}`}&ensp;{'보유 NFT 수 : 10'}
               </div>
               <div style={{ paddingTop: '15px', fontSize: `${theme.fs_9}`, whiteSpace: 'nowrap' }}>
                 {`내 주소 : ${user.state.userInfo.address}`}
               </div>
               <div style={{ paddingTop: '15px', fontSize: `${theme.fs_9}` }}>
-                {`토큰 잔액: ${user.state.userInfo.token_amount}`}
+                {`토큰 잔액: ${user.state.userInfo.eth_amount}`}
               </div>
             </Title>
           </TitleFont>
