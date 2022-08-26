@@ -13,6 +13,16 @@ function MyPage() {
   const user = location;
   console.log(user.state);
 
+  const [userInfo, setUserInfo] = useState({
+    user_id: '',
+    nickname: '',
+    address: '',
+    token_amount: '',
+    eth_amount: '',
+    waiting_time: '',
+    created_at: '',
+  });
+
   const { Title } = Typography;
   const [optionVal, setOptionVal] = useState(null);
 
