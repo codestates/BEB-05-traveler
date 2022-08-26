@@ -8,16 +8,9 @@ const jwt = require("jsonwebtoken");
 const Web3 = require("web3");
 const { use } = require("../routes");
 const nftmodel = require("../models/nft");
-const abi20 = require("../abi20");
-const abi721 = require("../abi721");
-const address20 = require("../address20");
-const address721 = require("../address721");
 
 // infura를 web3 프로바이더로 사용함
 const web3 = new Web3(process.env.RPCURL);
-const contract20 = new web3.eth.Contract(abi20, address20);
-const contract721 = new web3.eth.Contract(abi721, address721);
-
 const contract20 = new web3.eth.Contract(abi20, address20);
 const contract721 = new web3.eth.Contract(abi721, address721);
 
