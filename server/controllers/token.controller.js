@@ -81,6 +81,14 @@ module.exports = {
                         signedTX.rawTransaction
                     );
 
+                    // 블록체인에서 최신 정보를 받아와 업데이트
+                    const ethAmount = await contract20.methods
+                        .balanceOf(senderAddress)
+                        .call();
+
+                    const updateEthAmount = await usermodel.setEthAmountById(userInfo.user_id, ethAmount);
+                    console.log("DB 업데이트된 20 Token의 양: ", updateEthAmount);
+
                     res.status(200).send({
                         data: sendingTX,
                         message: "Transfer success",
@@ -357,14 +365,6 @@ module.exports = {
                         const sendingTX = await web3.eth.sendSignedTransaction(
                             signedTX.rawTransaction
                         );
-
-                        // 블록체인에서 최신 정보를 받아와 업데이트
-                        const ethAmount = await contract20.methods
-                            .balanceOf(userInfo[0].address)
-                            .call();
-
-                        const updateEthAmount = await usermodel.setEthAmountById(userInfo[0].user_id, ethAmount);
-                        console.log("DB 업데이트된 20 Token의 양: ", updateEthAmount);
 
                         res.status(200).send({data: sendingTX, message: "Transaction success"});
                     }
