@@ -1,8 +1,7 @@
 import { Row, Typography } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { theme } from '../../style/theme';
-import collectionData from '../../asset/dummy/fakeNFT';
 import MarketNFTList from './MarketNFTList';
 import axios from 'axios';
 import { useEffect } from 'react';
@@ -10,13 +9,15 @@ import { useEffect } from 'react';
 const { Title } = Typography;
 
 function Market() {
+  const [collectionData, setCollectionData] = useState([]);
   useEffect(() => {
-    getNFT();
+    getNFTs();
+    console.log(collectionData);
   }, []);
 
-  const getNFT = async () => {
-    const NFT_list = await axios.get('http://localhost:4000/user/info', {
-      // headers: { authorization: res.data.data.accessToken },
+  const getNFTs = async () => {
+    axios.get('http://localhost:4000/token/findallnft').then((res) => {
+      setCollectionData(res.data.data.nftInfo);
     });
   };
 

@@ -153,7 +153,8 @@ function MyPage() {
                 {user.state.userInfo.nickname}&ensp;({user.state.userInfo.user_id})
               </div>
               <div style={{ paddingTop: '15px', fontSize: `${theme.fs_9}` }}>
-                {`게시글 수 : ${user.state.userInfo.token_amount}`}&ensp;{'보유 NFT 수 : 10'}
+                {`게시글 수 : ${numOfPosts}`}&ensp;
+                {`보유 NFT 수 : ${user.state.userInfo.token_amount}`}
               </div>
               <div style={{ paddingTop: '15px', fontSize: `${theme.fs_9}`, whiteSpace: 'nowrap' }}>
                 {`내 주소 : ${user.state.userInfo.address}`}
