@@ -12,6 +12,7 @@ import Axios from 'axios';
 import styled from 'styled-components';
 import eth from '../../asset/imgs/ethereum-icon-2.jpg';
 import { theme } from '../../style/theme';
+import axios from 'axios';
 
 import { useLocation } from 'react-router-dom';
 
@@ -22,28 +23,40 @@ const { Meta } = Card;
 function NFTDetail() {
   const location = useLocation();
   const user = location;
-  console.log(user.state);
 
   const [num, setNum] = useState('');
   const [Img, setImg] = useState('');
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
-  const [price, setPrice] = useState('1 ETH');
+  const [price, setPrice] = useState('');
   useEffect(() => {
     getNFTInfo();
   }, [collectionData]);
 
   const onBuy = async () => {
-    alert('구매구매');
+    console.log(user.state.collectionData);
+    const res = await axios.post(
+      'http://localhost:4000/token/buynft',
+      {
+        token_id: user.state.collectionData.token_id,
+        user_id: user.state.collectionData.user_id,
+        price: user.state.collectionData.price,
+      },
+      {
+        headers: { authorization: `Bearer ${user.state.token}` },
+      }
+    );
+    console.log(res);
   };
 
   const getNFTInfo = async () => {
-    setNum(user.state.collectionData.content_id);
-    const response = await Axios.get(user.state.collectionData.link);
+    setNum(user.state.collectionData.token_id);
+    const response = await Axios.get(user.state.collectionData.token_uri);
 
     setImg(`https://ipfs.io/ipfs/${response.data.image.split('//')[1]}`);
     setName(response.data.name);
     setDesc(response.data.description);
+    setPrice(user.state.collectionData.price);
   };
   return (
     <Lists>

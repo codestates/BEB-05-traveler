@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Axios from 'axios';
 
-function MarketNFTPreivew({ collectionData }) {
+function MarketNFTPreivew({ collectionData, token }) {
   const [Img, setImg] = useState('');
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
@@ -15,7 +15,7 @@ function MarketNFTPreivew({ collectionData }) {
   }, [collectionData]);
 
   const getNFTInfo = async () => {
-    const response = await Axios.get(collectionData.link);
+    const response = await Axios.get(collectionData.token_uri);
 
     setImg(`https://ipfs.io/ipfs/${response.data.image.split('//')[1]}`);
     setName(response.data.name);
@@ -24,7 +24,10 @@ function MarketNFTPreivew({ collectionData }) {
   };
 
   return (
-    <Link to={`/market/${collectionData.content_id}`} state={{ collectionData: collectionData }}>
+    <Link
+      to={`/market/${collectionData.token_id}`}
+      state={{ collectionData: collectionData, token: token }}
+    >
       <PreviewImage>
         <Card
           key={collectionData.name}

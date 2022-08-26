@@ -14,7 +14,7 @@ function PostsPreview({ collectionData }) {
   }, [collectionData]);
 
   const getNFTInfo = async () => {
-    const response = await Axios.get(collectionData.link);
+    const response = await Axios.get(collectionData.token_uri);
 
     setImg(`https://ipfs.io/ipfs/${response.data.image.split('//')[1]}`);
     setName(response.data.name);
@@ -22,7 +22,7 @@ function PostsPreview({ collectionData }) {
   };
 
   return (
-    <Link to={`/market/${collectionData.content_id}`} state={{ collectionData: collectionData }}>
+    <Link to={`/market/${collectionData.token_id}`} state={{ collectionData: collectionData }}>
       <PreviewImage>
         <Card
           key={collectionData.name}

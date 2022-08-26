@@ -59,11 +59,7 @@ module.exports = {
                     const amount = req.body.amount;
 
                     const data = contract20.methods
-                        .transferFrom(
-                            senderAddress,
-                            recipientAddress,
-                            amount
-                        )
+                        .transferFrom(senderAddress, recipientAddress, amount)
                         .encodeABI();
 
                     const rawTransaction = {
@@ -86,8 +82,14 @@ module.exports = {
                         .balanceOf(senderAddress)
                         .call();
 
-                    const updateEthAmount = await usermodel.setEthAmountById(userInfo.user_id, ethAmount);
-                    console.log("DB 업데이트된 20 Token의 양: ", updateEthAmount);
+                    const updateEthAmount = await usermodel.setEthAmountById(
+                        userInfo.user_id,
+                        ethAmount
+                    );
+                    console.log(
+                        "DB 업데이트된 20 Token의 양: ",
+                        updateEthAmount
+                    );
 
                     res.status(200).send({
                         data: sendingTX,
@@ -292,7 +294,6 @@ module.exports = {
     buynft: async (req, res) => {
         try {
             const accessToken = req.headers.authorization;
-
             if (!accessToken) {
                 return res
                     .status(404)
@@ -323,7 +324,7 @@ module.exports = {
                             await usermodel.getUserInfoByNickname(
                                 req.body.nickname
                             );
-                            senderAddress = senderInfo[0].address;
+                        senderAddress = senderInfo[0].address;
                     } else {
                         senderAddress = req.body.recipient;
                     }
@@ -337,7 +338,10 @@ module.exports = {
                     if (nft_owner !== senderAddress) {
                         return res
                             .status(404)
-                            .send({ data: null, message: "Seller isn't owner" });
+                            .send({
+                                data: null,
+                                message: "Seller isn't owner",
+                            });
                     } else {
                         console.log("현재 NFT 소유자: ", nft_owner);
 
@@ -366,7 +370,10 @@ module.exports = {
                             signedTX.rawTransaction
                         );
 
-                        res.status(200).send({data: sendingTX, message: "Transaction success"});
+                        res.status(200).send({
+                            data: sendingTX,
+                            message: "Transaction success",
+                        });
                     }
                 }
             }
@@ -429,7 +436,7 @@ module.exports = {
             });
         }
     },
-    
+
     // NFT의 판매 등록 취소
     cancelsale: async (req, res) => {
         try {
@@ -460,9 +467,7 @@ module.exports = {
                             message: "Not owner of NFT",
                         });
                     } else {
-                        const cancelResist = await nftmodel.cancelSale(
-                            tokenId
-                        );
+                        const cancelResist = await nftmodel.cancelSale(tokenId);
                         res.status(200).send({
                             data: cancelResist,
                             message: "Sales-Registration canceled",

@@ -5,19 +5,20 @@ import { theme } from '../../style/theme';
 import MarketNFTList from './MarketNFTList';
 import axios from 'axios';
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const { Title } = Typography;
 
-function Market() {
+function Market({ token }) {
   const [collectionData, setCollectionData] = useState([]);
   useEffect(() => {
     getNFTs();
-    console.log(collectionData);
   }, []);
 
   const getNFTs = async () => {
     axios.get('http://localhost:4000/token/market').then((res) => {
-      setCollectionData(res.data.data.nftInfo);
+      console.log(res.data.data);
+      setCollectionData(res.data.data);
     });
   };
 
@@ -37,7 +38,7 @@ function Market() {
         </Title>
       </TitleFont>
       <List>
-        <MarketNFTList collectionData={collectionData} />
+        <MarketNFTList collectionData={collectionData} token={token} />
       </List>
     </Row>
   );
