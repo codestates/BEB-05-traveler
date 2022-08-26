@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Axios from 'axios';
 
-function MarketNFTPreivew({ collectionData }) {
+function MarketNFTPreivew({ collectionData, token }) {
   const [Img, setImg] = useState('');
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
@@ -24,7 +24,10 @@ function MarketNFTPreivew({ collectionData }) {
   };
 
   return (
-    <Link to={`/market/${collectionData.content_id}`} state={{ collectionData: collectionData }}>
+    <Link
+      to={`/market/${collectionData.content_id}`}
+      state={{ collectionData: collectionData, token: token }}
+    >
       <PreviewImage>
         <Card
           key={collectionData.name}

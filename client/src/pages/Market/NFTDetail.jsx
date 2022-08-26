@@ -12,6 +12,7 @@ import Axios from 'axios';
 import styled from 'styled-components';
 import eth from '../../asset/imgs/ethereum-icon-2.jpg';
 import { theme } from '../../style/theme';
+import axios from 'axios';
 
 import { useLocation } from 'react-router-dom';
 
@@ -22,7 +23,7 @@ const { Meta } = Card;
 function NFTDetail() {
   const location = useLocation();
   const user = location;
-  console.log(user.state);
+  console.log(user.state.token);
 
   const [num, setNum] = useState('');
   const [Img, setImg] = useState('');
@@ -34,7 +35,14 @@ function NFTDetail() {
   }, [collectionData]);
 
   const onBuy = async () => {
-    alert('구매구매');
+    const res = await axios.post(
+      'http://localhost:4000/token/buynft',
+      { token_id: user.state.collectionData.content_id },
+      {
+        headers: { authorization: `Bearer ${user.state.token}` },
+      }
+    );
+    console.log(res);
   };
 
   const getNFTInfo = async () => {

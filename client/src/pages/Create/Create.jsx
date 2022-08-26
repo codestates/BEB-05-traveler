@@ -35,7 +35,6 @@ function Create() {
     };
     console.log(headers);
     const res = await axios.post('http://localhost:4000/token/mint', formData, { headers });
-    console.log(res, 'TEST_RESUTL');
 
     setTimeout(() => {
       setLoadings((prevLoadings) => {

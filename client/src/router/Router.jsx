@@ -41,8 +41,12 @@ export default function Router({ token, userInfo }) {
         ]}
       />
       <Route path="/create" element={[<Create />]} />
-      <Route path="/market" element={[<Market />]} />
-      <Route path="/market/:content_id" element={<NFTDetail />} />
+      <Route path="/market" element={[<Market token={token} />]} />
+      <Route
+        path="/market/:content_id"
+        element={<NFTDetail />}
+        state={{ token: token, userInfo: userInfo }}
+      />
     </Routes>
   );
 }

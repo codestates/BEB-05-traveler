@@ -36,7 +36,7 @@ function DrawerComp({ visible, setVisible, token, userInfo }) {
           <Link to="/create" state={{ token: token, userInfo: userInfo }}>
             <Title style={{ fontSize: 30 }}>Create your NFT</Title>
           </Link>
-          <Link to="/market">
+          <Link to="/market" state={{ token: token, userInfo: userInfo }}>
             <Title style={{ fontSize: 30 }}>NFT Market</Title>
           </Link>
         </Drawer>
