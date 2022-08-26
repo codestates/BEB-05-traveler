@@ -203,7 +203,7 @@ module.exports = {
                     "https://ipfs.io/ipfs/" + nftCID.url.replace("ipfs://", "");
 
                 console.log(newTokenURI);
-                // Contract mintNFT 함수 실행하는 트랜잭션 발행
+
                 let senderBalance;
                 const data = contract721.methods
                     .mintNFT(userInfo.address, newTokenURI)
@@ -216,8 +216,6 @@ module.exports = {
                     data: data,
                 };
 
-                //https://dapp-world.com/smartbook/send-transaction-using-web3-in-node-project-RETu
-
                 const test = await web3.eth.accounts.signTransaction(
                     rawTransaction,
                     process.env.ADMIN_WALLET_PRIVATE_KEY
@@ -227,22 +225,17 @@ module.exports = {
                     test.rawTransaction
                 );
 
-                console.log(test2, "test2");
-
-                senderBalance = await contract20.methods
+                senderBalance = await contract721.methods
                     .balanceOf(userInfo.address)
-                    .call();
+                    .call({ from: process.env.ADMIN_WALLET_ADDRESS });
 
-                console.log(senderBalance, "센더발란스!");
-
-                // 몽고DB 의 user정보 업데이트.
-                // const updateSenderInfo = await usermodel.setTokenAmountById(
-                //     userInfo.user_id,
-                //     senderBalance
-                // );
+                const updateSenderInfo = await usermodel.setTokenAmountById(
+                    userInfo.user_id,
+                    senderBalance
+                );
 
                 return res.status(200).send({
-                    // data: updateSenderInfo,
+                    data: updateSenderInfo,
                     message: "Minting completed",
                 });
             }
@@ -296,11 +289,25 @@ module.exports = {
     findallnft: async (req, res) => {
         console.log(req);
 
-        // console.log("모든 NFT 정보를 불러옵니다.");
-        // const data = await contract721.methods
-        //     .getMarketList()
-        //     .call({ from: test_account });
-        // console.log(data);
-        return res.status(200).send("모든 NFT 정보를 불러옵니다.");
+        // const totalNFT = await contract721.methods.totalSupply().call();
+        // console.log(totalNFT);
+        totalNFT = 30;
+        const nftInfo = await Promise.all(
+            [21, 22, 23, 24, 25, 26, 27, 28].map(async (i) => {
+                const link = await contract721.methods.tokenURI(i).call();
+                console.log("test");
+                return {
+                    content_id: i,
+                    link,
+                };
+            })
+        );
+
+        console.log(nftInfo);
+
+        return res.status(200).send({
+            data: { nftInfo },
+            message: "모든 NFT 정보를 불러옵니다.",
+        });
     },
 };

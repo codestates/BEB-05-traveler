@@ -68,10 +68,8 @@ userSchema.statics.setEthAmountById = async function (nickname, amount) {
 };
 
 // nft token 변경(user_id)
-userSchema.statics.setTokenAmountById = async function (user_id, amount) {
-    const _userInfo = await this.find({ user_id: user_id });
-    _userInfo.token_amount = amount;
-    return await this.findOneAndUpdate({ user_id: user_id }, _userInfo);
+userSchema.statics.setTokenAmountById = async function (user_id, token_amount) {
+    return await this.findOneAndUpdate({ user_id: user_id }, { token_amount });
 };
 
 // nft token 변경(nickname)
