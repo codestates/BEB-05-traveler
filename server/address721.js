@@ -1,3 +1,3 @@
-const address721 = "0x9561118270F87C3044868260dbbe91D805239b88";
+const address721 = "0x0EE5542f12568A7E01abd960b3ADC4Acfceb4473";
 
 module.exports = address721;
