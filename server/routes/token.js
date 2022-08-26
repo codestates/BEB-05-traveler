@@ -18,5 +18,6 @@ router.post("/transfer_721", controller.transfer_721);
 router.post("/mint", upload.single("img"), controller.mint);
 router.post("/buynft", controller.buynft);
 router.post("/sellnft", controller.sellnft);
+router.get("/market", controller.market);
 
 module.exports = router;

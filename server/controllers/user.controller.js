@@ -1,9 +1,18 @@
 const usermodel = require("../models/user");
 const jwt = require("jsonwebtoken");
 const Web3 = require("web3");
+const { use } = require("../routes");
+const nftmodel = require("../models/nft");
+const abi20 = require("../abi20");
+const abi721 = require("../abi721");
+const address20 = require("../address20");
+const address721 = require("../address721");
 
 // infura를 web3 프로바이더로 사용함
 const web3 = new Web3(process.env.RPCURL);
+
+const contract20 = new web3.eth.Contract(abi20, address20);
+const contract721 = new web3.eth.Contract(abi721, address721);
 
 module.exports = {
     // 회원 로그인
@@ -120,8 +129,6 @@ module.exports = {
                     process.env.ACCESS_SECRET
                 );
 
-                console.log(userInfo, "확인중");
-
                 const userData = {
                     user_id: userInfo.user_id,
                     nickname: userInfo.nickname,
@@ -131,10 +138,33 @@ module.exports = {
                     waiting_time: userInfo.waiting_time,
                     created_at: userInfo.created_at,
                 };
-                console.log(userData);
-                return res
-                    .status(200)
-                    .send({ data: userData, message: "Completed search" });
+
+                const user_nftInfo_sell = [];
+                const user_nftInfo_notsell = [];
+                const nftList = await nftmodel.getNftByUserId(userData.user_id);
+
+                console.log(nftList);
+
+                for (i = 0; i < nftList.length; i++) {
+                    if (nftList[i].isselling === true) {
+                        user_nftInfo_sell.push({
+                            content_id: nftList[i].token_id,
+                            link: nftList[i].token_uri,
+                        });
+                    }
+                    if (nftList[i].isselling === false) {
+                        user_nftInfo_notsell.push({
+                            content_id: nftList[i].token_id,
+                            link: nftList[i].token_uri,
+                        });
+                    }
+                }
+                return res.status(200).send({
+                    data: userData,
+                    user_nftInfo_sell,
+                    user_nftInfo_notsell,
+                    message: "Completed search",
+                });
             }
         }
     },

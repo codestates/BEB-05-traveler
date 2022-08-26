@@ -13,9 +13,8 @@ module.exports = {
     // 최근 게시물과 NFT 정보 조회
     findAll: async (req, res) => {
         const postInfo = await postmodel.getRecentPost();
-        // const totalNFT = await contract721.methods.totalSupply().call();
-        // console.log(totalNFT);
-        totalNFT = 30;
+        const totalNFT = await contract721.methods.totalSupply().call();
+        console.log(totalNFT);
         const nftInfo = await Promise.all(
             [totalNFT, totalNFT - 1, totalNFT - 2, totalNFT - 3].map(
                 async (i) => {

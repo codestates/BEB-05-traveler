@@ -105,7 +105,7 @@ userSchema.statics.getUserInfoByNickname = async function (nickname) {
 
 // 회원정보 요청 (user_address)
 userSchema.statics.getUserInfoByAddress = async function (address) {
-    return await this.find({ address: address });
+    return await this.findOne({ address: address });
 };
 
 module.exports = mongoose.model("User", userSchema);
