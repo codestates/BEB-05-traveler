@@ -333,7 +333,10 @@ module.exports = {
                     const price = req.body.price;
                     const nft_owner = await contract721.methods.ownerOf(
                         tokenId
-                    );
+                    ).call();
+
+                    console.log(nft_owner);
+                    console.log(senderAddress);
 
                     if (nft_owner !== senderAddress) {
                         return res
@@ -356,7 +359,7 @@ module.exports = {
 
                         const rawTransaction = {
                             to: address721,
-                            gas: 1000000,
+                            gas: 10000000,
                             data: data,
                         };
 
@@ -369,6 +372,8 @@ module.exports = {
                         const sendingTX = await web3.eth.sendSignedTransaction(
                             signedTX.rawTransaction
                         );
+
+                        console.log(sendingTX);
 
                         res.status(200).send({
                             data: sendingTX,

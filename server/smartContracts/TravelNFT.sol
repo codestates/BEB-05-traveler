@@ -71,8 +71,30 @@ contract TravelNFT is ERC721URIStorage, Ownable, ERC721Enumerable {
         _transfer(from, to, tokenId);
     }
 
-    function safeTransferFrom(address from, address to, uint256 tokenId) public override onlyOwner {
-        safeTransferFrom(from, to, tokenId, "");
+    function safeTransferFrom (address from, address to, uint256 tokenId) public override onlyOwner {
+        _safeTransfer(from, to, tokenId, "");
+    }
+
+    function _safeTransfer (address from, address to, uint256 tokenId, bytes memory data) internal override {
+        _transfer(from, to, tokenId);
+        require(_checkOnERC721Received(from, to, tokenId, data), "ERC721: transfer to non ERC721Receiver implementer");
+    }
+
+    function _transfer (address from, address to, uint256 tokenId) internal override {
+        require(to != address(0), "ERC721: transfer to the zero address");
+
+        _beforeTokenTransfer(from, to, tokenId);
+        delete _tokenApprovals[tokenId];
+
+        unchecked {
+            _balances[from] -= 1;
+            _balances[to] += 1;
+        }
+        _owners[tokenId] = to;
+
+        emit Transfer(from, to, tokenId);
+
+        _afterTokenTransfer(from, to, tokenId);
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal override(ERC721, ERC721Enumerable) {

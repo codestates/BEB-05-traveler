@@ -323,6 +323,6 @@ const abi20 = [
 		"stateMutability": "nonpayable",
 		"type": "function"
 	}
-];
+]
 
 module.exports = abi20;
