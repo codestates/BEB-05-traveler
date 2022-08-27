@@ -16,7 +16,7 @@ interface ERC20Interface {
     // event Approval(address indexed owner, address indexed spender, uint256 oldAmount, uint256 amount);
 }
 
-contract ERC20 is ERC20Interface, Ownable {
+contract Traveler is ERC20Interface, Ownable {
     mapping (address => uint256) private _balances;
     // mapping (address => mapping (address => uint256)) public _allowances;
 
@@ -58,20 +58,7 @@ contract ERC20 is ERC20Interface, Ownable {
         emit Transfer(msg.sender, recipient, amount);
         return true;
     }
-    // 
-    // owner가 spender에게 양도 설정한 토큰의 양을 확인
-    // function allowance(address owner, address spender) external view override returns (uint256) {
-    //     return _allowances[owner][spender];
-    // }
-    // spender 에게 value 만큼의 토큰을 인출할 권리를 부여. 
-    // 이용시 반드시 Approval 이벤트 함수를 호출해야 함.
-    // function approve(address spender, uint amount) external virtual override returns (bool) {
-    //     uint256 currentAllownace = _allowances[msg.sender][spender];
-    //     require(currentAllownace >= amount, "ERC20: Transfer amount exceeds allowance");
-    //     _approve(msg.sender, spender, currentAllownace, amount);
-    //     return true;
-    // }
-    // spender가 거래 가능하도록 양도 받은 토큰을 전송
+ 
     function transferFrom(address sender, address recipient, uint256 amount) external virtual override returns (bool) {
         _transfer(sender, recipient, amount);
         emit Transfer(msg.sender, sender, recipient, amount);
@@ -89,14 +76,6 @@ contract ERC20 is ERC20Interface, Ownable {
         _balances[sender] = senderBalance - amount;
         _balances[recipient] += amount;
     }
-    
-    // function _approve(address owner, address spender, uint256 currentAmount, uint256 amount) internal virtual {
-    //     require(owner != address(0), "ERC20: approve from the zero address");
-    //     require(spender != address(0), "ERC20: approve to the zero address");
-    //     require(currentAmount == _allowances[owner][spender], "ERC20: invalid currentAmount");
-    //     _allowances[owner][spender] = amount;
-    //     emit Approval(owner, spender, currentAmount, amount);
-    // }
 
     function getBack(address viator, uint256 amount) public onlyOwner returns (bool) {
         address owner = owner();
