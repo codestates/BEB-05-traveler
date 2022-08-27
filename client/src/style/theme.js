@@ -19,6 +19,7 @@ export const theme = {
   sky_blue: '#5B7895',
 
   /* Typography */
+  fw_300: 300,
   fw_500: 500,
   fw_700: 700,
   fs_1: 'clamp(0.56rem, calc(0.5rem + 0.16vw), 0.74rem)',

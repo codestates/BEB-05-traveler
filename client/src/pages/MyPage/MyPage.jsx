@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { theme } from '../../style/theme';
 import { ContactsOutlined } from '@ant-design/icons';
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const { Option } = Select;
@@ -11,6 +12,14 @@ const { Option } = Select;
 function MyPage() {
   const location = useLocation();
   const user = location;
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user.state.token === '') {
+      window.alert("로그인이 필요한 페이지 입니다.")
+      navigate('/');
+  }
+  },[]);
 
   const [userInfo, setUserInfo] = useState({
     user_id: '',
@@ -169,8 +178,9 @@ function MyPage() {
           if (res.status === 200) {
             console.log(res);
             window.alert("토큰 전송 완료!");
+            window.location.reload();
           }
-          else {window.alert("토큰 전송 실패!");}
+          else {window.alert("토큰 전송 실패!");window.location.reload();}
         });
       }
       if (transType === "NFT") {
@@ -186,8 +196,11 @@ function MyPage() {
           if (res.status === 200) {
             console.log(res);
             window.alert("NFT 전송 완료!");
+            window.location.reload();
           }
-          else {window.alert("NFT 전송 실패!");}
+          else {window.alert("NFT 전송 실패!");
+          window.location.reload();
+        }
         });
       };
     }

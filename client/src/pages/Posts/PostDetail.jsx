@@ -1,4 +1,4 @@
-import { Col, Image, Row, Space, Typography } from 'antd';
+import { Col, Image, Row, Space, Typography, Modal, Button } from 'antd';
 import React, {useState, useEffect} from 'react';
 import {PushpinOutlined, EnvironmentOutlined, UserOutlined, EditOutlined, DeleteOutlined} from '@ant-design/icons';
 import styled from 'styled-components';
@@ -54,7 +54,11 @@ function PostDetail() {
         {text}
     </Space>
   );
-  
+  // 삭제 모달 관련
+  const [visible, setVisible] = useState(false);
+  const showModal = () => {setVisible(true);};
+  const handleOk = (e) => {};
+  const handleCancel = (e) => {};
   const onDelete = () => {
     axios
       .post("http://localhost:4000/board/post_delete",{
@@ -63,44 +67,63 @@ function PostDetail() {
         headers: {authorization: user.token}
       })
       .then((res) => {
-        console.log(res);
+        console.log("응답");
+        if (res.status === 200) {window.alert("삭제 완료 되었습니다."); window.location.reload();}
+        else {window.alert("삭제 실패 되었습니다."); window.location.reload();}
       });
   }
     
   return (
-    <Row justify="left" align="middle">
-      <Wrapper>
-        <TextWrapper>
-          <Col flex={2}>
-            <Space direction="vertical">
-              <TitleFont style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_8}`, color: '#424242'}}>{title}</TitleFont>
-              <Text type="secondary" style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_5}`}}><PushpinOutlined style={{paddingTop: '4px'}}/>&nbsp;{place}</Text>
-              <Text type="secondary" style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_5}`}}><EnvironmentOutlined style={{paddingTop: '4px'}}/>&nbsp;{address}</Text>
-            </Space>
-          </Col>
-        </TextWrapper>
-        <CardWrapper>
-          <Col flex={3} style={{width: '800px', paddingTop:'10px', paddingBottom: '10px'}}>
-            <Image src={image} style={{paddingBottom:'10px', objectFit: 'cover'}}/>
-            <div style={{textAlign: 'left', whiteSpace: 'nowrap'}}>
-              <Text type="secondary" style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_5}`}}><UserOutlined style={{paddingTop: '4px'}}/>&nbsp;{nickname}</Text>
-              <Text type="secondary" style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_5}`}}>&ensp;&ensp;{time}</Text>
-            </div>
-            <div style={{textAlign: 'left'}}>
-              <Text style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_6}`, marginTop:'10px'}}>{content}</Text>
-            </div>
-            {user.userInfo.user_id === nickname & user.userInfo.user_id !== '' ?
-              <div style={{textAlign: 'right', whiteSpace: 'nowrap'}}>
-                <Link to={"/posts/edit/"+ post_id} state={location.state}><IconText icon={EditOutlined} text="수정" /></Link>
-                <Space>&ensp;&ensp;</Space>
-                <button onClick={onDelete}><IconText icon={DeleteOutlined} text="삭제" /></button>
+    <div>
+      <Modal
+        visible={visible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="submit" shape="round" onClick={() => {onDelete(); setVisible(false);}}>
+            삭제
+          </Button>,
+          <Button key="submit" shape="round" onClick={()=>{setVisible(false)}}>
+            취소
+          </Button>,
+        ]}
+      >
+        <p>해당 게시물을 삭제 하시겠습니까? 게시글 삭제시 지급된 토큰이 반환 됩니다.</p>
+      </Modal>
+      <Row justify="left" align="middle">
+        <Wrapper>
+          <TextWrapper>
+            <Col flex={2}>
+              <Space direction="vertical">
+                <TitleFont style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_8}`, color: '#424242'}}>{title}</TitleFont>
+                <Text type="secondary" style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_5}`}}><PushpinOutlined style={{paddingTop: '4px'}}/>&nbsp;{place}</Text>
+                <Text type="secondary" style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_5}`}}><EnvironmentOutlined style={{paddingTop: '4px'}}/>&nbsp;{address}</Text>
+              </Space>
+            </Col>
+          </TextWrapper>
+          <CardWrapper>
+            <Col flex={3} style={{width: '800px', paddingTop:'10px', paddingBottom: '10px'}}>
+              <Image src={image} style={{paddingBottom:'10px', objectFit: 'cover'}}/>
+              <div style={{textAlign: 'left', whiteSpace: 'nowrap'}}>
+                <Text type="secondary" style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_5}`}}><UserOutlined style={{paddingTop: '4px'}}/>&nbsp;{nickname}</Text>
+                <Text type="secondary" style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_5}`}}>&ensp;&ensp;{time}</Text>
               </div>
-              : <div></div>
-            }
-          </Col>
-        </CardWrapper>
-      </Wrapper>
-    </Row>
+              <div style={{textAlign: 'left'}}>
+                <Text style={{ width: '100%', display: 'inline', fontSize: `${theme.fs_6}`, marginTop:'10px'}}>{content}</Text>
+              </div>
+              {user.userInfo.user_id === nickname & user.userInfo.user_id !== '' ?
+                <div style={{textAlign: 'right', whiteSpace: 'nowrap'}}>
+                  <Link to={"/posts/edit/"+ post_id} state={location.state}><IconText icon={EditOutlined} text="수정" /></Link>
+                  <Space>&ensp;&ensp;</Space>
+                  <button onClick={showModal}><IconText icon={DeleteOutlined} text="삭제" /></button>
+                </div>
+                : <div></div>
+              }
+            </Col>
+          </CardWrapper>
+        </Wrapper>
+      </Row>
+    </div>
   );
 }
 

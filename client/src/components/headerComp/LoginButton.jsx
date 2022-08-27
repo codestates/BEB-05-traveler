@@ -19,8 +19,9 @@ function LoginButton({ setIsLoginVisible, btnVisible, setBtnVisible, userInfo, l
   const clickHandler = (e) => {
     e.preventDefault();
     cookieRemove('rememberUser',{path:'/'});
+    window.alert("로그아웃 되었습니다.")
+    window.location.reload();
     authToken.setToken('');
-    console.log("로그아웃!")
     setBtnVisible(true);
   }
 
