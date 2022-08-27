@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import { theme } from '../../style/theme';
+import { Link } from 'react-router-dom';
 
 function LogoTitle() {
   return (
     <LogoTitle_D>
-      <a href="http://localhost:3000/">T r a v e l e r</a>
+      <Link to={"/"}>T r a v e l e r</Link>
     </LogoTitle_D>
   );
 }

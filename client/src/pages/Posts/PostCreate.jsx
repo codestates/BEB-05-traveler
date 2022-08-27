@@ -15,7 +15,7 @@ function PostCreate() {
     const ref = useRef(null);
     const ref1 = useRef(null);
     const ref2 = useRef(null);
-    const ref3 = useRef(null);
+    const ref3 = useRef(null); 
 
     const [title, setTitle] = useState("제목");
     const [editTitle,setEditTitle] = useState(false);
@@ -74,7 +74,14 @@ function PostCreate() {
                 place_address: addr,
             },{headers:{authorization: location.state.token}})
             .then((res) => {
-                console.log(res);
+                if (res.status == 200){
+                    window.alert("작성 완료!");
+                    window.location.reload();
+                } else {
+                    console.log(res);
+                    window.alert("작성 실패");
+                    window.location.reload();
+                }
             });
         }
     };

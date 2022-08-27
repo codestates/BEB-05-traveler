@@ -52,7 +52,7 @@ function LoginModal({
         waiting_time: userinfo.data.data.waiting_time,
         created_at: userinfo.data.data.created_at,
       }
-      setUserInfo({userInfo});
+      setUserInfo(userInfo);
       setCookie('rememberUser', {token: token, userInfo: userInfo}, { path: '/', maxAge: 2000 });
       setBtnVisible(false);
     }

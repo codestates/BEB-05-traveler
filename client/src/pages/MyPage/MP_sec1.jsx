@@ -1,4 +1,4 @@
-import { Result, Row } from 'antd';
+import { Modal, Row, Button } from 'antd';
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
@@ -11,7 +11,6 @@ import {
 } from '@ant-design/icons';
 import { Typography, Space, List, Image, Tag } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
-
 
 const { Title } = Typography;
 const IconText = ({ icon, text }) => (
@@ -43,6 +42,7 @@ const item_list = (list) => {
   return array;
 };
 
+
 function MP_sec1() {
   const location = useLocation();
   const user = location;
@@ -66,23 +66,45 @@ function MP_sec1() {
     getPosts();
   },[]);
 
-  const onDelete = (post_id) => {
-    console.log("delete", post_id);
+  // 삭제 모달 관련
+  const [visible, setVisible] = useState(false);
+  const showModal = () => {setVisible(true);};
+  const handleOk = (e) => {};
+  const handleCancel = (e) => {};
+  const [postId, setPostId] = useState();
+  const onDelete = () => {
+    console.log("delete", postId);
     axios
       .post("http://localhost:4000/board/post_delete",{
-        post_id: post_id
+        post_id: postId
       },{
         headers: {authorization: userObject["token"]}
       })
       .then((res) => {
         console.log("응답");
-        console.log(res);
+        if (res.status === 200) {window.alert("삭제 완료 되었습니다."); window.location.reload();}
+        else {window.alert("삭제 실패 되었습니다."); window.location.reload();}
       });
   }
   
   const data = item_list(postList);
   return (
     <div>
+        <Modal
+          visible={visible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          footer={[
+            <Button key="submit" shape="round" onClick={() => {onDelete(); setVisible(false);}}>
+              삭제
+            </Button>,
+            <Button key="submit" shape="round" onClick={()=>{setVisible(false)}}>
+              취소
+            </Button>,
+          ]}
+      >
+        <p>해당 게시물을 삭제 하시겠습니까? 게시글 삭제시 지급된 토큰이 반환 됩니다.</p>
+      </Modal>
       <Row gutter={[8, 8]} justify="center" align="middle" wrap={true}>
         <TitleFont>
           <Title
@@ -100,6 +122,7 @@ function MP_sec1() {
           <List
             itemLayout="vertical"
             size="large"
+            style={{width: '100%'}}
             pagination={{
               onChange: (page) => {
                 console.log(page);
@@ -114,7 +137,9 @@ function MP_sec1() {
                   <Link to={'/posts/edit/' + item.idx} state={userObject}>
                     <IconText icon={EditOutlined} text="수정" />
                   </Link>,
-                  <button onClick={(e)=>{e.preventDefault(); onDelete(item.idx)}}><IconText icon={DeleteOutlined} text="삭제" /></button>
+                  <button onClick={(e)=>{e.preventDefault(); showModal(); setPostId(item.idx);}}>
+                  <IconText icon={DeleteOutlined} text="삭제" />
+                  </button>
                 ]}
               >
                 <List.Item.Meta
@@ -127,7 +152,7 @@ function MP_sec1() {
                       {item.title}
                     </Link>
                   }
-                  avatar={<Image src={item.image} width={272} alt="logo" preview={true} />}
+                  avatar={<Image src={item.image} width={500} alt="logo" preview={true} />}
                   description={
                     <>
                       <div>{item.created_at}</div>
@@ -156,9 +181,13 @@ const TitleFont = styled.div`
   text-align: center;
   font-weight: 400;
   font-family: 'Noto Sans KR', sans-serif;
+  width: 100%;
+  overflow:hiddlen; 
+  word-break:break-all;
 `;
 
 const ListWrapper = styled.div`
+  width: 100%;
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
