@@ -17,11 +17,11 @@ function Create() {
   const user = location;
 
   const onMint = async () => {
-    // setLoadings((prevLoadings) => {
-    //   const newLoadings = [...prevLoadings];
-    //   newLoadings[1] = true;
-    //   return newLoadings;
-    // });
+    setLoadings((prevLoadings) => {
+      const newLoadings = [...prevLoadings];
+      newLoadings[1] = true;
+      return newLoadings;
+    });
     console.log('hihi', image, user.state.token);
     const formData = new FormData();
     console.log('name', name, description);
@@ -36,13 +36,13 @@ function Create() {
     console.log(headers);
     const res = await axios.post('http://localhost:4000/token/mint', formData, { headers });
 
-    // setTimeout(() => {
-    //   setLoadings((prevLoadings) => {
-    //     const newLoadings = [...prevLoadings];
-    //     newLoadings[1] = false;
-    //     return newLoadings;
-    //   });
-    // }, 10);
+    setTimeout(() => {
+      setLoadings((prevLoadings) => {
+        const newLoadings = [...prevLoadings];
+        newLoadings[1] = false;
+        return newLoadings;
+      });
+    }, 10);
   };
 
   const beforeUpload = (file) => {

@@ -12,18 +12,6 @@ import mainImg3 from '../../../src/asset/dummy/image3.png';
 import mainImg4 from '../../../src/asset/dummy/image4.png';
 import mainImg5 from '../../../src/asset/dummy/image5.png';
 
-const image_array = [
-  mainImg,
-  mainImg2,
-  mainImg3,
-  mainImg4,
-  mainImg5,
-  mainImg,
-  mainImg2,
-  mainImg3,
-  mainImg4,
-  mainImg5,
-];
 const { Title, Text } = Typography;
 
 const returnTitle = (text) => {
@@ -55,15 +43,18 @@ function MP_sec2({ state }) {
         headers: { authorization: state.token },
       })
       .then((res) => {
+        console.log(res.data);
         setCollectionData1(res.data.user_nftInfo_sell);
         setCollectionData2(res.data.user_nftInfo_notsell);
       });
   };
 
   const getNFTInfo = async (collectionData, func) => {
+    console.log('NFT 정보 찾기');
     const infoList = [];
     for (let i = 0; i < collectionData.length; i++) {
       axios.get(collectionData[i].link).then((res) => {
+        console.log(res.data);
         const info = {
           img: `https://ipfs.io/ipfs/${res.data.image.split('//')[1]}`,
           name: res.data.name,
@@ -93,6 +84,7 @@ function MP_sec2({ state }) {
   };
 
   const returnNFTs = (image_array, SellBool) => {
+    console.log('hihi return NFTS');
     return (
       <List>
         <Row gutter={[16, 16]}>
@@ -223,8 +215,8 @@ const TitleFont = styled.div`
 `;
 
 const List = styled.div`
-  padding-right: 20px;
-  padding-left: 20px;
+  //   padding-right: 20px;
+  //   padding-left: 20px;
 `;
 
 const BTNWrapper = styled.div`
