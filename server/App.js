@@ -18,7 +18,7 @@ mongoConnect();
 
 // 실시간 블록체인 네트워크의 NFT 정보를 탐색하여 DB에 저장하는 DAEMON 실행
 const getTransactions = require("./controllers/contract.controller");
-// getTransactions.start();
+getTransactions.start();
 
 // Routing 설정
 const routes = require("./routes");

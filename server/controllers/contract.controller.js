@@ -21,7 +21,12 @@ const getTransactions = cron.schedule(
         const nftModels = await nftmodel.getAllNfts();
         const nftCount = nftModels.length;
 
-        console.log("DB에 저장된 NFT의 양: ", nftCount, " // 블록체인에 기록된 NFT의 양: ", totalSupply);
+        console.log(
+            "DB에 저장된 NFT의 양: ",
+            nftCount,
+            " // 블록체인에 기록된 NFT의 양: ",
+            totalSupply
+        );
 
         const nftInexArr = [];
         for (let i = nftCount + 1; i <= totalSupply; i++) {

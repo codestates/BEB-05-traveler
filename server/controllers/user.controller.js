@@ -202,7 +202,7 @@ module.exports = {
                 const user_nftInfo_notsell = [];
                 const nftList = await nftmodel.getNftByUserId(userData.user_id);
 
-                // console.log(nftList);
+                console.log(nftList);
 
                 for (i = 0; i < nftList.length; i++) {
                     if (nftList[i].isselling === true) {
@@ -220,6 +220,7 @@ module.exports = {
                         });
                     }
                 }
+                console.log(nftList);
                 return res.status(200).send({
                     data: userData,
                     user_nftInfo_sell,
