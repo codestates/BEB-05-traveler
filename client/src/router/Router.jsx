@@ -36,7 +36,7 @@ export default function Router({ token, userInfo }) {
         element={[
           <MyPage />,
           <MP_sec1 />,
-          <MP_sec2 state={{ token: token, userInfo: userInfo }}/>,
+          <MP_sec3 state={{ token: token, userInfo: userInfo }} />,
         ]}
       />
       <Route path="/create" element={[<Create />]} />

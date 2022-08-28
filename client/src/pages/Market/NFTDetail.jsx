@@ -35,7 +35,6 @@ function NFTDetail() {
   }, [collectionData]);
 
   const onBuy = async () => {
-    console.log(user.state.collectionData);
     const res = await axios.post(
       'http://localhost:4000/token/buynft',
       {
@@ -47,7 +46,6 @@ function NFTDetail() {
         headers: { authorization: `Bearer ${user.state.token}` },
       }
     );
-    console.log(res);
   };
 
   const getNFTInfo = async () => {

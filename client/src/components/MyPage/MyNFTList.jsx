@@ -1,9 +1,10 @@
 import { Col, Row } from 'antd';
 import React, { useEffect } from 'react';
-import MarketNFTPreivew from './MarketNFTPreview';
+import MyNFTPreview from './MyNFTPreview';
 import styled from 'styled-components';
 
-function MarketNFTList({ collectionData, token }) {
+function MyNFTList({ collectionData, sellBool, token }) {
+  console.log(collectionData, sellBool, token, '중간단계');
   useEffect(() => {}, [collectionData]);
   return (
     <Lists>
@@ -11,7 +12,7 @@ function MarketNFTList({ collectionData, token }) {
         {collectionData.map((_, idx) => {
           return (
             <Col xs={12} xl={6} key={Symbol(idx + 1).toString()}>
-              <MarketNFTPreivew collectionData={_} token={token}></MarketNFTPreivew>
+              <MyNFTPreview token={token} sellBool={sellBool} collectionData={_}></MyNFTPreview>
             </Col>
           );
         })}
@@ -21,8 +22,8 @@ function MarketNFTList({ collectionData, token }) {
 }
 
 const Lists = styled.div`
-  padding-right: 40px;
-  padding-left: 40px;
+  padding-right: 20px;
+  padding-left: 20px;
 `;
 
-export default MarketNFTList;
+export default MyNFTList;
