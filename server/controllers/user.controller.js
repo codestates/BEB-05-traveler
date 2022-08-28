@@ -52,9 +52,9 @@ module.exports = {
                     );
                     console.log(
                         "DB 업데이트된 20 Token의 양: ",
-                        updateEthAmount,
+                        updateEthAmount.eth_amount,
                         " / NFT의 양: ",
-                        updateNftAmount
+                        updateNftAmount.token_amount
                     );
 
                     // user정보 객체를 만들어 토큰에 담아 응답
@@ -182,9 +182,9 @@ module.exports = {
                 );
                 console.log(
                     "DB 업데이트된 20 Token의 양: ",
-                    updateEthAmount,
+                    updateEthAmount.eth_amount,
                     " / NFT의 양: ",
-                    updateNftAmount
+                    updateNftAmount.token_amount
                 );
 
                 // 20토큰과 NFT 정보를 업데이트하고, 최신 정보를 userInfo 객체에 담아 응답
@@ -197,13 +197,12 @@ module.exports = {
                     waiting_time: userInfo.waiting_time,
                     created_at: userInfo.created_at,
                 };
-                console.log(userData);
 
                 const user_nftInfo_sell = [];
                 const user_nftInfo_notsell = [];
                 const nftList = await nftmodel.getNftByUserId(userData.user_id);
 
-                console.log(nftList);
+                // console.log(nftList);
 
                 for (i = 0; i < nftList.length; i++) {
                     if (nftList[i].isselling === true) {

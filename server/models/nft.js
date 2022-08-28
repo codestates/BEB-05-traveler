@@ -63,6 +63,17 @@ nftSchema.statics.buynft = async function (token_id, buyer_id, buyer_address) {
     return await this.findOneAndUpdate({ token_id }, _nft);
 };
 
+// 기존 DB 등록된 NFT의 소유자 정보 변경
+nftSchema.statics.changeOwner = async function (token_id, newOwner_id, newOwner_address) {
+    const updateNFT = {
+        user_id: newOwner_id,
+        user_address: newOwner_address,
+        isselling: false,
+        price: Number.MAX_SAFE_INTEGER
+    }
+    return await this.findOneAndUpdate({ token_id}, updateNFT)
+}
+
 // nft 전체 조회
 nftSchema.statics.getAllNfts = async function () {
     return await this.find({});
