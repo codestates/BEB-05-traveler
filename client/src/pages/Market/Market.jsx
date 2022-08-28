@@ -17,7 +17,6 @@ function Market({ token }) {
 
   const getNFTs = async () => {
     axios.get('http://localhost:4000/token/market').then((res) => {
-      console.log(res.data.data);
       setCollectionData(res.data.data);
     });
   };

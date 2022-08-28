@@ -8,7 +8,7 @@ import * as HeaderComp from '../headerComp';
 
 const { Header: _Header } = Layout;
 
-function HeaderComponent({ userInfo, setUserInfo, token, setToken, setCookie, cookieRemove}) {
+function HeaderComponent({ userInfo, setUserInfo, token, setToken, setCookie, cookieRemove }) {
   const [visible, setVisible] = useState(false);
   const [isLoginVisible, setIsLoginVisible] = useState(false);
   const [isJoinVisible, setIsJoinVisible] = useState(false);
@@ -16,8 +16,7 @@ function HeaderComponent({ userInfo, setUserInfo, token, setToken, setCookie, co
   const [joinName, setJoinName] = useState('');
   const [joinPW, setJoinPW] = useState('');
   // 로그인 버튼, 로그아웃 버튼 중 무엇을 보여줄지
-  console.log(token);
-  const [btnVisible, setBtnVisible] = useState(token==='');
+  const [btnVisible, setBtnVisible] = useState(token === '');
 
   const handleJoinOk = () => {
     axios
@@ -28,7 +27,6 @@ function HeaderComponent({ userInfo, setUserInfo, token, setToken, setCookie, co
       })
       .then((res) => {
         if (res.status === 200) {
-          console.log(res);
           setIsJoinVisible(false);
         }
       });

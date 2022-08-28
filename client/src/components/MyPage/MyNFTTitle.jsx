@@ -26,7 +26,6 @@ export default MyPageTitle;
 
 const TitleFont = styled.div`
   @import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Noto+Sans+KR:wght@100&display=swap');
-    
   text-align: center;
   font-weight: 400;
   font-family: 'Aboreto', cursive;

@@ -34,7 +34,6 @@ const { Title } = Typography;
 function Section2({ state }) {
   const [postList, setPostList] = useState([]);
   const getPosts = async () => {
-    console.log('get', userInfo);
     axios.get('http://localhost:4000/').then((res) => {
       setPostList(res.data.data.postInfo);
     });

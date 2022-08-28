@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Axios from 'axios';
-import { Input, Row, Col, Card, Image, Button, Typography } from 'antd';
+import { Input, Card, Image, Button, Typography } from 'antd';
 import { theme } from '../../style/theme';
+import axios from 'axios';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
-function MyNFTPreview({ collectionData, sellBool }) {
+function MyNFTPreview({ collectionData, sellBool, token }) {
+  console.log(token, 'hihihihihi');
   const [Img, setImg] = useState('');
   const [name, setName] = useState('');
-  const [desc, setDesc] = useState('');
+  const [price, setPrice] = useState('');
   useEffect(() => {
     getNFTInfo();
     console.log(sellBool);
@@ -25,10 +27,28 @@ function MyNFTPreview({ collectionData, sellBool }) {
 
   const getNFTInfo = async () => {
     const response = await Axios.get(collectionData.link);
-    console.log(response, '응답');
     setImg(`https://ipfs.io/ipfs/${response.data.image.split('//')[1]}`);
     setName(response.data.name);
-    setDesc(response.data.description);
+  };
+
+  const onAddToMarket = async () => {
+    const res = await axios.post(
+      'http://localhost:4000/token/sellnft',
+      { token_id: collectionData.content_id, price: price },
+      {
+        headers: { authorization: `Bearer ${token}` },
+      }
+    );
+  };
+
+  const cancelMarket = async () => {
+    const res = await axios.post(
+      'http://localhost:4000/token/cancelsale',
+      { token_id: collectionData.content_id, price: price },
+      {
+        headers: { authorization: `Bearer ${token}` },
+      }
+    );
   };
 
   return (
@@ -63,7 +83,11 @@ function MyNFTPreview({ collectionData, sellBool }) {
               <div style={{ width: '100%' }}>
                 <div>{`Price: ${collectionData.price}`}</div>
                 <BTNWrapper>
-                  <Button shape="round" style={{ margin: 'auto', display: 'inline-block' }}>
+                  <Button
+                    shape="round"
+                    style={{ margin: 'auto', display: 'inline-block' }}
+                    onClick={cancelMarket}
+                  >
                     {'등록 취소'}
                   </Button>
                 </BTNWrapper>
@@ -81,7 +105,13 @@ function MyNFTPreview({ collectionData, sellBool }) {
                   >
                     {'가격 입력 : '}
                   </Text>
-                  <Input type="text" style={{ width: '20%', height: '20px' }} />
+                  <Input
+                    type="text"
+                    style={{ width: '20%', height: '20px' }}
+                    onChange={(e) => {
+                      setPrice(e.target.value);
+                    }}
+                  />
                   <span
                     style={{
                       display: 'inline-block',
@@ -89,7 +119,9 @@ function MyNFTPreview({ collectionData, sellBool }) {
                       paddingLeft: '30%',
                     }}
                   >
-                    <Button shape="round">등록</Button>
+                    <Button shape="round" onClick={onAddToMarket}>
+                      등록
+                    </Button>
                   </span>
                 </div>
                 <BTNWrapper style={visible ? {} : { display: 'none' }}>

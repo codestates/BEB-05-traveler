@@ -1,12 +1,7 @@
-import { Input, Row, Col, Card, Image, Button, Typography } from 'antd';
+import { Row, Typography } from 'antd';
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { theme } from '../../style/theme';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import * as MyPage from '../../components/MyPage';
-
-const { Title, Text } = Typography;
 
 function MP_sec3({ state }) {
   const [collectionData1, setCollectionData1] = useState([]);
@@ -24,25 +19,6 @@ function MP_sec3({ state }) {
       });
   };
 
-  // const getNFTInfo = async (collectionData, func) => {
-  //   console.log('NFT 정보 찾기');
-  //   const infoList = [];
-  //   for (let i = 0; i < collectionData.length; i++) {
-  //     axios.get(collectionData[i].link).then((res) => {
-  //       console.log(res.data);
-  //       setNftInfo1({
-  //         img: `https://ipfs.io/ipfs/${res.data.image.split('//')[1]}`,
-  //         name: res.data.name,
-  //         desc: res.data.description,
-  //         price: collectionData[i].price,
-  //         content_id: collectionData[i].token_id,
-  //       });
-  //       // infoList.push(info);
-  //       // func(infoList);
-  //     });
-  //   }
-  // };
-
   useEffect(() => {
     getNFTs();
   }, [state]);
@@ -51,9 +27,9 @@ function MP_sec3({ state }) {
     <Row gutter={[8, 8]} justify="center" align="middle" wrap={true}>
       <MyPage.MyNFTTitle />
       <MyPage.MyNFTsubtitle title={'NFT for sale'} />
-      <MyPage.MyNFTList collectionData={collectionData1} sellBool={true} />
+      <MyPage.MyNFTList collectionData={collectionData1} sellBool={true} token={state.token} />
       <MyPage.MyNFTsubtitle title={'NFT not for sale'} />
-      <MyPage.MyNFTList collectionData={collectionData2} sellBool={false} />
+      <MyPage.MyNFTList collectionData={collectionData2} sellBool={false} token={state.token} />
     </Row>
   );
 }

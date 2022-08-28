@@ -4,9 +4,7 @@ import MarketNFTPreivew from './MarketNFTPreview';
 import styled from 'styled-components';
 
 function MarketNFTList({ collectionData, token }) {
-  useEffect(() => {
-    console.log(token, 'hihsfihsidhisfoihdsofhosf');
-  }, [collectionData]);
+  useEffect(() => {}, [collectionData]);
   return (
     <Lists>
       <Row gutter={[16, 16]}>

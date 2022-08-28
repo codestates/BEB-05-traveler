@@ -3,8 +3,8 @@ import React, { useEffect } from 'react';
 import MyNFTPreview from './MyNFTPreview';
 import styled from 'styled-components';
 
-function MyNFTList({ collectionData, sellBool }) {
-  console.log(collectionData, sellBool, '중간단계');
+function MyNFTList({ collectionData, sellBool, token }) {
+  console.log(collectionData, sellBool, token, '중간단계');
   useEffect(() => {}, [collectionData]);
   return (
     <Lists>
@@ -12,7 +12,7 @@ function MyNFTList({ collectionData, sellBool }) {
         {collectionData.map((_, idx) => {
           return (
             <Col xs={12} xl={6} key={Symbol(idx + 1).toString()}>
-              <MyNFTPreview sellBool={sellBool} collectionData={_}></MyNFTPreview>
+              <MyNFTPreview token={token} sellBool={sellBool} collectionData={_}></MyNFTPreview>
             </Col>
           );
         })}
