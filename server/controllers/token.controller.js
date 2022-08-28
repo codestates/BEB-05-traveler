@@ -76,6 +76,9 @@ module.exports = {
                     const sendingTX = await web3.eth.sendSignedTransaction(
                         signedTX.rawTransaction
                     );
+                    console.log("20 Token 전송 트랜잭션: ", sendingTX)
+
+                    console.log("트랜잭션이 실행되어, DB 의 20 Token 소유자 정보를 업데이트합니다.")
 
                     // 블록체인에서 최신 정보를 받아와 업데이트
                     const ethAmount = await contract20.methods
@@ -88,7 +91,7 @@ module.exports = {
                     );
                     console.log(
                         "DB 업데이트된 20 Token의 양: ",
-                        updateEthAmount
+                        updateEthAmount.eth_amount
                     );
 
                     res.status(200).send({
@@ -130,27 +133,24 @@ module.exports = {
                     const senderAddress = userInfo.address;
 
                     let recipientAddress;
+                    let recipientInfo;
                     if (req.body.user_id) {
-                        const recipientInfo = await usermodel.getUserInfoById(
-                            req.body.user_id
-                        );
+                        recipientInfo = await usermodel.getUserInfoById(req.body.user_id);
                         recipientAddress = recipientInfo[0].address;
                     } else if (req.body.nickname) {
-                        const recipientInfo =
-                            await usermodel.getUserInfoByNickname(
-                                req.body.nickname
-                            );
+                        recipientInfo = await usermodel.getUserInfoByNickname(req.body.nickname);
                         recipientAddress = recipientInfo[0].address;
                     } else {
+                        recipientInfo = await usermodel.getUserInfoByAddress(req.body.recipient);
                         recipientAddress = req.body.recipient;
                     }
-                    console.log("수신자: ", recipientAddress);
 
                     const tokenId = req.body.token_id;
 
-                    const nft_owner = await contract721.methods.ownerOf(
-                        tokenId
-                    );
+                    const nft_owner = await contract721.methods.ownerOf(tokenId).call();
+                    console.log("DB NFT 소유자", senderAddress)
+                    console.log("온체인 NFT 소유자", nft_owner)
+                    console.log("수신자: ", recipientAddress);
 
                     if (nft_owner !== senderAddress) {
                         return res
@@ -160,7 +160,6 @@ module.exports = {
                         const nft_owner = await contract721.methods.ownerOf(
                             tokenId
                         );
-                        console.log("NFT 소유자: ", nft_owner);
 
                         const data = contract721.methods
                             .safeTransferFrom(
@@ -185,9 +184,13 @@ module.exports = {
                         const sendingTX = await web3.eth.sendSignedTransaction(
                             signedTX.rawTransaction
                         );
+                        console.log("NFT 전송 트랜잭션: ", sendingTX)
+
+                        console.log("트랜잭션이 실행되어, DB 의 NFT 소유자 정보를 업데이트합니다.")
+                        const updateOwner = await nftmodel.changeOwner(tokenId, recipientInfo[0].user_id, recipientInfo[0].address)
 
                         res.status(200).send({
-                            data: sendingTX,
+                            data: updateOwner,
                             message: "Transfer success",
                         });
                     }
@@ -265,8 +268,8 @@ module.exports = {
                     const sendingTX = await web3.eth.sendSignedTransaction(
                         signedTX.rawTransaction
                     );
-
-                    console.log(sendingTX);
+                    console.log("NFT 발행 트랜잭션: ", sendingTX);
+                    console.log("NFT 발행이 완료되었습니다.")
 
                     senderBalance = await contract721.methods
                         .balanceOf(userInfo.address)
@@ -300,6 +303,7 @@ module.exports = {
                     .send({ data: null, message: "Invalid access token" });
             } else {
                 const token = accessToken.split(" ")[1];
+                console.log(token)
 
                 if (!token) {
                     return res
@@ -313,30 +317,19 @@ module.exports = {
 
                     const recipientAddress = userInfo.address;
 
-                    let senderAddress;
-                    if (req.body.user_id) {
-                        const senderInfo = await usermodel.getUserInfoById(
-                            req.body.user_id
-                        );
-                        senderAddress = senderInfo[0].address;
-                    } else if (req.body.nickname) {
-                        const senderInfo =
-                            await usermodel.getUserInfoByNickname(
-                                req.body.nickname
-                            );
-                        senderAddress = senderInfo[0].address;
-                    } else {
-                        senderAddress = req.body.recipient;
-                    }
+                    let senderInfo = await usermodel.getUserInfoById(req.body.user_id);
 
+                    const senderAddress = senderInfo[0].address;
                     const tokenId = req.body.token_id;
                     const price = req.body.price;
+
                     const nft_owner = await contract721.methods.ownerOf(
                         tokenId
                     ).call();
 
-                    console.log(nft_owner);
-                    console.log(senderAddress);
+                    console.log("DB NFT 소유자", senderAddress);
+                    console.log("온체인 NFT 소유자", nft_owner);
+                    console.log("수신자: ", recipientAddress);
 
                     if (nft_owner !== senderAddress) {
                         return res
@@ -346,8 +339,6 @@ module.exports = {
                                 message: "Seller isn't owner",
                             });
                     } else {
-                        console.log("현재 NFT 소유자: ", nft_owner);
-
                         const data = contract721.methods
                             .buyNFT(
                                 senderAddress,
@@ -359,7 +350,7 @@ module.exports = {
 
                         const rawTransaction = {
                             to: address721,
-                            gas: 10000000,
+                            gas: 1000000,
                             data: data,
                         };
 
@@ -372,8 +363,10 @@ module.exports = {
                         const sendingTX = await web3.eth.sendSignedTransaction(
                             signedTX.rawTransaction
                         );
+                        console.log("NFT 전송 트랜잭션: ", sendingTX)
 
-                        console.log(sendingTX);
+                        console.log("트랜잭션이 실행되어, DB 의 NFT 소유자 정보를 업데이트합니다.")
+                        const updateOwner = await nftmodel.changeOwner(tokenId, userInfo.user_id, userInfo.address)
 
                         res.status(200).send({
                             data: sendingTX,
