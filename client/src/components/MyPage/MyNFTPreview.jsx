@@ -60,11 +60,11 @@ function MyNFTPreview({ collectionData, sellBool, token }) {
             alt="collection-card"
             src={Img}
             preview={false}
-            // style={{ objectFit: 'cover', height: 350 }}
+            style={{ objectFit: 'cover', height: 350 }}
           />
         }
       >
-        <div style={{ fontSize: `${theme.fs_3}`, width: '100%', textAlign: 'right' }}>
+        <div>
           <Link to={`/market/${collectionData.content_id}`}>
             <Text type="secondary" underline={true}>
               상세보기
@@ -80,7 +80,7 @@ function MyNFTPreview({ collectionData, sellBool, token }) {
           }
           description={
             sellBool ? (
-              <div style={{ width: '100%' }}>
+              <div>
                 <div>{`Price: ${collectionData.price}`}</div>
                 <BTNWrapper>
                   <Button
@@ -93,7 +93,7 @@ function MyNFTPreview({ collectionData, sellBool, token }) {
                 </BTNWrapper>
               </div>
             ) : (
-              <div style={{ width: '100%' }}>
+              <div>
                 <div style={visible ? { display: 'none' } : {}}>
                   <Text
                     type="secondary"
@@ -155,12 +155,6 @@ const BTNWrapper = styled.div`
   cursor: pointer;
   margin-left: 100px;
   margin-right: 25px;
-`;
-
-const Summary = styled.span`
-  @import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Noto+Sans+KR:wght@100&display=swap');
-  font-family: 'Aboreto', cursive;
-  font-family: 'Noto Sans KR', sans-serif;
 `;
 
 export default MyNFTPreview;

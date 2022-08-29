@@ -5,7 +5,6 @@ import { theme } from '../../style/theme';
 import MarketNFTList from './MarketNFTList';
 import axios from 'axios';
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 
 const { Title } = Typography;
 
@@ -36,9 +35,7 @@ function Market({ token }) {
           NFT Market
         </Title>
       </TitleFont>
-      <List>
-        <MarketNFTList collectionData={collectionData} token={token} />
-      </List>
+      <MarketNFTList collectionData={collectionData} token={token} />
     </Row>
   );
 }
@@ -52,10 +49,5 @@ const TitleFont = styled.div`
   font-family: 'Noto Sans KR', sans-serif;
   width: 100%;
 `;
-const List = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin
-`;
+
 export default Market;

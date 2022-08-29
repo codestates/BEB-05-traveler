@@ -4,7 +4,6 @@ import MyNFTPreview from './MyNFTPreview';
 import styled from 'styled-components';
 
 function MyNFTList({ collectionData, sellBool, token }) {
-  console.log(collectionData, sellBool, token, '중간단계');
   useEffect(() => {}, [collectionData]);
   return (
     <Lists>
@@ -22,8 +21,8 @@ function MyNFTList({ collectionData, sellBool, token }) {
 }
 
 const Lists = styled.div`
-  padding-right: 20px;
-  padding-left: 20px;
+  margin-right: 10px;
+  margin-left: 10px;
 `;
 
 export default MyNFTList;
