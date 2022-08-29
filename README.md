@@ -28,7 +28,7 @@ This project is to develop a community site equipped with a blockchain incentive
 ### [Common]
   * MVC Architecture
   * RESTful API
-  * HTTP connecting support
+  * HTTPS connecting support
   * Dotenv
 ### [API & Library]
   * Infura Ropsten Network provider
