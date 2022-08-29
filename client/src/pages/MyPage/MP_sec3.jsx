@@ -1,4 +1,4 @@
-import { Row, Typography } from 'antd';
+import { Row } from 'antd';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import * as MyPage from '../../components/MyPage';
@@ -24,7 +24,7 @@ function MP_sec3({ state }) {
   }, [state]);
 
   return (
-    <Row gutter={[8, 8]} justify="center" align="middle" wrap={true}>
+    <Row>
       <MyPage.MyNFTTitle />
       <MyPage.MyNFTsubtitle title={'NFT for sale'} />
       <MyPage.MyNFTList collectionData={collectionData1} sellBool={true} token={state.token} />
