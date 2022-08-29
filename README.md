@@ -40,10 +40,10 @@ This project is to develop a community site equipped with a blockchain incentive
 ## Architecture
   * Using MVC architecture & RESTful API
 
-### [Front-end]
+### [client]
 <img width="1144" alt="Flow chart" src="https://user-images.githubusercontent.com/104472372/187106157-00a12df4-30e1-43b5-8ecb-7c27bd4e9039.png">
 
-### [Back-end]
+### [server]
 ![traveler_server_flowchart](https://user-images.githubusercontent.com/104472372/187106263-776f61a9-7ced-4ec4-8fd8-86a6ae422073.png)
 
 # Token Economy Design
