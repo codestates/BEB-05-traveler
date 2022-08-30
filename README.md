@@ -23,8 +23,7 @@ This project is to develop a community site equipped with a blockchain incentive
 ### [Back-end]
   * Node.js(web3, express, mongoose, multer, jsonwebtoken, node-cron, bcrypt)
   * MongoDB
-  * IPFS (nft.storage)<img width="391" alt="스크린샷 2022-08-29 오후 3 04 12" src="https://user-images.githubusercontent.com/104472372/187133470-92b309f5-a7e9-411f-9a6b-3748f45a0d76.png">
-
+  * IPFS (nft.storage)
   * Solidity (ERC20/ERC721 standard)
 ### [Common]
   * MVC Architecture
