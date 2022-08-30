@@ -1,4 +1,4 @@
-This is ReadME for Traveler project. you can find more detail info about the project our [Wiki page](https://github.com/codestates/BEB-05-traveler/wiki).
+This is ReadME for Traveler project. More information about the project can be found on the [Wiki page](https://github.com/codestates/BEB-05-traveler/wiki).
 
 ## Index
   - [Intro](#intro) 
