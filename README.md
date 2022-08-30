@@ -11,6 +11,8 @@ This is ReadME for Traveler project. you can find more detail info about the pro
   - [Authors](#authors)
   
 ## Intro
+<img width="932" alt="haha" src="https://user-images.githubusercontent.com/104472372/187326884-5463032a-82d3-4f0b-a7fa-cabf297f78f1.png">
+
 This project is to develop a community site equipped with a blockchain incentive-based nft trading system on web2. The *Traveler* community is for people who want to share their travel information. Users of this community are given a new wallet address upon signing up and are rewarded with ERC20 tokens every time they write a post. They can send it to other community users or use it to buy minted NFTs from our community.
 
 ## Tech Stack
